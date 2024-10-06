@@ -9,9 +9,9 @@ import Icon from "../atoms/Icon";
 export const SectionFolder: React.FC<{
   section: FolderListData;
   onClick: (section: FolderListData) => void;
-  onMenuClick: () => void;
+  onMenuClick: (e: React.MouseEvent) => void; // 이벤트 타입 명시
   showModify: boolean; // 수정 모달을 표시할지 여부
-}> = ({ section, onClick, onMenuClick, showModify }) => {
+}> = ({ section, onClick, onMenuClick }) => { // `showModify`는 여기서 필요하지 않음
   return (
     <div className="relative items-center">
       <div onClick={() => onClick(section)}>
@@ -37,25 +37,15 @@ export const SectionFolder: React.FC<{
             label="kebab-menu"
             invert={false}
             alt="menu"
-            onClick={onMenuClick}
+            onClick={onMenuClick} // 이벤트 전파 방지
             className="cursor-pointer"
           />
         </div>
       </div>
-
-      {/* SectionModify 컴포넌트 표시 */}
-      {showModify && (
-        <div className="absolute top-full right-0 mt-2 z-10"> {/* absolute positioning */}
-          <SectionModify
-            section={section}
-            onEditClick={() => onClick(section)} // 함수에 인자 전달
-            onDelete={onMenuClick} // 함수에 인자 전달하지 않음
-          />
-        </div>
-      )}
     </div>
   );
 };
+
 
 // SectionModify 컴포넌트
 export const SectionModify: React.FC<{
@@ -109,7 +99,7 @@ export const SectionModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-20">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
       <div className="bg-[#3E3E3E] w-[490px] h-[440px] py-4 px-6 rounded-[20px] shadow-lg relative">
         <Image
           src="/folder.svg"
