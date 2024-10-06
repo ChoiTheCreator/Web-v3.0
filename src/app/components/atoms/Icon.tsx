@@ -11,7 +11,7 @@ interface IconProps {
 
 const Icon: React.FC<IconProps> = ({
   label,
-  size = 24,
+  size,
   alt,
   className = "",
   invert = false,

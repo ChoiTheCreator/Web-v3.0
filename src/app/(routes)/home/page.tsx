@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Button from '@/app/components/atoms/Button';
 import { SectionFolder, SectionModal, SectionModify } from '@/app/components/molecules/Modal';
 import { FolderListData } from '@/app/types/folder';
-import { createFolder, deleteFolder, getFolders, updateFolder } from '@/app/api/folders';
 import Icon from '@/app/components/atoms/Icon';
 import { useFolderStore } from '@/app/store/useFolderStore';
 
@@ -71,7 +70,7 @@ const HomePage = ({ onClose }: { onClose: () => void }) => {
       <div className="flex flex-col border-t-2 h-[600px] border-r-2 border-l-2 border-[#929292]/[0.4] rounded-t-xl rounded-r-ml rounded-l-ml bg-[#242424]">
       <div className="flex flex-row justify-between p-5">
         <div className="flex flex-row gap-2 ">
-          <Icon label="ic_side_all" />
+          <Icon label="ic_side_all" className="w-[30px] h-[30px] m-auto " />
           <p className="flex flex-col text-white place-items-center m-auto text-[18px]">강의과목</p>
         </div>
         {/* 폴더 생성 버튼 */}

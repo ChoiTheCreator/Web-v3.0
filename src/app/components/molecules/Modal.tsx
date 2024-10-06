@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FolderListData } from "@/app/types/folder";
 import Icon from "../atoms/Icon";
+import { useRouter } from "next/navigation";
 
 // SectionFolder 컴포넌트
 export const SectionFolder: React.FC<{
@@ -11,10 +12,18 @@ export const SectionFolder: React.FC<{
   onClick: (section: FolderListData) => void;
   onMenuClick: (e: React.MouseEvent) => void; // 이벤트 타입 명시
   showModify: boolean; // 수정 모달을 표시할지 여부
-}> = ({ section, onClick, onMenuClick }) => { // `showModify`는 여기서 필요하지 않음
+}> = ({ section, onClick, onMenuClick }) => {
+  const router = useRouter();
+
   return (
     <div className="relative items-center">
-      <div onClick={() => onClick(section)}>
+      {/* 폴더를 클릭하면 해당 폴더 ID로 라우팅 */}
+      <div
+        onClick={() => {
+          router.push(`/notes/${section.folderId}`); // 해당 폴더 ID로 이동
+          onClick(section); // 추가 로직이 필요하다면 실행
+        }}
+      >
         <Image
           src="/folder.svg"
           alt="folder"
@@ -33,11 +42,15 @@ export const SectionFolder: React.FC<{
           </p>
         </div>
         <div className="flex flex-row gap-3">
+          {/* 메뉴 아이콘 클릭 시 이벤트 전파 방지 */}
           <Icon
             label="kebab-menu"
             invert={false}
             alt="menu"
-            onClick={onMenuClick} // 이벤트 전파 방지
+            onClick={(e) => {
+              e.stopPropagation(); // 이벤트 전파 방지
+              onMenuClick(e);
+            }}
             className="cursor-pointer"
           />
         </div>
