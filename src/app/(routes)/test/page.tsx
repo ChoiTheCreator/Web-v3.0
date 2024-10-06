@@ -12,6 +12,8 @@ import CountInput from '@/app/components/atoms/CountInput';
 import { SectionFolder, SectionModal, SectionModify } from '@/app/components/molecules/Modal';
 import { FolderListData } from '@/app/types/folder';
 import { createFolder, deleteFolder, getFolders, updateFolder } from '@/app/api/folders';
+import Info from '@/app/components/molecules/Info';
+import NoteList from '@/app/components/organisms/NoteList';
 
 const Page = ({ onClose }: { onClose: () => void }) => {
   // 폴더 관련 상태관리
@@ -138,6 +140,7 @@ const Page = ({ onClose }: { onClose: () => void }) => {
   return (
     <>
       {/* 1. 폴더 생성 */}
+      <Info folderName="빅데이터기술특론" professorName="하석재" />
       <h1>folder</h1>
       <div className="flex flex-wrap gap-4">
         {folders.map((folder) => (
@@ -357,6 +360,7 @@ const Page = ({ onClose }: { onClose: () => void }) => {
         variant="save"
         type="submit"
       />
+      {/* <NoteList /> */}
     </>
   );
 };
