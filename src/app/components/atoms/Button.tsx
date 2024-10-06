@@ -7,6 +7,8 @@ interface ButtonProps {
   imgSrc?: string; // 이미지 소스 (옵션)
   isSelected?: boolean; // 선택된 상태 여부 (옵션)
   onClick?: () => void; // 클릭 핸들러 (옵션)
+  onMouseEnter?: () => void; // 마우스 엔터 핸들러 (옵션)
+  onMouseLeave?: () => void; // 마우스 리브 핸들러 (옵션)
   type?: "button" | "submit" | "reset"; // 버튼 타입
   variant?: "select" | "next" | "create" | "cancel" | "save"; // 버튼 스타일 종류
 }
@@ -18,6 +20,8 @@ const Button: React.FC<ButtonProps> = ({
   imgSrc,
   isSelected = false,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
   type = "button",
   variant = "create",
 }) => {
@@ -44,6 +48,8 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       className={`flex items-center justify-center py-2 px-4 text-white ${getButtonStyles()}`}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       disabled={disabled}
     >
       <p className="font-Pretendard rounded-full font-normal text-center text-lg">{label}</p>

@@ -9,8 +9,7 @@ interface FormInputProps {
   variant?: "round" | "square"; // round 또는 square로 className 지정
   labelClassName?: string; // 라벨 커스텀 스타일
 }
-
-const FormInput: React.FC<FormInputProps> = ({
+export const FormInput: React.FC<FormInputProps> = ({
   name,
   defaultValue = "",
   placeholder = "",
@@ -44,4 +43,3 @@ const FormInput: React.FC<FormInputProps> = ({
   );
 };
 
-export default FormInput;
