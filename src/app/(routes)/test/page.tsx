@@ -244,7 +244,7 @@ const Page = ({ onClose }: { onClose: () => void }) => {
       {/* 4. 파일 업로드 */}
       <h1>Form Example</h1>
       <FileUpload
-        request={{ keywords, requirement }}
+        request={{ practiceSize:10, type: "OX", keywords, requirement }}
         onUploadSuccess={handleUploadSuccess}
         onUploadError={handleUploadError}
         label="파일 업로드"
