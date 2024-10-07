@@ -4,7 +4,7 @@ import { postSummary } from "@/app/api/summaries/index";
 import Image from "next/image";
 
 interface FileUploadProps {
-  request: { keywords: string; requirement: string };
+  request: { practiceSize: number; type: string; keywords: string; requirement: string }; // Add 'type' here
   onUploadSuccess: (response: any) => void;
   onUploadError: (error: any) => void;
   label?: string;
