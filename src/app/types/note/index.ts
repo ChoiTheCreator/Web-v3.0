@@ -16,6 +16,7 @@ export interface NoteData {
   
 //노트에 대한 폴더 정보 조회 
   export interface FolderInfo {
+    information: any;
     folderName: string;
     professor: string;
   }

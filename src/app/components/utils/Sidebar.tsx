@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
   const toggleSections = () => setShowSections(!showSections);
 
   return (
-    <div className="w-[210px] h-screen justify-between flex flex-col z-20 bg-mainBlack px-2">
+    <div className="min-w-[220px] h-screen justify-between flex flex-col z-20 bg-mainBlack px-2">
       <div className="flex flex-col h-full rounded-lg bg-mainBlack">
         <Link href="/home">
           <div className="flex items-center justify-center px-2">

@@ -3,11 +3,13 @@ import React, { useState } from "react";
 interface TabProps {
   onKeywordChange: (keywords: string) => void;
   onRequirementChange: (requirement: string) => void;
+  labelClassName?: string;
 }
 
 const TabComponent: React.FC<TabProps> = ({
   onKeywordChange,
   onRequirementChange,
+  labelClassName,
 }) => {
   // 현재 선택된 탭 상태 관리
   const [activeTab, setActiveTab] = useState<"keywords" | "requirements">(
@@ -40,7 +42,9 @@ const TabComponent: React.FC<TabProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg bg-[#2B2B2B] rounded-lg">
+    <div className="flex flex-row ">
+      <p className={`text-mainWhite text-base font-normal flex-shrink-0 ${labelClassName}`}>중요 내용</p>
+      <div className="w-full max-w-[730px] bg-[#2B2B2B] rounded-lg">
       {/* 탭 헤더 */}
       <div className="flex">
         <button
@@ -49,7 +53,7 @@ const TabComponent: React.FC<TabProps> = ({
             activeTab === "keywords"
               ? "bg-[#05D686] text-black"
               : "bg-[#5F5F5F] text-white"
-          }`}
+          } rounded-tl-md`} // 왼쪽 상단 border를 md로 수정
         >
           핵심 키워드 입력
         </button>
@@ -59,7 +63,7 @@ const TabComponent: React.FC<TabProps> = ({
             activeTab === "requirements"
               ? "bg-[#05D686] text-black"
               : "bg-[#5F5F5F] text-white"
-          }`}
+          } rounded-tr-md`} // 우측 상단 border를 md로 수정
         >
           요구사항 입력
         </button>
@@ -97,8 +101,10 @@ const TabComponent: React.FC<TabProps> = ({
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
+    
   );
 };
 
