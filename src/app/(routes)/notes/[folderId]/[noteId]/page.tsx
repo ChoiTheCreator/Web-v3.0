@@ -36,14 +36,15 @@ const NotePage = () => {
         </div>
         {/* 노트 생성 폼 */}
         <div>
-          <NewNoteForm
+          {/* <NewNoteForm
             folderId={Number(folderId)}
             noteId={Number(noteId)}
             setNoteName={setNoteName}
             setFile={setFile}
             setKeywords={setKeywords}
             setRequirement={setRequirement}
-          />
+            // onSubmit={handleCreateNote}
+          /> */}
           {/* Next Button */}
         </div>
       </div>

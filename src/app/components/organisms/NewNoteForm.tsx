@@ -12,9 +12,10 @@ interface NewNoteFormProps {
   setFile: (file: File) => void;
   setKeywords: (keywords: string) => void;
   setRequirement: (requirement: string) => void;
+  onSubmit: () => void;
 }
 
-const NewNoteForm: React.FC<NewNoteFormProps> = ({ folderId, noteId, setNoteName }) => {
+const NewNoteForm: React.FC<NewNoteFormProps> = ({ folderId, noteId, setNoteName, onSubmit }) => {
   const { setFile, setKeywords, setRequirement } = usePracticeContext();
   const [keywords, setLocalKeywords] = useState(""); // 로컬 키워드
   const [requirement, setLocalRequirement] = useState(""); // 로컬 요구사항
@@ -75,7 +76,7 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ folderId, noteId, setNoteName
             onChange={() => {}} // 교수자명 수동 변경 시 동작
             labelClassName="mr-14"
             disabled={true}
-        />
+        /> 
         {/* 강의명 */}
         <FormInput
             name="noteName"
