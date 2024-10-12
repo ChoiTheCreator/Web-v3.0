@@ -24,10 +24,10 @@ const NoteList: React.FC<NoteListProps> = ({ notes, onDeleteNote }) => {
     {notes.map((note) => (
       <div
         key={note.noteId}
-        className="grid grid-cols-4 text-center text-white p-4 border-b border-gray-600"
+        className="grid grid-cols-4 text-center flex-shrink-0 text-white p-4 border-b border-gray-600"
         style={{ gridTemplateColumns: "5fr 1.5fr 1.5fr 0.4fr" }}
       >
-        <div>{note.title}</div>
+        <div className="text-start">{note.title}</div>
         <div>{note.createdAt}</div>
         <div>{note.practiceSize}문제</div>
         <button onClick={() => onDeleteNote(note.noteId)} className="text-red-400">
