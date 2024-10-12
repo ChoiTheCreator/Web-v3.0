@@ -6,6 +6,7 @@ interface CountInputProps {
   defaultValue?: string;
   placeholder?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean; // disabled prop 추가
 }
 
 const CountInput: React.FC<CountInputProps> = ({
@@ -13,6 +14,7 @@ const CountInput: React.FC<CountInputProps> = ({
   defaultValue = "",
   placeholder = "",
   onChange,
+  disabled = false, // 기본값은 false
 }) => {
   return (
     <div className="flex flex-row items-center pl-5">
@@ -24,6 +26,7 @@ const CountInput: React.FC<CountInputProps> = ({
         onChange={onChange}
         variant="square" // 필요한 경우 "round"로 변경 가능
         labelClassName="mr-2" // 라벨 스타일 커스텀 (필요 시)
+        disabled={disabled} // disabled prop 전달
       />
       {/* "개" 단위 표시 */}
       <p className="pl-2 text-white">개</p>
