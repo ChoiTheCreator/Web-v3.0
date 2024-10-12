@@ -4,11 +4,13 @@ interface FormInputProps {
   name: string;
   defaultValue?: string; // 초기값 설정
   placeholder?: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
   variant?: "round" | "square"; // round 또는 square로 className 지정
   labelClassName?: string; // 라벨 커스텀 스타일
+  disabled?: boolean; // input 비활성화 여부 추가
 }
+
 export const FormInput: React.FC<FormInputProps> = ({
   name,
   defaultValue = "",
@@ -17,6 +19,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   label,
   variant = "square", // 기본적으로 "square" 설정
   labelClassName = "",
+  disabled = false, // 기본적으로 비활성화되지 않음
 }) => {
   // `variant`에 따른 클래스명 분리
   const inputClassName =
@@ -37,9 +40,9 @@ export const FormInput: React.FC<FormInputProps> = ({
         defaultValue={defaultValue} // 초기값은 defaultValue로 지정
         onChange={onChange}
         placeholder={placeholder}
-        className={inputClassName}
+        disabled={disabled} // disabled 속성 추가
+        className={`${inputClassName} ${disabled ? "cursor-not-allowed opacity-50" : ""}`} // 비활성화 스타일 추가
       />
     </div>
   );
 };
-
