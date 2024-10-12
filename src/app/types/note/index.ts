@@ -21,9 +21,9 @@ export interface NoteData {
     professor: string;
   }
   
-//노트 삭제
+//노트 생성
   export interface CreateNoteRequest {
-    noteName: string;
+    title: string;
   }
   
   // Delete Note Response Type

@@ -1,25 +1,26 @@
 import axios from 'axios';
 import { NoteResponse, FolderInfo, CreateNoteRequest, DeleteNoteResponse } from '@/app/types/note';
 import { baseURL } from '..';
-// Fetch notes by folder ID
+
+// 노트 목록 조회(GET)
 export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
   const response = await axios.get(`${baseURL}/api/v1/professor/note/${folderId}`);
   return response.data;
 };
 
-// Create a new note
+// 새로운 노트 생성(POST)
 export const createNote = async (folderId: number, noteData: CreateNoteRequest): Promise<{ message: string }> => {
   const response = await axios.post(`${baseURL}/api/v1/professor/note/${folderId}`, noteData);
   return response.data;
 };
 
-// Fetch folder info by folder ID
+// 노트에 대한 폴더 정보 조회(GET)
 export const fetchFolderInfo = async (folderId: number): Promise<FolderInfo> => {
   const response = await axios.get(`${baseURL}/api/v1/professor/note/${folderId}/info`);
   return response.data;
 };
 
-// Delete note by note ID
+// 노트 삭제(DELETE)
 export const deleteNote = async (noteId: number): Promise<DeleteNoteResponse> => {
   const response = await axios.delete(`${baseURL}/api/v1/professor/note/${noteId}`);
   return response.data;

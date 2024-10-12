@@ -9,13 +9,22 @@ import NoteList from "@/app/components/organisms/NoteList";
 import Button from "@/app/components/atoms/Button";
 import { NoteData, NoteResponse } from "@/app/types/note";
 import Skeleton from "@/app/components/utils/Skeleton";
+import NewNoteForm from "@/app/components/organisms/NewNoteForm";
 
 const NotesPage = () => {
   const router = useRouter();
   const { folderId } = useParams(); // URL에서 `folderId` 추출
-  const [folderInfo, setFolderInfo] = useState<{ folderName: string; professor: string }>({ folderName: '기본 폴더명', professor: '기본 교수자명' });
+  const [folderInfo, setFolderInfo] = useState<{ folderName: string; professor: string }>({
+    folderName: '기본 폴더명',
+    professor: '기본 교수자명',
+  });
   const [notes, setNotes] = useState<NoteData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false); // 폼 열기 상태 추가
+  const [noteName, setNoteName] = useState(""); // 새로운 노트 이름 상태 추가
+  const [file, setFile] = useState<File | null>(null); // 파일 상태 추가
+  const [keywords, setKeywords] = useState<string>(""); // 키워드 상태 추가
+  const [requirement, setRequirement] = useState<string>(""); // 요구사항 상태 추가
 
   // 폴더 정보와 노트 목록 가져오기
   useEffect(() => {
@@ -23,10 +32,9 @@ const NotesPage = () => {
       // `folderId`로 폴더 정보와 노트 목록 가져오기
       const loadNotes = async () => {
         try {
-          // 폴더 리스트 가져오기
           const folders = await getFolders();
           console.log("Fetched Folders:", folders);
-          
+
           // 현재 `folderId`에 해당하는 폴더 찾기
           const currentFolder = folders.find(folder => folder.folderId === Number(folderId));
           if (currentFolder) {
@@ -37,7 +45,7 @@ const NotesPage = () => {
           } else {
             console.error("Folder not found");
           }
-  
+
           // 노트 목록 가져오기
           const notesData: NoteResponse = await fetchNotes(Number(folderId));
           setNotes(notesData.noteListDetailRes);
@@ -47,7 +55,7 @@ const NotesPage = () => {
           setLoading(false);
         }
       };
-  
+
       loadNotes();
     }
   }, [folderId]);
@@ -64,24 +72,33 @@ const NotesPage = () => {
     }
   };
 
-  const handleCreateNote = async () => {
-    try {
-      // 노트 생성 요청 보내기 (생성 요청 시 `folderId`만 전송)
-      await createNote(Number(folderId), { noteName: "새 노트" });
-  
-      // 노트 생성 후 해당 폴더의 노트 목록을 다시 가져오기
-      const notesData: NoteResponse = await fetchNotes(Number(folderId));
-      
-      // 방금 생성된 노트의 ID 가져오기
-      const newNote = notesData.noteListDetailRes[notesData.noteListDetailRes.length - 1]; // 마지막 노트가 방금 생성된 노트라고 가정
-      
-      // newNote의 noteId로 라우팅
-      router.push(`/notes/${folderId}/${newNote.noteId}`);
-    } catch (error) {
-      console.error("Failed to create note:", error);
+// 노트 생성 핸들러 (folderId와 noteName을 전달)
+const handleCreateNote = async () => {
+  try {
+    // 노트 이름이 비어 있으면 경고창을 띄우고 폼을 닫지 않음
+    if (!noteName) {
+      alert("노트 이름을 입력해 주세요.");
+      return; // 폼을 닫지 않고 다시 입력할 수 있게 함
     }
-  };
-  
+
+    // POST 요청으로 노트 생성 (folderId와 noteName을 사용하여 createNote 호출)
+    const createdNoteResponse = await createNote(Number(folderId), { title: noteName });
+
+    // 서버에서 생성된 노트의 데이터가 성공적으로 반환됐을 때
+    if (createdNoteResponse) {
+      const notesData: NoteResponse = await fetchNotes(Number(folderId)); // 생성된 노트 리스트를 다시 불러옴
+      const newNote = notesData.noteListDetailRes[notesData.noteListDetailRes.length - 1]; // 가장 최근에 생성된 노트를 가져옴
+
+      // 생성된 노트 페이지로 리다이렉트
+      router.push(`/notes/${folderId}/${newNote.noteId}/create-practice`);
+    }
+  } catch (error) {
+    console.error("Failed to create note:", error);
+  }
+  // 폼이 정상적으로 제출된 경우에만 폼을 닫음
+};
+
+
   if (loading) {
     return (
       <div className="h-full flex flex-col justify-start">
@@ -108,27 +125,51 @@ const NotesPage = () => {
         </div>
       </div>
     );
-  };
+  }
 
   return (
     <div className="h-full flex flex-col justify-between">
-      {/* 폴더 정보 */}
-      <div className="flex flex-row justify-between">
-        <Info folderName={folderInfo.folderName} professorName={folderInfo.professor} />
-        <div className="flex flex-col justify-center items-center pr-8">
-          {/* '새 노트 만들기' 버튼 클릭 시 라우팅 */}
-          <Button label="새 노트 만들기" variant="create" onClick={handleCreateNote} />
+      {/* Info 또는 수업 정보 */}
+      {isFormOpen ? (
+        <div className="flex flex-col justify-start p-8">
+          <p className="text-white text-sm font-normal">수업 정보를 입력해 주세요</p>
+          <p className="text-white text-2xl font-normal">새로운 수업</p>
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-row justify-between">
+          <Info folderName={folderInfo.folderName} professorName={folderInfo.professor} />
+          <div className="flex flex-col justify-center items-center pr-8">
+            {/* '새 노트 만들기' 버튼 클릭 시 폼 열기 */}
+            <Button label="새 노트 만들기" variant="create" onClick={() => setIsFormOpen(true)} />
+          </div>
+        </div>
+      )}
+
+      {/* 노트 생성 폼 */}
+      {isFormOpen && (
+        <NewNoteForm
+          folderId={Number(folderId)}
+          noteId={0} // 노트가 생성되기 전이므로 0으로 설정
+          setNoteName={setNoteName} // 노트 이름 설정
+          setFile={setFile}         // 파일 설정
+          setKeywords={setKeywords}  // 키워드 설정
+          setRequirement={setRequirement} // 요구사항 설정
+          onSubmit={handleCreateNote}  // 폼 제출 시 노트 생성
+        />
+      )}
+
       <div className="h-full flex flex-col justify-between">
         {/* 노트 목록 또는 노트 생성 버튼 */}
-        {notes.length === 0 ? (
+        {isFormOpen ? (
+          // NewNoteForm이 열려 있으면 NoteList를 숨기고 폼만 보여줌
+          null
+        ) : notes.length === 0 ? (
           <div className="flex flex-col justify-center items-center text-center text-white h-full">
             <p className="text-2xl mb-2">새로운 수업을 만들어 보세요.</p>
             <p className="text-base text-gray-400 mb-8">
               강의 녹화 파일을 업로드하면 복습 문제 생성이 가능해요
             </p>
-            <Button label="새 노트 만들기" variant="create" onClick={handleCreateNote} />
+            <Button label="새 노트 만들기" variant="create" onClick={() => setIsFormOpen(true)} />
           </div>
         ) : (
           // 노트 목록 표시
@@ -137,6 +178,13 @@ const NotesPage = () => {
           </div>
         )}
       </div>
+
+      {/* 다음 버튼 */}
+      {isFormOpen && (
+        <div className="flex justify-end p-8">
+          <Button label="다음" variant="next" imgSrc="arrow_next" onClick={handleCreateNote} />
+        </div>
+      )}
     </div>
   );
 };

@@ -30,7 +30,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   return (
     <div className="flex flex-row place-items-center">
       {label && (
-        <label className={` text-mainWhite text-base text-start ${labelClassName}`}>
+        <label className={`text-mainWhite text-base text-start ${labelClassName}` }>
           {label}
         </label>
       )}
