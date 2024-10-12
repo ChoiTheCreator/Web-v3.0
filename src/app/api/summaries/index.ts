@@ -1,7 +1,8 @@
 import axios from "axios";
+import { baseURL } from "@/app/api/index"; // baseURL로 서버 주소를 관리하도록 import
 
 interface CreatePracticeReq {
-  practiceSize: number
+  practiceSize: number;
   type: string; // 문제의 유형 (예: "OX")
   keywords: string; // 키워드 (예: "네트워크 강의 OSI")
   requirement: string; // 요약에 필요한 요구사항 (예: "요약에 필요한 요구사항")
@@ -10,6 +11,7 @@ interface CreatePracticeReq {
 interface PostSummaryProps {
   file: File; // 전송할 파일
   request: CreatePracticeReq; // `CreatePracticeReq` 형식의 JSON 데이터
+  noteId: number; // 동적으로 noteId를 받아오도록 추가
 }
 
 // 파일과 JSON 데이터를 함께 서버로 전송하는 함수
@@ -31,7 +33,7 @@ export const postSummary = async ({ file, request }: PostSummaryProps) => {
   try {
     // 서버로 POST 요청 보내기
     const response = await axios.post(
-      "http://43.201.165.4:8080/api/v1/professor/practice/1/new",
+      `${baseURL}/api/v1/professor/practice`, // 동적으로 `noteId` 사용
       formData,
       {
         headers: {
