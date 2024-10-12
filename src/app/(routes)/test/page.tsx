@@ -14,6 +14,7 @@ import { FolderListData } from '@/app/types/folder';
 import { createFolder, deleteFolder, getFolders, updateFolder } from '@/app/api/folders';
 import Info from '@/app/components/molecules/Info';
 import NoteList from '@/app/components/organisms/NoteList';
+import ReviewQuestions from '@/app/components/organisms/ReviewQuestions';
 
 const Page = ({ onClose }: { onClose: () => void }) => {
   // 폴더 관련 상태관리
@@ -243,13 +244,13 @@ const Page = ({ onClose }: { onClose: () => void }) => {
 
       {/* 4. 파일 업로드 */}
       <h1>Form Example</h1>
-      <FileUpload
+      {/* <FileUpload
         request={{ practiceSize:10, type: "OX", keywords, requirement }}
         onUploadSuccess={handleUploadSuccess}
         onUploadError={handleUploadError}
         label="파일 업로드"
         description="드래그하거나 클릭하여 파일을 업로드하세요."
-      />
+      /> */}
 
       {/* 업로드 성공 시 응답 데이터 표시 */}
       {responseData && (
