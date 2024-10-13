@@ -1,5 +1,3 @@
-// app/components/atoms/FileUpload.tsx
-
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
