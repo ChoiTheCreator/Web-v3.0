@@ -3,26 +3,26 @@
 import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
 
 interface PracticeContextType {
-  file: File | null;
-  keywords: string;
-  requirement: string;
-  practiceSize: number; // `number`로만 지정
-  type: "OX" | "SHORT";
-  setFile: (file: File | null) => void;
-  setKeywords: (keywords: string) => void;
-  setRequirement: (requirement: string) => void;
-  setPracticeSize: Dispatch<SetStateAction<number>>; // `setPracticeSize`는 항상 `number`
-  setType: (type: "OX" | "SHORT") => void;
+  file: File | null; // 파일은 필수, null이 될 수 없도록 변경
+  keywords: string; // 키워드 (필수 아님)
+  requirement: string; // 요구사항 (필수 아님)
+  practiceSize: number | null; // 문제 개수, null 가능 (AI 추천 시)
+  type: "OX" | "SHORT"; // 문제 유형
+  setFile: Dispatch<SetStateAction<File | null>>;
+  setKeywords: Dispatch<SetStateAction<string>>;
+  setRequirement: Dispatch<SetStateAction<string>>;
+  setPracticeSize: Dispatch<SetStateAction<number | null>>; // practiceSize는 null 가능
+  setType: Dispatch<SetStateAction<"OX" | "SHORT">>;
 }
 
 const PracticeContext = createContext<PracticeContextType | undefined>(undefined);
 
 export const PracticeProvider = ({ children }: { children: ReactNode }) => {
-  const [file, setFile] = useState<File | null>(null);
-  const [keywords, setKeywords] = useState("");
-  const [requirement, setRequirement] = useState("");
-  const [practiceSize, setPracticeSize] = useState<number>(0); // 기본값을 `0`으로 설정
-  const [type, setType] = useState<"OX" | "SHORT">("OX");
+  const [file, setFile] = useState<File | null>(null); // 파일을 기본값으로 null로 설정
+  const [keywords, setKeywords] = useState<string>(""); // 키워드를 빈 문자열로 초기화
+  const [requirement, setRequirement] = useState<string>(""); // 요구사항을 빈 문자열로 초기화
+  const [practiceSize, setPracticeSize] = useState<number | null>(null); // 문제 개수 기본값은 null
+  const [type, setType] = useState<"OX" | "SHORT">("OX"); // 문제 유형 기본값 OX
 
   return (
     <PracticeContext.Provider
@@ -33,6 +33,7 @@ export const PracticeProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Context에서 전역 상태를 가져오는 커스텀 훅
 export const usePracticeContext = () => {
   const context = useContext(PracticeContext);
   if (!context) {

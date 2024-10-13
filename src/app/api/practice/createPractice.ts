@@ -2,8 +2,9 @@ import axios from 'axios';
 import { baseURL } from '..';
 
 interface CreatePracticeRequest {
+  noteId: number;
   createPracticeReq: {
-    practiceSize: number;
+    practiceSize?: number;
     type: 'OX' | 'SHORT';
     keywords?: string;
     requirement?: string;
@@ -13,14 +14,15 @@ interface CreatePracticeRequest {
 
 // 문제 생성 함수
 export const createPractice = async ({
+  noteId,
   createPracticeReq,
   file,
 }: CreatePracticeRequest) => {
   try {
-    // multipart/form-data용 FormData 생성
+    // FormData 생성
     const formData = new FormData();
 
-    // createPracticeReq 객체를 JSON으로 변환하여 FormData에 추가
+    // createPracticeReq 객체를 JSON으로 변환하고 FormData에 추가
     formData.append(
       'createPracticeReq',
       new Blob([JSON.stringify(createPracticeReq)], { type: 'application/json' })
@@ -29,9 +31,9 @@ export const createPractice = async ({
     // 파일을 FormData에 추가
     formData.append('file', file);
 
-    // API 호출
+    // API 호출 (multipart/form-data로 전송)
     const response = await axios.post(
-      `${baseURL}/api/v1/professor/practice`, // 필요한 경우 올바른 base URL로 변경
+      `${baseURL}/api/v1/professor/practice/${noteId}/new`,
       formData,
       {
         headers: {
@@ -39,6 +41,9 @@ export const createPractice = async ({
         },
       }
     );
+
+    // API 응답 출력 (디버깅용)
+    console.log('API 응답:', response.data);
 
     return response.data;
   } catch (error) {
