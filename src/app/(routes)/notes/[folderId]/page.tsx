@@ -15,7 +15,7 @@ import { usePracticeContext } from "@/app/context/PracticeContext"; // PracticeC
 const NotesPage = () => {
   const router = useRouter();
   const { folderId } = useParams(); // URL에서 `folderId` 추출
-  const { setFile, setKeywords, setRequirement } = usePracticeContext(); // Context에서 상태 업데이트 함수 가져옴
+  const { setFile, setKeywords, setRequirement, setFolderName, setProfessor } = usePracticeContext(); // Context에서 상태 업데이트 함수 가져옴
   const [folderInfo, setFolderInfo] = useState<{ folderName: string; professor: string }>({
     folderName: '기본 폴더명',
     professor: '기본 교수자명',
@@ -35,10 +35,8 @@ const NotesPage = () => {
 
           const currentFolder = folders.find(folder => folder.folderId === Number(folderId));
           if (currentFolder) {
-            setFolderInfo({
-              folderName: currentFolder.folderName,
-              professor: currentFolder.professor,
-            });
+            setFolderName(currentFolder.folderName);
+            setProfessor(currentFolder.professor);
           } else {
             console.error("Folder not found");
           }
@@ -123,7 +121,7 @@ const NotesPage = () => {
         </div>
       ) : (
         <div className="flex flex-row justify-between">
-          <Info folderName={folderInfo.folderName} professorName={folderInfo.professor} />
+          <Info folderName={usePracticeContext().folderName} professorName={usePracticeContext().professor} />
           <div className="flex flex-col justify-center items-center pr-8">
             {/* '새 노트 만들기' 버튼 클릭 시 폼 열기 */}
             <Button label="새 노트 만들기" variant="create" onClick={() => setIsFormOpen(true)} />
