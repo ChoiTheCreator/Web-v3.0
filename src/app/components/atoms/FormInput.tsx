@@ -9,6 +9,7 @@ interface FormInputProps {
   variant?: "round" | "square"; // round 또는 square로 className 지정
   labelClassName?: string; // 라벨 커스텀 스타일
   disabled?: boolean; // input 비활성화 여부 추가
+  className?: string; // input 커스텀 스타일
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
@@ -20,6 +21,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   variant = "square", // 기본적으로 "square" 설정
   labelClassName = "",
   disabled = false, // 기본적으로 비활성화되지 않음
+  className = "", // 추가된 속성
 }) => {
   // `variant`에 따른 클래스명 분리
   const inputClassName =
@@ -41,7 +43,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled} // disabled 속성 추가
-        className={`${inputClassName} ${disabled ? "cursor-not-allowed opacity-50" : ""}`} // 비활성화 스타일 추가
+        className={`${inputClassName} ${className} ${disabled ? "cursor-not-allowed opacity-50" : ""}`} // 비활성화 스타일 추가
       />
     </div>
   );
