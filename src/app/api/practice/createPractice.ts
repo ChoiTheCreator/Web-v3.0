@@ -45,7 +45,7 @@ export const createPractice = async ({
     // API 응답 출력 (디버깅용)
     console.log('API 응답:', response.data);
 
-    return response.data;
+    return response.data; 
   } catch (error) {
     console.error('문제 생성 실패:', error);
     throw error;

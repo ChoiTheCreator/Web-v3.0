@@ -10,7 +10,7 @@ import { createPractice } from "@/app/api/practice/createPractice";
 const CreatePracticePage = () => {
   const router = useRouter();
   const { folderId, noteId } = useParams(); // URL에서 folderId와 noteId 추출
-  const { file, keywords, requirement, practiceSize, type } = usePracticeContext(); // PracticeContext에서 전역 상태 사용
+  const { file, keywords, requirement, practiceSize, setQuestions, setSummary, type } = usePracticeContext(); // PracticeContext에서 전역 상태 사용
 
   // 복습 문제 생성 핸들러
   const handleCreatePractice = async () => {
@@ -47,15 +47,34 @@ const CreatePracticePage = () => {
       }
 
       console.log("createPracticeReq: ", createPracticeReq); // 요청 데이터 출력
-
+      
       // 문제 생성 API 호출
       const practiceResponse = await createPractice({
         noteId: Number(noteId), // noteId를 URL로 전달
         createPracticeReq,
         file, // Context에서 불러온 파일
       });
-
-      console.log("API 응답: ", practiceResponse); // API 응답 출력
+      
+      console.log("API 응답1: ", practiceResponse); // API 응답 출력
+  
+      if (practiceResponse && practiceResponse.information) {
+        const { practiceResList, summary } = practiceResponse.information;
+        console.log("practiceResList: ", practiceResList); // 문제 목록 출력
+        // practiceResList의 각 항목에서 content의 번호와 콜론을 제거
+        const formattedQuestions = practiceResList.map((question: any) => ({
+          ...question,
+          content: question.content.replace(/^\d+:\s*/, "") // 숫자와 콜론, 공백 제거
+        }));
+        
+        // formattedQuestions 배열을 questions로 설정
+        setQuestions(formattedQuestions); 
+        // summary 문자열 설정
+        setSummary(summary);       
+      } else {
+        console.log("응답 데이터에 information이 없습니다.", practiceResponse);
+      }
+  
+      
 
       // 문제 생성 성공 시 결과 페이지로 이동
       router.push(`/notes/${folderId}/${noteId}/result?tab=questions`);
