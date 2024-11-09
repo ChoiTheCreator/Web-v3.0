@@ -4,10 +4,11 @@ import axios from "axios";
 import { baseURL } from "..";
 
 interface FetchPracticeResponse {
-  practiceResList: {
+  reqList: {
     practiceNumber: number;
     content: string;
     result: string;
+    solution: string;
     practiceType: "OX" | "SHORT";
   }[];
   summary: string;
@@ -17,6 +18,7 @@ interface FetchPracticeResponse {
 export const fetchPractice = async (noteId: number): Promise<FetchPracticeResponse> => {
   try {
     const response = await axios.get(`${baseURL}/api/v1/professor/practice/${noteId}`);
+    console.log("response:", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching practice questions:", error);
