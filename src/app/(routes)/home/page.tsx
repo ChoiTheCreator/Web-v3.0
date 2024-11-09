@@ -7,7 +7,7 @@ import { FolderListData } from '@/app/types/folder';
 import Icon from '@/app/components/atoms/Icon';
 import { useFolderStore } from '@/app/store/useFolderStore';
 
-const HomePage = ({ onClose }: { onClose: () => void }) => {
+const HomePage = () => {
 
   // zustand store 폴더 관련 상태 및 함수 가져오기
   const folders = useFolderStore((state) => state.folders);
@@ -162,4 +162,4 @@ const HomePage = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default HomePage;
+export default  HomePage;

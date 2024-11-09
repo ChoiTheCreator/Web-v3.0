@@ -16,7 +16,7 @@ import Info from '@/app/components/molecules/Info';
 import NoteList from '@/app/components/organisms/NoteList';
 import ReviewQuestions from '@/app/components/organisms/ReviewQuestions';
 
-const Page = ({ onClose }: { onClose: () => void }) => {
+const Page = () => {
   // 폴더 관련 상태관리
   const [folders, setFolders] = useState<FolderListData[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(null);
@@ -349,11 +349,11 @@ const Page = ({ onClose }: { onClose: () => void }) => {
       <Icon label="update" />
 
       {/* 취소 버튼 */}
-      <Button
+      {/* <Button
         label="취소"
         variant="cancel"
         onClick={onClose}
-      />
+      /> */}
 
       {/* 저장 버튼 */}
       <Button
