@@ -1,12 +1,20 @@
 import React from "react";
 import { NoteData } from "@/app/types/note";
+import { useRouter } from "next/navigation";
 
 interface NoteListProps {
   notes: NoteData[];
   onDeleteNote: (noteId: number) => void;
+  folderId: number;
 }
 
-const NoteList: React.FC<NoteListProps> = ({ notes, onDeleteNote }) => {
+const NoteList: React.FC<NoteListProps> = ({ notes, onDeleteNote, folderId }) => {
+  const router = useRouter();
+
+  const handleNoteClick = (noteId: number, folderId: number) => {
+    router.push(`/notes/${folderId}/${noteId}/result`);
+  };
+
   return (
     <div className="mx-8">
     {/* 컬럼 헤더 */}
@@ -26,6 +34,7 @@ const NoteList: React.FC<NoteListProps> = ({ notes, onDeleteNote }) => {
         key={note.noteId}
         className="grid grid-cols-4 text-center flex-shrink-0 text-white p-4 border-b border-gray-600"
         style={{ gridTemplateColumns: "5fr 1.5fr 1.5fr 0.4fr" }}
+        onClick={() => handleNoteClick(note.noteId, folderId)}
       >
         <div className="text-start">{note.title}</div>
         <div>{note.createdAt}</div>

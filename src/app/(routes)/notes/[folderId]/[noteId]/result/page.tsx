@@ -51,7 +51,7 @@ const ResultPage = () => {
       </div>
 
       {activeTab === "questions" && <ReviewQuestions noteId={Number(noteId)} />}
-      {/* {activeTab === "summary" && <SummaryText noteId={Number(noteId)} />} */}
+      {activeTab === "summary" && <SummaryText noteId={Number(noteId)} />}
     </div>
     </>
   );
