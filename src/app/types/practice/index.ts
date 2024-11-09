@@ -11,3 +11,12 @@ export interface CreatePracticeResponse {
     summary: string;
   }
   
+
+export interface PracticeRequest {
+    practiceNumber: number;
+    content: string;
+    additionalResults: string;
+    solution: string;
+    result: string;
+    practiceType: "OX" | "SHORT";
+  }
