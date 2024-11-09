@@ -87,7 +87,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
         return {
           practiceNumber,
           content: editedQuestion?.content || originalQuestion?.content || "", // 수정된 내용이 있으면 사용, 없으면 원본 사용
-          additionalResults: "", // 요구사항에 따라 빈 값으로 유지
+          additianalResults: "", // 요구사항에 따라 빈 값으로 유지
           result: editedQuestion?.result || originalQuestion?.result || "", // 수정된 답이 있으면 사용, 없으면 원본 사용
           solution: "", // 요구사항에 따라 빈 값으로 유지
           practiceType: originalQuestion?.practiceType || "OX", // 원본 문제 유형 사용
@@ -128,8 +128,8 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
         </thead>
         <tbody>
           {filteredQuestions.map((question) => (
-            <tr key={question.practiceNumber} className="border-none bg-secondaryGray/45 text-center">
-              <td className="p-4">
+            <tr key={question.practiceNumber} className="border-none place-items-center bg-secondaryGray/45 text-center">
+              <td className="p-4 flex justify-center items-center">
                 <CheckCircle
                   isChecked={selectedQuestions.includes(question.practiceNumber)}
                   onChange={() => toggleSelect(question.practiceNumber)}
