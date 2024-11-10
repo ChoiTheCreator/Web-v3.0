@@ -1,12 +1,13 @@
+// src/components/ReviewQuestions.tsx
 import React, { useEffect, useState } from "react";
 import Button from "@/app/components/atoms/Button";
 import Icon from "@/app/components/atoms/Icon";
 import CheckCircle from "@/app/components/atoms/CheckCircle";
 import { FormInput } from "@/app/components/atoms/FormInput";
-import { usePracticeContext } from "@/app/context/PracticeContext";
 import savePracticeQuestions from "@/app/api/practice/savePracticeQuestions";
 import { PracticeRequest } from "@/app/types/practice";
 import { fetchPractice } from "@/app/api/practice/fetchPractice";
+import { usePracticeContext } from "@/app/context/PracticeContext";
 
 interface ReqList {
   practiceNumber: number;
@@ -21,49 +22,47 @@ interface ReviewQuestionsProps {
 }
 
 const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
+  const { questions, setQuestions } = usePracticeContext(); // context에서 questions 가져오기
+  const [filteredQuestions, setFilteredQuestions] = useState<ReqList[] | null>(questions);
+  const [isEditable, setIsEditable] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [filteredQuestions, setFilteredQuestions] = useState<ReqList[] | null>(null);
   const [selectedQuestions, setSelectedQuestions] = useState<number[]>([]);
-  const [editMode, setEditMode] = useState<{ [key: number]: boolean }>({});
-  const [editedQuestions, setEditedQuestions] = useState<{ [key: number]: { content: string; result: string } }>({});
-  const { questions, setQuestions } = usePracticeContext();
-
-  useEffect(() => {
-    const loadPractice = async () => {
+  const [editMode, setEditMode] = useState<Record<number, boolean>>({});
+  const [editedQuestions, setEditedQuestions] = useState<Record<number, { content: string; result: string }>>({});
+  
+  const loadPractice = async () => {
+    if (questions && questions.length > 0) {
+      setFilteredQuestions(questions);
+      setIsEditable(true);
+    } else {
       try {
         setLoading(true);
         const response = await fetchPractice(noteId);
-        console.log("fetchPractice response:", response.information);
-        setQuestions(response.information); // PracticeContext에 문제 목록 설정
-        setFilteredQuestions(response.information); // filteredQuestions도 동기화
+        setFilteredQuestions(response.information);
+        setIsEditable(false);
       } catch (error) {
         console.error("Failed to load practice questions:", error);
       } finally {
         setLoading(false);
       }
-    };
-
-    if (!questions || questions.length === 0) {
-      console.log("문제 목록이 없습니다. API 호출 시작");
-      loadPractice(); // 문제 목록이 없을 경우에만 API 호출
-    } else {
-      setFilteredQuestions(questions); // questions가 존재할 경우 filteredQuestions 초기화
     }
-  }, [noteId, questions]);
+  };
 
-  // 선택된 문제 배열에 문제 번호 추가 또는 제거
+  useEffect(() => {
+    loadPractice();
+  }, [noteId]);
+
   const toggleSelect = (practiceNumber: number) => {
     setSelectedQuestions((prev) =>
       prev.includes(practiceNumber) ? prev.filter((num) => num !== practiceNumber) : [...prev, practiceNumber]
     );
   };
 
-  // 수정 모드 활성화 또는 비활성화
   const toggleEditMode = (practiceNumber: number) => {
+    if (!isEditable) return;
     setEditMode((prev) => ({ ...prev, [practiceNumber]: !prev[practiceNumber] }));
 
     if (!editMode[practiceNumber] && filteredQuestions) {
-      // 수정 모드가 처음 활성화될 때 원본 데이터를 editedQuestions에 설정
       const question = filteredQuestions.find((q) => q.practiceNumber === practiceNumber);
       if (question) {
         setEditedQuestions((prev) => ({
@@ -72,10 +71,8 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
         }));
       }
     } else if (editMode[practiceNumber]) {
-      // 수정 모드가 비활성화될 때 (수정 완료 시), 수정된 내용을 filteredQuestions에 반영
       const updatedContent = editedQuestions[practiceNumber]?.content;
       const updatedResult = editedQuestions[practiceNumber]?.result;
-
       setFilteredQuestions((prev) =>
         prev?.map((q) =>
           q.practiceNumber === practiceNumber
@@ -86,7 +83,6 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
     }
   };
 
-  // 문제나 답 수정 시 editedQuestions 상태 업데이트
   const handleInputChange = (practiceNumber: number, field: "content" | "result", value: string) => {
     setEditedQuestions((prev) => ({
       ...prev,
@@ -94,29 +90,30 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
     }));
   };
 
-  // 선택된 문제들 저장 기능
   const saveSelectedQuestions = async () => {
     setLoading(true);
     try {
       const dataToSave: PracticeRequest[] = selectedQuestions.map((practiceNumber) => {
-        // 선택된 문제를 원본 데이터에서 찾기
-        const originalQuestion = questions.find((q) => q.practiceNumber === practiceNumber);
+        const originalQuestion = filteredQuestions?.find((q) => q.practiceNumber === practiceNumber);
         const editedQuestion = editedQuestions[practiceNumber];
         
         return {
           practiceNumber,
-          content: editedQuestion?.content || originalQuestion?.content || "", // 수정된 내용이 있으면 사용, 없으면 원본 사용
-          additianalResults: "", // 요구사항에 따라 빈 값으로 유지
-          result: editedQuestion?.result || originalQuestion?.result || "", // 수정된 답이 있으면 사용, 없으면 원본 사용
-          solution: "", // 요구사항에 따라 빈 값으로 유지
-          practiceType: originalQuestion?.practiceType || "OX", // 원본 문제 유형 사용
+          content: editedQuestion?.content || originalQuestion?.content || "",
+          additionalResults: [],
+          result: editedQuestion?.result || originalQuestion?.result || "",
+          solution: "",
+          practiceType: originalQuestion?.practiceType || "OX",
         };
       });
 
-      console.log("백엔드에 보낼 데이터:", dataToSave); // 백엔드로 보낼 데이터 확인
-
       await savePracticeQuestions(noteId, dataToSave);
       alert("선택된 문제들이 저장되었습니다.");
+
+      // 저장 성공 후 context의 questions를 초기화
+      setQuestions([]); // context에서 questions 삭제
+      await loadPractice(); // 저장 후 API 호출을 통해 최신 데이터를 다시 로드
+      setIsEditable(false); // 이후에는 수정 불가능하도록 설정
     } catch (error) {
       console.error("문제 저장 중 오류 발생:", error);
       alert("문제 저장에 실패했습니다.");
@@ -125,12 +122,12 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
     }
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
   if (!filteredQuestions || filteredQuestions.length === 0) {
-    return <p>문제를 불러올 수 없습니다.</p>;
+    return (
+      <div className="flex h-[84vh] justify-center items-center bg-secondaryGray/45">
+        <p className="text-gray-400 text-lg ">아직 생성된 문제가 없어요. 다시 문제를 생성해주세요!</p>
+      </div>
+    );
   }
 
   return (
@@ -199,13 +196,15 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
           ))}
         </tbody>
       </table>
-      <div className="z-40 mt-[-80px] mr-[40px] flex justify-end">
-        <Button
-          label="저장"
-          variant="next"
-          onClick={saveSelectedQuestions}
-        />
-      </div>
+      {isEditable && (
+        <div className="z-40 mt-[-80px] mr-[40px] flex justify-end">
+          <Button
+            label="저장"
+            variant="next"
+            onClick={saveSelectedQuestions}
+          />
+        </div>
+      )}
     </div>
   );
 };
