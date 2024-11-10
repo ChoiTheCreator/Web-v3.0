@@ -30,20 +30,26 @@ const NoteList: React.FC<NoteListProps> = ({ notes, onDeleteNote, folderId }) =>
     
     {/* 노트 데이터 */}
     {notes.map((note) => (
-      <div
-        key={note.noteId}
-        className="grid grid-cols-4 text-center flex-shrink-0 text-white p-4 border-b border-gray-600"
-        style={{ gridTemplateColumns: "5fr 1.5fr 1.5fr 0.4fr" }}
-        onClick={() => handleNoteClick(note.noteId, folderId)}
+    <div
+      key={note.noteId}
+      className="grid grid-cols-4 text-center flex-shrink-0 text-white p-4 border-b border-gray-600 hover:bg-secondaryGray/45 hover:cursor-pointer"
+      style={{ gridTemplateColumns: "5fr 1.5fr 1.5fr 0.4fr" }}
+      onClick={() => handleNoteClick(note.noteId, folderId)}
+    >
+      <div className="text-start">{note.title}</div>
+      <div>{note.createdAt}</div>
+      <div>{note.practiceSize}문제</div>
+      <button
+        onClick={(e) => {
+          e.stopPropagation(); // 이벤트 전파 중단
+          onDeleteNote(note.noteId);
+        }}
+        className="text-red-400"
       >
-        <div className="text-start">{note.title}</div>
-        <div>{note.createdAt}</div>
-        <div>{note.practiceSize}문제</div>
-        <button onClick={() => onDeleteNote(note.noteId)} className="text-red-400">
-          삭제
-        </button>
-      </div>
-    ))}
+        삭제
+      </button>
+    </div>
+  ))}
   </div>
   );
 };
