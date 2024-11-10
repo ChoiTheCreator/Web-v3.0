@@ -15,7 +15,7 @@ export interface CreatePracticeResponse {
 export interface PracticeRequest {
     practiceNumber: number;
     content: string;
-    additianalResults: string;
+    additionalResults: string[];
     solution: string;
     result: string;
     practiceType: "OX" | "SHORT";
