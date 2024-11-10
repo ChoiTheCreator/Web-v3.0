@@ -152,7 +152,7 @@ const NotesPage = () => {
           </div>
         ) : (
           <div>
-            <NoteList notes={notes} onDeleteNote={handleDeleteNote} />
+            <NoteList notes={notes} onDeleteNote={handleDeleteNote} folderId={Number(folderId)}/>
           </div>
         )}
       </div>
