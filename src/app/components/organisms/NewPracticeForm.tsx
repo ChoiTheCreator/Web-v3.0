@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "@/app/components/atoms/Button";
 import CountInput from "@/app/components/atoms/CountInput";
 import Popover from "@/app/components/molecules/PopOver";
@@ -38,6 +38,32 @@ const NewPracticeForm: React.FC = () => {
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = Number(event.target.value);
     setPracticeSize(isNaN(newSize) ? 0 : newSize); // NaN인 경우 0으로 설정
+  };
+
+  // 문제 유형 선택 토글 핸들러
+  const toggleType = (selectedType: "OX" | "SHORT") => {
+    if (type === "") {
+      // 빈 상태에서 선택하면 그 타입을 단일 선택으로 설정
+      setType(selectedType);
+    } else if (type === "OX" && selectedType === "OX") {
+      // OX만 선택된 상태에서 다시 OX를 누르면 빈 상태로 변경
+      setType("");
+    } else if (type === "SHORT" && selectedType === "SHORT") {
+      // SHORT만 선택된 상태에서 다시 SHORT를 누르면 빈 상태로 변경
+      setType("");
+    } else if (type === "OX" && selectedType === "SHORT") {
+      // OX만 선택된 상태에서 SHORT를 선택하면 BOTH로 설정
+      setType("BOTH");
+    } else if (type === "SHORT" && selectedType === "OX") {
+      // SHORT만 선택된 상태에서 OX를 선택하면 BOTH로 설정
+      setType("BOTH");
+    } else if (type === "BOTH" && selectedType === "OX") {
+      // BOTH 상태에서 OX를 누르면 SHORT만 남김
+      setType("SHORT");
+    } else if (type === "BOTH" && selectedType === "SHORT") {
+      // BOTH 상태에서 SHORT를 누르면 OX만 남김
+      setType("OX");
+    }
   };
 
   return (
@@ -92,8 +118,8 @@ const NewPracticeForm: React.FC = () => {
           <Button
             label="O X 퀴즈"
             variant="select"
-            isSelected={type === "OX"}
-            onClick={() => setType("OX")}
+            isSelected={type === "OX" || type === "BOTH"}
+            onClick={() => toggleType("OX")}
           />
           {showPopover === "OX" && (
             <Popover type="OX" position={oxPopoverPosition} />
@@ -107,8 +133,8 @@ const NewPracticeForm: React.FC = () => {
           <Button
             label="단답형"
             variant="select"
-            isSelected={type === "SHORT"}
-            onClick={() => setType("SHORT")}
+            isSelected={type === "SHORT" || type === "BOTH"}
+            onClick={() => toggleType("SHORT")}
           />
           {showPopover === "SHORT" && (
             <Popover type="단답형" position={shortPopoverPosition} />

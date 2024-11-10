@@ -5,7 +5,7 @@ interface CreatePracticeRequest {
   noteId: number;
   createPracticeReq: {
     practiceSize?: number;
-    type: 'OX' | 'SHORT';
+    type: string;
     keywords?: string;
     requirement?: string;
   };

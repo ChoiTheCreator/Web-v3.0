@@ -6,7 +6,7 @@ interface CountInputProps {
   defaultValue?: string;
   placeholder?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled?: boolean; // disabled prop 추가
+  disabled?: boolean;
 }
 
 const CountInput: React.FC<CountInputProps> = ({
@@ -14,21 +14,29 @@ const CountInput: React.FC<CountInputProps> = ({
   defaultValue = "",
   placeholder = "",
   onChange,
-  disabled = false, // 기본값은 false
+  disabled = false,
 }) => {
+  // handleChange 함수에서 value를 체크하여 20개를 초과하면 alert를 띄움
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(event.target.value);
+    if (value > 20) {
+      alert("20개 이하로 입력해 주세요.");
+      return;
+    }
+    onChange(event);
+  };
+
   return (
     <div className="flex flex-row items-center pl-5">
-      {/* FormInput을 활용하여 숫자 입력 */}
       <FormInput
         name={name}
         defaultValue={defaultValue}
         placeholder={placeholder}
-        onChange={onChange}
-        variant="square" // 필요한 경우 "round"로 변경 가능
-        labelClassName="mr-2" // 라벨 스타일 커스텀 (필요 시)
-        disabled={disabled} // disabled prop 전달
+        onChange={handleChange} // handleChange 함수를 사용하여 변경
+        variant="square"
+        labelClassName="mr-2"
+        disabled={disabled}
       />
-      {/* "개" 단위 표시 */}
       <p className="pl-2 text-white">개</p>
     </div>
   );
