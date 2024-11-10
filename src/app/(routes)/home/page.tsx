@@ -60,7 +60,7 @@ const HomePage = () => {
   return (
     <div className="flex flex-col justify-between h-screen w-full bg-bgDeepGray">
       {/* 상단 인사말 */}
-      <div className="px-8 py-8 font-Pretendard font-semibold leading-[70px] text-[57px] text-custom-green">
+      <div className="px-8 py-8 font-Pretendard font-semibold leading-[70px] text-[57px] text-customGreen">
           안녕하세요!
           <br />
           교수님을 도와드릴 AI Tutor 예요!
