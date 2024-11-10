@@ -6,6 +6,7 @@ import { FormInput } from "@/app/components/atoms/FormInput";
 import { usePracticeContext } from "@/app/context/PracticeContext";
 import savePracticeQuestions from "@/app/api/practice/savePracticeQuestions";
 import { PracticeRequest } from "@/app/types/practice";
+import { fetchPractice } from "@/app/api/practice/fetchPractice";
 
 interface ReqList {
   practiceNumber: number;
@@ -25,12 +26,30 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
   const [selectedQuestions, setSelectedQuestions] = useState<number[]>([]);
   const [editMode, setEditMode] = useState<{ [key: number]: boolean }>({});
   const [editedQuestions, setEditedQuestions] = useState<{ [key: number]: { content: string; result: string } }>({});
-  const { questions } = usePracticeContext();
+  const { questions, setQuestions } = usePracticeContext();
 
   useEffect(() => {
-    setFilteredQuestions(questions);
-    console.log("context에서 불러온 questions: ", questions);
-  }, [questions]);
+    const loadPractice = async () => {
+      try {
+        setLoading(true);
+        const response = await fetchPractice(noteId);
+        console.log("fetchPractice response:", response.information);
+        setQuestions(response.information); // PracticeContext에 문제 목록 설정
+        setFilteredQuestions(response.information); // filteredQuestions도 동기화
+      } catch (error) {
+        console.error("Failed to load practice questions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!questions || questions.length === 0) {
+      console.log("문제 목록이 없습니다. API 호출 시작");
+      loadPractice(); // 문제 목록이 없을 경우에만 API 호출
+    } else {
+      setFilteredQuestions(questions); // questions가 존재할 경우 filteredQuestions 초기화
+    }
+  }, [noteId, questions]);
 
   // 선택된 문제 배열에 문제 번호 추가 또는 제거
   const toggleSelect = (practiceNumber: number) => {
@@ -115,7 +134,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
   }
 
   return (
-    <div className="w-full h-full relative ">
+    <div className="w-full h-full relative">
       <table className="table-auto w-full text-left text-white">
         <thead>
           <tr className="bg-secondaryGray text-center">
