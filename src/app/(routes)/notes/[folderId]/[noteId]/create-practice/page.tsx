@@ -111,7 +111,9 @@ const CreatePracticePage = () => {
   return (
     <>
     {isLoading && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <Loader />
+      </div>
     )}
     <div className="flex flex-col justify-between h-full p-8">
 
