@@ -5,7 +5,7 @@ import ProgressBar from "../../../../public/Progress.json";
 
 const Loader: React.FC = () => {
   return (
-    <div className="absolute top-0 left-0 flex items-center justify-center h-screen w-full bg-bgDeepGray/40">
+    <div className="absolute top-0 left-0 flex items-center justify-center h-screen w-full bg-bgDeepGray/60">
       <div className="flex flex-col items-center justify-center">
       <div className="w-1/4 md:w-1/4 flex flex-rowjustify-center items-center">
         <Lottie animationData={ProgressBar} loop={true} className="w-[100px] h-[100px] m-auto flex flex-row justify-center items-center "/>

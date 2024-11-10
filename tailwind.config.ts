@@ -18,7 +18,7 @@ const config: Config = {
         bgGray: "#2F2F2F",
         bgDeepGray: "#191919",
         primaryGray: "#3F3F3F",
-        primaryLightGray: "#06CC80",
+        primaryLightGray: "#5F5F5F",
         secondaryGray: "#3C3C3C",
         thirdGray: "#D9D9D9",
         textGray: "#B3B3B3",
