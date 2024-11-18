@@ -52,3 +52,13 @@ const response = await axios.delete(`${baseURL}/api/v1/folder/${folderId}`, {
 
 return response.data;
 };
+
+export const fetchFolderName = async () => {
+  const response = await axios.get(`${baseURL}/api/v1/folder/names`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  
+  return response.data;
+  };

@@ -11,7 +11,7 @@ import Popover from '@/app/components/molecules/PopOver';
 import CountInput from '@/app/components/atoms/CountInput';
 import { SectionFolder, SectionModal, SectionModify } from '@/app/components/molecules/Modal';
 import { FolderListData } from '@/app/types/folder';
-import { createFolder, deleteFolder, getFolders, updateFolder } from '@/app/api/folders';
+import { createFolder, deleteFolder, fetchFolderName, getFolders, updateFolder } from '@/app/api/folders';
 import Info from '@/app/components/molecules/Info';
 import NoteList from '@/app/components/organisms/NoteList';
 import ReviewQuestions from '@/app/components/organisms/ReviewQuestions';
@@ -37,6 +37,21 @@ const Page = () => {
   const [error, setError] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState<"OX" | "단답형" | null>(null);
   const [count, setCount] = useState("");
+
+  //fetchFolderName에 대한 응답값을 확인할 수 있는 함수
+  const fetchFolderNames = async () => {
+    try {
+      const data = await fetchFolderName();
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching folder names:", error);
+    }
+  };
+
+  // 마운트 될 때 한번만 실행되도록 함
+  useEffect(() => {
+    fetchFolderNames();
+  }, []);
 
   // 폴더 목록 조회 함수
   const fetchFolders = async () => {
