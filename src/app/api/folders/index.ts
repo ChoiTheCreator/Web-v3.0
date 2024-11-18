@@ -5,7 +5,7 @@ import axios from "axios";
 
 // 폴더 목록 가져오기
 export const getFolders = async (): Promise<FolderListData[]> => {
-    const response = await fetch(`${baseURL}folder/`, {
+    const response = await fetch(`${baseURL}/api/v1/folder/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const getFolders = async (): Promise<FolderListData[]> => {
 
 // 폴더 생성
 export const createFolder = async ({ folderName, professorName }: PostFolderProps) => {
-  const response = await fetch(`${baseURL}folder/`, {
+  const response = await fetch(`${baseURL}/api/v1/folder/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export const createFolder = async ({ folderName, professorName }: PostFolderProp
 
 // 폴더 수정
 export const updateFolder = async ({ folderId, folderName, professorName }: PatchFolderProps) => {
-  const response = await fetch(`${baseURL}folder/${folderId}`, {
+  const response = await fetch(`${baseURL}/api/v1/folder/${folderId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export const updateFolder = async ({ folderId, folderName, professorName }: Patc
 
 // 폴더 삭제
 export const deleteFolder = async (folderId: number) => {
-  const response = await fetch(`${baseURL}folder/${folderId}`, {
+  const response = await fetch(`${baseURL}/api/v1/folder/${folderId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
