@@ -1,1 +1,1 @@
-export const baseURL = "http://43.201.165.4:8080";
+export const baseURL = "https://ai-tutor.co.kr";
