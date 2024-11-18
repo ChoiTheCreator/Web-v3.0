@@ -1,1 +1,1 @@
-export const baseURL = "https://ai-tutor.co.kr";
+export const baseURL = process.env.BASE_URL;
