@@ -1,5 +1,2 @@
 # /api/v1/ 하위 경로의 모든 요청을 NGINX 서버로 프록시
-/api/v1/*  https://ai-tutor.co.kr/api/v1/:splat  200
-
-# Netlify에서 정적 파일 요청 처리 (기본 설정)
-/* /index.html 200
+/api/v1/* http://43.201.165.4:8080/api/v1/:splat 200
