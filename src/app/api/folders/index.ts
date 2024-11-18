@@ -5,7 +5,7 @@ import axios from "axios";
 
 // 폴더 목록 가져오기
 export const getFolders = async (): Promise<FolderListData[]> => {
-  const response = await axios.get("https://ai-tutor.co.kr/api/v1/folder/", {
+  const response = await axios.get(`${baseURL}/api/v1/folder/`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -53,6 +53,7 @@ const response = await axios.delete(`${baseURL}/api/v1/folder/${folderId}`, {
 return response.data;
 };
 
+// 폴더 이름 가져오기 (test)
 export const fetchFolderName = async () => {
   const response = await axios.get(`${baseURL}/api/v1/folder/names`, {
     headers: {
