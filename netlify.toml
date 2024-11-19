@@ -2,6 +2,3 @@
   # Next.js 프로젝트의 빌드 명령어와 출력 디렉토리 설정
   command = "npm run build && npm run export"
   publish = "out"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
