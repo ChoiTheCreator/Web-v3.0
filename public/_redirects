@@ -1,1 +1,5 @@
-/* /index.html 200
+# API 요청 경로 리다이렉트 방지
+/api/*  /api/:splat  200
+
+# 나머지 요청 처리
+/*  /index.html  200
