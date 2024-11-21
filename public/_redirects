@@ -1,3 +1,3 @@
-/api/*  https://ai-tutor.co.kr/api/:splat  200
+/api/*  https://ai-tutor.co.kr/api/v1/:splat  200
 
 /*  /index.html  200
