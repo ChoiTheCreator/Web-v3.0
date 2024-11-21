@@ -1,5 +1,11 @@
-// next.config.js
 module.exports = {
   reactStrictMode: true,
-  // Any other Next.js configuration options
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://ai-tutor.co.kr/api/v1/:path*',
+      },
+    ];
+  },
 };
