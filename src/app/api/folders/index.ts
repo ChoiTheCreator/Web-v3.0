@@ -53,3 +53,13 @@ const response = await axios.delete(`${baseURL}/api/v1/folder/${folderId}`, {
 return response.data;
 };
 
+// 폴더 이름 가져오기 (test)
+export const fetchFolderName = async () => {
+  const response = await axios.get(`${baseURL}/api/v1/folder/names`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  
+  return response.data;
+  };
