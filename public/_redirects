@@ -1,3 +1,0 @@
-# _redirects 파일에서 /api/* 라인 제거
-/api/v1/*  http://api.ai-tutor.co.kr:8080/api/v1/:splat  200
-/*  /index.html  200
