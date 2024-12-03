@@ -1,1 +1,1 @@
-export const baseURL = "http://43.201.165.4:8080";
+export const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
