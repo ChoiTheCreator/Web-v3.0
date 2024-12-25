@@ -3,8 +3,8 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*", // 프론트엔드에서 사용하는 API 경로
-        destination: "http://api.ai-tutor.co.kr:8080/api/:path*", // 백엔드 실제 경로
+        source: "/api/v1/:path*", // 프론트엔드에서 사용하는 API 경로
+        destination: "https://api.ai-tutor.co.kr:8080/api/v1/:path*", // 백엔드 실제 경로
       },
     ];
   },
