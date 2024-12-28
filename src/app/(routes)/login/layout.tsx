@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import ClientSessionProvider from "./ClientSessionProvider";
+import "../../globals.css"; // 전역 스타일 적용
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AI-Tutor",
-  description: "교수님을 위한 복습 문제 생성 서비스",
+  title: "My Next App",
+  description: "This is my Next.js 14 App with Google Login",
 };
 
 export default function RootLayout({
@@ -18,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClientSessionProvider>{children}</ClientSessionProvider>
+          {children}
       </body>
     </html>
   );
