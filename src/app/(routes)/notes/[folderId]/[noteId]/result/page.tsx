@@ -11,8 +11,17 @@ import axios from "axios";
 
 const ResultPage = () => {
   const { noteId } = useParams();
-  const [activeTab, setActiveTab] = useState<"questions" | "summary">("questions");
-  const { folderName, professor, questions, setQuestions, summary, setSummary } = usePracticeContext();
+  const [activeTab, setActiveTab] = useState<"questions" | "summary">(
+    "questions"
+  );
+  const {
+    folderName,
+    professor,
+    questions,
+    setQuestions,
+    summary,
+    setSummary,
+  } = usePracticeContext();
 
   const handleTabChange = (tab: "questions" | "summary") => {
     setActiveTab(tab);
@@ -45,21 +54,25 @@ const ResultPage = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center">   
-        <Info folderName={folderName} professorName={professor} />  
+      <div className="flex justify-between items-center">
+        <Info folderName={folderName} professorName={professor} />
       </div>
 
       <div className="flex flex-col">
         {/* 탭 메뉴 */}
         <div className="w-full flex justify-center items-stretch">
           <button
-            className={`w-full py-2 text-white ${activeTab === "questions" ? "bg-mainGreen" : "bg-primaryLightGray"}`}
+            className={`w-full py-2 text-white ${
+              activeTab === "questions" ? "bg-primary" : "bg-black-80"
+            }`}
             onClick={() => handleTabChange("questions")}
           >
             생성된 복습 문제 확인 및 선택
           </button>
           <button
-            className={`w-full py-2 text-white ${activeTab === "summary" ? "bg-mainGreen" : "bg-primaryLightGray"}`}
+            className={`w-full py-2 text-white ${
+              activeTab === "summary" ? "bg-primary" : "bg-black-80"
+            }`}
             onClick={() => handleTabChange("summary")}
           >
             생성된 요약문 확인
@@ -70,9 +83,7 @@ const ResultPage = () => {
         {activeTab === "questions" && (
           <ReviewQuestions noteId={Number(noteId)} />
         )}
-        {activeTab === "summary" && (
-          <SummaryText noteId={Number(noteId)} />
-        )}
+        {activeTab === "summary" && <SummaryText noteId={Number(noteId)} />}
       </div>
     </>
   );
