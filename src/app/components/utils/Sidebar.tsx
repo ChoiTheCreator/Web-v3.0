@@ -70,7 +70,7 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
       <div className="pb-8">
-        <div className="hover:bg-[#3c3c3c] hover:rounded-md cursor-pointer transition-colors duration-200">
+        <div className="hover:bg-black-80 hover:rounded-md cursor-pointer transition-colors duration-200 rounded-md">
           <div className="flex flex-row px-[35px] py-2 gap-3">
             <Icon label="guide" className="w-[20px] h-[20px] my-auto" />
             <p className="text-white">가이드보기</p>

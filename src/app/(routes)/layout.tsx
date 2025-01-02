@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <div>
       <PracticeProvider>
-        <div className="flex">
+        <div className="flex bg-black">
           {!isLoginPage && <Sidebar />}
           <div className="flex-1 bg-black-90">{children}</div>
         </div>
