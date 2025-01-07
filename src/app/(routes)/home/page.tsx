@@ -8,7 +8,6 @@ import {
   SectionModify,
 } from "@/app/components/molecules/Modal";
 import { FolderListData } from "@/app/types/folder";
-import Icon from "@/app/components/atoms/Icon";
 import { useFolderStore } from "@/app/store/useFolderStore";
 
 const HomePage = () => {
@@ -62,25 +61,17 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col justify-between h-screen w-full bg-bgDeepGray">
-      {/* 상단 인사말 */}
-      <div className="px-8 py-8 font-Pretendard font-semibold leading-[70px] text-[57px] text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-        안녕하세요!
-        <br />
-        교수님을 도와드릴 AI Tutor 예요!
-      </div>
-
       {/* 1. 폴더 생성 */}
-      <div className="flex flex-col border-t-2 h-[600px] border-r-2 border-l-2 border-[#929292]/[0.4] rounded-t-xl rounded-r-ml rounded-l-ml bg-[#242424]">
+      <div className="flex flex-col h-[600px] rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
         <div className="flex flex-row justify-between p-5">
           <div className="flex flex-row gap-2 ">
-            <Icon label="ic_side_all" className="w-[30px] h-[30px] m-auto " />
-            <p className="flex flex-col text-white place-items-center m-auto text-[18px]">
-              강의과목
+            <p className="flex flex-col text-white place-items-center m-auto font-semibold text-lg">
+              홈
             </p>
           </div>
           {/* 폴더 생성 버튼 */}
           <Button
-            label="폴더 생성하기 "
+            label="새 과목 만들기"
             variant="create"
             onClick={() => {
               setIsEditMode(false); // 생성 모드
@@ -93,8 +84,10 @@ const HomePage = () => {
         {/* 폴더가 없을 때 */}
         {folders.length === 0 ? (
           <div className="flex flex-col justify-center items-center h-full text-center text-white">
-            <p className="text-2xl mb-4">강의 과목 폴더를 만들어 보세요.</p>
-            <p className="text-base text-gray-400">
+            <p className="text-xl font-bold mb-4">
+              강의 과목 폴더를 만들어 보세요.
+            </p>
+            <p className="text-base text-black-70">
               새 과목 만들기 버튼을 누르면 강의 과목 폴더를 만들어 수업을 관리할
               수 있어요
             </p>
