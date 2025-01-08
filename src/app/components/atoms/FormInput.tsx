@@ -26,13 +26,15 @@ export const FormInput: React.FC<FormInputProps> = ({
   // `variant`에 따른 클래스명 분리
   const inputClassName =
     variant === "round"
-      ? "bg-[#252424] text-white rounded-full outline-none px-4 py-2"
-      : "bg-[#252424] text-white rounded-md outline-none px-4 py-2";
+      ? "bg-black-90 text-white rounded-full outline-none px-4 py-2"
+      : "bg-black-80 text-white rounded-md outline-none px-4 py-2";
 
   return (
-    <div className="flex flex-row place-items-center">
+    <div className="flex flex-row w-full justify-center">
       {label && (
-        <label className={`text-mainWhite text-base text-start ${labelClassName}` }>
+        <label
+          className={`text-mainWhite text-base text-start ${labelClassName}`}
+        >
           {label}
         </label>
       )}
@@ -43,7 +45,9 @@ export const FormInput: React.FC<FormInputProps> = ({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled} // disabled 속성 추가
-        className={`${inputClassName} ${className} ${disabled ? "cursor-not-allowed opacity-50" : ""}`} // 비활성화 스타일 추가
+        className={`${inputClassName} ${className} ${
+          disabled ? "cursor-not-allowed opacity-50" : ""
+        }`} // 비활성화 스타일 추가
       />
     </div>
   );
