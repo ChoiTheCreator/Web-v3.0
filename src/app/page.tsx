@@ -17,7 +17,7 @@ const Home = () => {
           <div className="font-Pretendard font-semibold text-3xl text-primary whitespace-nowrap text-center">
             회원님의 신분을 선택해주세요
           </div>
-          <div className="flex justify-center items-center flex-row gap-4 mt-4">
+          <div className="flex justify-center items-center flex-row gap-4 mt-6">
             <button
               className="bg-black-80 text-white font-Pretendard text-xl flex flex-col justify-center items-center gap-2 p-4 px-10 hover:bg-primary active:bg-primary rounded-lg w-1/2"
               onClick={handleProfessorClick}
