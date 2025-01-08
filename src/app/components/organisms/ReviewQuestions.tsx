@@ -160,18 +160,28 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
       <table className="px-5 py-2 table-fixed w-full text-left text-white border-separate border-spacing-0.2">
         <thead>
           <tr className="bg-black-80 text-center whitespace-nowrap m-2">
-            <th className="w-[10%] p-4">선택</th>
-            <th className="w-[15%] p-4">문제유형</th>
-            <th className="w-[45%] p-4">문제</th>
-            <th className="w-[20%] p-4">답</th>
-            <th className="w-[10%] p-4">수정</th>
+            <th className="w-[7%] p-1 ">
+              <Icon
+                label="UnCheckedCircle"
+                className="items-center w-full px-2.5 align-middle"
+              />
+            </th>
+            <th className="w-[20%] p-1">문제유형</th>
+            <th className="w-[50%] p-1">문제</th>
+            <th className="w-[20%] p-1">답</th>
+            <th className="w-[7%] p-1">
+              <Icon
+                label="update"
+                className="items-center w-full px-3.5 align-middle"
+              />
+            </th>
           </tr>
         </thead>
         <tbody>
           {filteredQuestions.map((question) => (
             <tr
               key={question.practiceNumber}
-              className="bg-black-90 text-center "
+              className="bg-black-90 m-2 text-center border-b-4 border-white border-solid"
             >
               {/* 선택 */}
               <td className="p-2 ">
@@ -186,11 +196,11 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
               </td>
 
               {/* 문제유형 */}
-              <td className="p-4 ">
+              <td className="p-1 ">
                 <div className="whitespace-nowrap items-center w-full flex flex-col">
                   <Button
                     label={
-                      question.practiceType === "OX" ? "O X 퀴즈" : "단답형"
+                      question.practiceType === "OX" ? "OX 퀴즈" : "단답형"
                     }
                     variant="select"
                     disabled={true}
@@ -199,7 +209,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
               </td>
 
               {/* 문제 */}
-              <td className="p-4 text-start">
+              <td className="p-2 py-3 text-start ">
                 {editMode[question.practiceNumber] ? (
                   <FormInput
                     name="content"
@@ -214,7 +224,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
                         e.target.value
                       )
                     }
-                    className="p-2 w-full"
+                    className="p-2 w-full "
                   />
                 ) : (
                   question.content
@@ -222,7 +232,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
               </td>
 
               {/* 답 */}
-              <td className="p-4">
+              <td className="p-1">
                 {editMode[question.practiceNumber] ? (
                   <FormInput
                     name="result"
@@ -237,7 +247,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
                         e.target.value
                       )
                     }
-                    className="w-[60px]"
+                    className="w-full"
                   />
                 ) : (
                   question.result
@@ -245,7 +255,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
               </td>
 
               {/* 수정 */}
-              <td className="p-4">
+              <td className="p-1">
                 <div className="flex justify-center">
                   <Icon
                     label="update"

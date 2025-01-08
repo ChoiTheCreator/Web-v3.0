@@ -46,13 +46,13 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={`flex items-center justify-center py-2 px-4 text-white ${getButtonStyles()}`}
+      className={`flex items-center justify-center py-1.5 px-4 text-white ${getButtonStyles()}`}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       disabled={disabled}
     >
-      <p className="font-Pretendard rounded-full font-normal text-center text-lg">
+      <p className="font-Pretendard rounded-full font-normal text-center text-base">
         {label}
       </p>
       {/* 이미지 소스가 존재하면 렌더링 */}

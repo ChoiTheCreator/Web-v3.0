@@ -3,6 +3,7 @@
 import Sidebar from "@/app/components/utils/Sidebar";
 import { PracticeProvider } from "@/app/context/PracticeContext";
 import { usePathname } from "next/navigation";
+import Header from "@/app/components/utils/Header";
 import "@/app/globals.css";
 
 export default function RootLayout({
@@ -18,7 +19,10 @@ export default function RootLayout({
       <PracticeProvider>
         <div className="flex bg-black">
           {!isLoginPage && <Sidebar />}
-          <div className="flex-1 bg-black-90">{children}</div>
+          <div className="flex flex-col w-full">
+            <Header />
+            <div className="flex-1 bg-black-90">{children}</div>
+          </div>
         </div>
       </PracticeProvider>
     </div>

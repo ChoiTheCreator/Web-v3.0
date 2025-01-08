@@ -62,20 +62,24 @@ const ResultPage = () => {
         {/* 탭 메뉴 */}
         <div className="w-full flex justify-center items-stretch">
           <button
-            className={`w-full py-2 text-white ${
-              activeTab === "questions" ? "bg-primary" : "bg-black-80"
+            className={`w-full py-2 border-b-2 font-medium ${
+              activeTab === "questions"
+                ? "border-primary text-primary bg-black-90"
+                : "border-black-80 text-white bg-black-90"
             }`}
             onClick={() => handleTabChange("questions")}
           >
-            생성된 복습 문제 확인 및 선택
+            복습 문제 확인 및 선택
           </button>
           <button
-            className={`w-full py-2 text-white ${
-              activeTab === "summary" ? "bg-primary" : "bg-black-80"
+            className={`w-full py-2 border-b-2 font-medium ${
+              activeTab === "summary"
+                ? "border-primary text-primary bg-black-90"
+                : "border-black-80 text-white bg-black-90"
             }`}
             onClick={() => handleTabChange("summary")}
           >
-            생성된 요약문 확인
+            요약문 확인
           </button>
         </div>
 
