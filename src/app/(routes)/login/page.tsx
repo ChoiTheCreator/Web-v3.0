@@ -15,7 +15,7 @@ const GoogleLoginCTA = dynamic(
 
 const Login = () => {
   const [isClient, setIsClient] = useState(false);
-  const { data: session, status } = useSession(); // 세션 정보와 상태 가져오기
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const Login = () => {
   }
 
   return (
-    <div className="w-full h-screen bg-black-90 flex flex-row">
+    <div className="w-full h-screen bg-black-90 flex flex-col md:flex-row">
       <div className="text-white w-full">
         <div className="fixed py-8 px-8">
           <Link href="/home">
@@ -44,29 +44,29 @@ const Login = () => {
         <div className="h-full flex flex-col justify-center px-8 items-start">
           <div className="flex flex-col relative justify-start items-start">
             {isClient && (
-              <div className="h-[70px] w-[70px] z-10 ml-[-20px]">
+              <div className="h-[50px] w-[50px] md:h-[70px] md:w-[70px] z-10 ml-[-10px] md:ml-[-20px]">
                 <Lottie
                   loop={true}
                   animationData={require("../../../../public/BouncingBall.json")}
                 />
               </div>
             )}
-            <section className="overflow-hidden">
-              <div className="animate-[textAnimation_8s_infinite] whitespace-nowrap">
-                <p className="font-Pretendard font-normal text-[28px] block">
+            <section className="overflow-auto md:overflow-hidden">
+              <div className="animate-[textAnimation_8s_infinite] md:whitespace-nowrap">
+                <p className="font-Pretendard font-normal text-[20px] md:text-[28px] block">
                   녹화한 강의 영상을 업로드 해보세요!
                 </p>
-                <p className="font-Pretendard font-normal text-[28px] block">
+                <p className="font-Pretendard font-normal text-[20px] md:text-[28px] block">
                   1단계 : 학생들에게 제공할 문제 유형을 선택해보세요
                 </p>
-                <p className="font-Pretendard font-normal text-[28px] block">
+                <p className="font-Pretendard font-normal text-[20px] md:text-[28px] block">
                   2단계 : 생성될 문제를 확인하고 수정해보세요
                 </p>
-                <p className="font-Pretendard font-normal text-[28px] block">
+                <p className="font-Pretendard font-normal text-[20px] md:text-[28px] block">
                   3단계 : 마지막으로 생성된 문제와 요약문을 학습자에게
                   전달해보세요!
                 </p>
-                <p className="font-Pretendard font-normal text-[28px] block">
+                <p className="font-Pretendard font-normal text-[20px] md:text-[28px] block">
                   이제 AI Tutor와 함께 질문 및 요약문을 생성하러 가볼까요?
                 </p>
               </div>
@@ -74,8 +74,8 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-center items-center px-[112px] bg-bgDeepGray">
-        <div className="text-white font-Pretendard font-normal text-[24px] px-4 py-4">
+      <div className="flex flex-col justify-center items-center bg-black-90 w-full md:w-1/3">
+        <div className="text-white font-Pretendard font-normal text-xl whitespace-nowrap md:text-[24px] px-4 py-4">
           <p>자기주도학습 시작하기</p>
         </div>
         <GoogleLoginCTA />

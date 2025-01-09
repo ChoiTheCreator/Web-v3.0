@@ -11,22 +11,24 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-row bg-black-90">
-      <div className="w-full h-lvh flex flex-col justify-center items-center">
-        <div className="px-8 py-8 font-Pretendard font-semibold leading-[70px] text-[57px] text-primary">
-          <div className="px-8 py-8 font-Pretendard font-semibold leading-[70px] text-[57px] text-primary whitespace-nowrap">
+    <div className="flex flex-row bg-black-90 w-full h-full justify-center items-center">
+      <div className="w-1/2 h-lvh flex flex-col justify-center items-center">
+        <div className="font-Pretendard font-semibold text-primary">
+          <div className="font-Pretendard font-semibold text-3xl text-primary whitespace-nowrap text-center">
             회원님의 신분을 선택해주세요
           </div>
-          <div className="flex justify-center items-center space-x-4">
+          <div className="flex justify-center items-center flex-row gap-4 mt-6">
             <button
-              className="bg-black-80 text-white font-Pretendard text-[18px] hover:bg-primary active:bg-primary rounded-lg px-16 py-8 space-y-4"
+              className="bg-black-80 text-white font-Pretendard text-xl flex flex-col justify-center items-center gap-2 p-4 px-10 hover:bg-primary active:bg-primary rounded-lg w-1/2"
               onClick={handleProfessorClick}
             >
               <Image src="professor.svg" alt="logo" width={100} height={100} />
-              <p className="font-Pretendard font-normal text-2xl">교수자</p>
+              <p className="font-Pretendard font-normal text-2xl whitespace-nowrap ">
+                교수자
+              </p>
             </button>
             <button
-              className="bg-black-80 text-[#4F4F4F] font-Pretendard text-[18px] rounded-lg px-16 py-8 space-y-4"
+              className="bg-black-80 text-black-60 font-Pretendard text-xl rounded-lg w-1/2 flex flex-col gap-2 p-4 px-10 justify-center items-center"
               disabled
             >
               <Image
@@ -36,7 +38,9 @@ const Home = () => {
                 height={100}
                 style={{ opacity: 0.2 }}
               />
-              <p className="font-Pretendard font-normal text-2xl">학생</p>
+              <p className="font-Pretendard font-normal text-2xl whitespace-nowrap">
+                학생
+              </p>
             </button>
           </div>
           <p className="font-Pretendard font-normal text-base text-center text-gray-500 mt-2">
