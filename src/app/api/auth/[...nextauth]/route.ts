@@ -12,19 +12,19 @@ const handler = NextAuth({
     async jwt({ token, account }) {
       if (account && account.access_token) {
         token.accessToken = account.access_token as string;
-        console.log("JWT Callback - Access Token:", token.accessToken); // 디버깅용 로그
+        console.log("JWT Callback - Access Token:", token.accessToken);
       }
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
-      console.log("Session Callback - Access Token:", session.accessToken); // 디버깅용 로그
+      console.log("Session Callback - Access Token:", session.accessToken);
       return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/home", // 로그인이 필요한 경우 리디렉션할 페이지 경로를 지정
+    signIn: "/login",
   },
 });
 
