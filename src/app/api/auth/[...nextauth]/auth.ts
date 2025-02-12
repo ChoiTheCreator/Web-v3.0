@@ -9,7 +9,15 @@ interface SignInParams {
   providerId: string;
 }
 
-export async function signIn(token: string, data: SignInParams) {
+interface SignInResponse {
+  accessToken: string | null;
+  refreshToken: string | null;
+}
+
+export async function aiTutorSignIn(
+  token: string,
+  data: SignInParams
+): Promise<SignInResponse> {
   try {
     const response = await api.post(`/auth/sign-in`, data, {
       headers: {
@@ -17,9 +25,19 @@ export async function signIn(token: string, data: SignInParams) {
       },
     });
 
-    return response.data;
+    const accessToken =
+      typeof response.data?.information?.accessToken === "string"
+        ? response.data.information.accessToken
+        : null;
+
+    const refreshToken =
+      typeof response.data?.information?.refreshToken === "string"
+        ? response.data.information.refreshToken
+        : null;
+
+    return { accessToken, refreshToken };
   } catch (error) {
-    console.error("Sign-in error:", error);
-    throw error;
+    console.error(error.response?.data || error.message);
+    return { accessToken: null, refreshToken: null };
   }
 }

@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { signIn } from "@/app/api/auth/[...nextauth]/auth";
+import { aiTutorSignIn } from "@/app/api/auth/[...nextauth]/auth";
+import { cookies } from "next/headers";
 
 const handler = NextAuth({
   providers: [
@@ -16,25 +17,41 @@ const handler = NextAuth({
 
         if (user?.email) {
           try {
-            const response = await signIn(token.accessToken, {
+            const response = await aiTutorSignIn(token.accessToken, {
               email: user.email,
-              providerId: "google",
+              providerId: user.id,
             });
 
-            if (response.accessToken) {
-              token.aiTutorToken = response.accessToken;
+            if (typeof response.accessToken === "string") {
+              cookies().set("aiTutorToken", response.accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                path: "/",
+              });
             }
+
+            if (typeof response.refreshToken === "string") {
+              cookies().set("refreshToken", response.refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                path: "/",
+              });
+            }
+
+            return {
+              ...token,
+              aiTutorToken: response.accessToken ?? null,
+              refreshToken: response.refreshToken ?? null,
+            };
           } catch (error) {
-            console.error("백엔드 로그인 실패:", error);
+            console.error(error);
           }
         }
       }
-      return token;
-    },
-    async session({ session, token }) {
-      session.accessToken = token.accessToken as string;
-      session.aiTutorToken = token.aiTutorToken || null;
-      return session;
+
+      return { ...token, aiTutorToken: null, refreshToken: null };
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
