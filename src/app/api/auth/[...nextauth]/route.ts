@@ -22,29 +22,29 @@ const handler = NextAuth({
               providerId: user.id,
             });
 
-            if (typeof response.accessToken === "string") {
+            if (response.accessToken) {
               cookies().set("aiTutorToken", response.accessToken, {
-                httpOnly: true,
+                httpOnly: false,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "lax",
                 path: "/",
               });
-            }
 
-            if (typeof response.refreshToken === "string") {
-              cookies().set("refreshToken", response.refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                path: "/",
-              });
-            }
+              if (typeof response.refreshToken === "string") {
+                cookies().set("refreshToken", response.refreshToken, {
+                  httpOnly: false,
+                  secure: process.env.NODE_ENV === "production",
+                  sameSite: "lax",
+                  path: "/",
+                });
+              }
 
-            return {
-              ...token,
-              aiTutorToken: response.accessToken ?? null,
-              refreshToken: response.refreshToken ?? null,
-            };
+              return {
+                ...token,
+                aiTutorToken: response.accessToken,
+                refreshToken: response.refreshToken,
+              };
+            }
           } catch (error) {
             console.error(error);
           }
