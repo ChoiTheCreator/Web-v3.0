@@ -15,7 +15,7 @@ interface SignInResponse {
 }
 
 export async function aiTutorSignIn(
-  token: string,
+  token: string | null,
   data: SignInParams
 ): Promise<SignInResponse> {
   try {
@@ -37,7 +37,7 @@ export async function aiTutorSignIn(
 
     return { accessToken, refreshToken };
   } catch (error) {
-    console.error(error.response?.data || error.message);
+    console.error(error);
     return { accessToken: null, refreshToken: null };
   }
 }

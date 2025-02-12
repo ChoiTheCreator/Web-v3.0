@@ -17,10 +17,13 @@ const handler = NextAuth({
 
         if (user?.email) {
           try {
-            const response = await aiTutorSignIn(token.accessToken, {
-              email: user.email,
-              providerId: user.id,
-            });
+            const response = await aiTutorSignIn(
+              token.accessToken as string | null,
+              {
+                email: user.email,
+                providerId: user.id,
+              }
+            );
 
             if (response.accessToken) {
               cookies().set("aiTutorToken", response.accessToken, {
