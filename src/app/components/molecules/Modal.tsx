@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FolderListData } from "@/app/types/folder";
 import Icon from "../atoms/Icon";
 import { useRouter } from "next/navigation";
+import forder from "../../../../public/folder.svg";
 
 // SectionFolder 컴포넌트
 export const SectionFolder: React.FC<{
@@ -24,8 +25,8 @@ export const SectionFolder: React.FC<{
           onClick(section); // 추가 로직이 필요하다면 실행
         }}
       >
-        <img
-          src="/folder.svg"
+        <Image
+          src={forder}
           alt="folder"
           width={240}
           height={140}
