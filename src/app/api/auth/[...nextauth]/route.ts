@@ -27,7 +27,7 @@ const handler = NextAuth({
 
             if (response.accessToken) {
               cookies().set("aiTutorToken", response.accessToken, {
-                httpOnly: false,
+                httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
                 path: "/",
@@ -35,7 +35,7 @@ const handler = NextAuth({
 
               if (typeof response.refreshToken === "string") {
                 cookies().set("refreshToken", response.refreshToken, {
-                  httpOnly: false,
+                  httpOnly: true,
                   secure: process.env.NODE_ENV === "production",
                   sameSite: "lax",
                   path: "/",
