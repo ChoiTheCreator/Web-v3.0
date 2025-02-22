@@ -5,12 +5,14 @@ import { PracticeProvider } from "@/app/context/PracticeContext";
 import { usePathname } from "next/navigation";
 import Header from "@/app/components/utils/Header";
 import "@/app/globals.css";
+import { useCookies } from "react-cookie";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [cookies] = useCookies(["aiTutorToken", "refreshToken"]);
   const pathname = usePathname();
   const isLoginPage = pathname.startsWith("/login");
 
