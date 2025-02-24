@@ -168,3 +168,58 @@ export const SectionModal: React.FC<{
     </div>
   );
 };
+
+export const DeleteModal: React.FC<{
+  message: string;
+  onDelete: () => void;
+  onClose: () => void;
+}> = ({ onDelete, onClose, message }) => {
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleDelete = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+
+    try {
+      console.log("Attempting to delete note...");
+      await onDelete();
+      console.log("Note deleted successfully.");
+      onClose();
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 flex flex-col gap-4 items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 ">
+      <div className="w-2/5">
+        <form onSubmit={handleDelete}>
+          <div className="flex flex-col gap-4">
+            <div className="bg-black-80 flex justify-center rounded-lg text-center h-44 items-center">
+              <div className="text-white"> {message}</div>
+            </div>
+            <div className="flex justify-center gap-4">
+              <button
+                type="button"
+                className="bg-black-80  text-white px-8 py-2 rounded-lg"
+                onClick={onClose}
+                disabled={isSaving}
+              >
+                취소
+              </button>
+              <button
+                type="submit"
+                className="bg-red-600 rounded-lg text-white px-8 py-2"
+                disabled={isSaving}
+              >
+                {isSaving ? "삭제 중..." : "삭제"}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};

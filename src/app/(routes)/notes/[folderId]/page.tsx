@@ -16,7 +16,6 @@ const NotesPage = () => {
   const router = useRouter();
   const { folderId } = useParams();
 
-  // Unconditionally retrieve context values
   const {
     setFile,
     setKeywords,
@@ -58,7 +57,7 @@ const NotesPage = () => {
 
       loadNotes();
     }
-  }, [folderId, setFolderName, setProfessor]); // Include missing dependencies
+  }, [folderId, setFolderName, setProfessor]);
 
   const handleDeleteNote = async (noteId: number) => {
     try {
