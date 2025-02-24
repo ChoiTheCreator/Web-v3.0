@@ -6,6 +6,8 @@ import { FolderListData } from "@/app/types/folder";
 import Icon from "../atoms/Icon";
 import { useRouter } from "next/navigation";
 import forder from "../../../../public/folder.svg";
+import delete_bin_red from "../../../../public/delete_bin_red.svg";
+import note from "../../../../public/note.svg";
 
 export const SectionFolder: React.FC<{
   section: FolderListData;
@@ -63,18 +65,20 @@ export const SectionModify: React.FC<{
   onDelete: () => void;
 }> = ({ section, onEditClick, onDelete }) => {
   return (
-    <div className="py-[12px] px-[15px] w-[180px] bg-[#343434] rounded-md">
+    <div className="bg-black-90 px-2 py-2 rounded-md flex flex-col gap-2">
       <button
-        className="block font-Pretendard font-regular text-[15px] text-left w-full text-mainWhite mb-2 hover:text-gray-300 transition-colors duration-200"
+        className="flex justify-between px-2 py-2 text-white font-normal text-left w-full hover:bg-black-80 rounded-lg"
         onClick={onEditClick}
       >
-        폴더 정보 수정하기
+        <span>수정하기</span>
+        <Image src={note} alt="modify" width={20} />
       </button>
       <button
-        className="block font-Pretendard font-regular text-[15px] text-left w-full text-[#CE1E34] hover:text-gray-300 transition-colors duration-200"
+        className="flex justify-between px-2 py-2 gap-24 font-normal text-left w-full text-red-600 hover:bg-black-80 rounded-lg"
         onClick={onDelete}
       >
-        폴더 삭제하기
+        <span>삭제하기</span>
+        <Image src={delete_bin_red} alt="delete" width={20} />
       </button>
     </div>
   );
