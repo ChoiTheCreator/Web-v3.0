@@ -9,16 +9,15 @@ import {
 } from "@/app/components/molecules/Modal";
 import { FolderListData } from "@/app/types/folder";
 import { useFolderStore } from "@/app/store/useFolderStore";
+import { useSession } from "next-auth/react";
 
 const HomePage = () => {
-  // zustand store 폴더 관련 상태 및 함수 가져오기
   const folders = useFolderStore((state) => state.folders);
   const fetchFolders = useFolderStore((state) => state.fetchFolders);
   const addFolder = useFolderStore((state) => state.addFolder);
   const updateFolder = useFolderStore((state) => state.updateFolder);
   const removeFolder = useFolderStore((state) => state.removeFolder);
 
-  // 폴더 관련 상태관리
   const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(
     null
   );
@@ -28,12 +27,10 @@ const HomePage = () => {
   const [professor, setProfessor] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // 컴포넌트 마운트 시 폴더 목록 조회
   useEffect(() => {
     fetchFolders();
   }, [fetchFolders]);
 
-  // 폴더 생성
   const handleCreateFolder = async () => {
     await addFolder(subject, professor);
     setSubject("");
@@ -41,7 +38,6 @@ const HomePage = () => {
     setShowModal(false);
   };
 
-  // 폴더 수정
   const handleUpdateFolder = async () => {
     if (selectedFolder) {
       await updateFolder(selectedFolder.folderId, subject, professor);
@@ -53,7 +49,6 @@ const HomePage = () => {
     }
   };
 
-  // 폴더 삭제
   const handleDeleteFolder = async (folderId: number) => {
     await removeFolder(folderId);
     setSelectedFolder(null);
@@ -61,7 +56,6 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col justify-between h-screen w-full bg-bgDeepGray">
-      {/* 1. 폴더 생성 */}
       <div className="flex flex-col h-[600px] rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
         <div className="flex flex-row justify-between p-5">
           <div className="flex flex-row gap-2 ">
@@ -69,19 +63,19 @@ const HomePage = () => {
               홈
             </p>
           </div>
-          {/* 폴더 생성 버튼 */}
+
           <Button
             label="새 과목 만들기"
             variant="create"
             onClick={() => {
-              setIsEditMode(false); // 생성 모드
+              setIsEditMode(false);
               setSubject("");
               setProfessor("");
               setShowModal(true);
             }}
           />
         </div>
-        {/* 폴더가 없을 때 */}
+
         {folders.length === 0 ? (
           <div className="flex flex-col justify-center items-center h-full text-center text-white">
             <p className="text-xl font-bold mb-4">
@@ -93,7 +87,6 @@ const HomePage = () => {
             </p>
           </div>
         ) : (
-          // 폴더가 있을 때
           <div className="flex flex-wrap justify-start items-start gap-4 mx-5">
             {folders.map((folder) => (
               <div
@@ -120,7 +113,7 @@ const HomePage = () => {
                     <SectionModify
                       section={folder}
                       onEditClick={() => {
-                        setIsEditMode(true); // 수정 모드
+                        setIsEditMode(true);
                         setShowModify((prevState) => ({
                           ...prevState,
                           [folder.folderId]: false,
@@ -139,7 +132,6 @@ const HomePage = () => {
           </div>
         )}
 
-        {/* 폴더 생성/수정 모달 */}
         {showModal && (
           <SectionModal
             subject={subject}
