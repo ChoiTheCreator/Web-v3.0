@@ -10,6 +10,8 @@ import {
 import { FolderListData } from "@/app/types/folder";
 import { useFolderStore } from "@/app/store/useFolderStore";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import speach_bubble from "../../../../public/speech_bubble.svg";
 
 const HomePage = () => {
   const folders = useFolderStore((state) => state.folders);
@@ -17,6 +19,7 @@ const HomePage = () => {
   const addFolder = useFolderStore((state) => state.addFolder);
   const updateFolder = useFolderStore((state) => state.updateFolder);
   const removeFolder = useFolderStore((state) => state.removeFolder);
+  const { data: session, status } = useSession();
 
   const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(
     null
@@ -54,26 +57,36 @@ const HomePage = () => {
     setSelectedFolder(null);
   };
 
+  console.log(session?.user.name, "section");
   return (
     <div className="flex flex-col justify-between h-screen w-full bg-bgDeepGray">
       <div className="flex flex-col h-[600px] rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
-        <div className="flex flex-row justify-between p-5">
-          <div className="flex flex-row gap-2 ">
-            <p className="flex flex-col text-white place-items-center m-auto font-semibold text-lg">
-              홈
-            </p>
+        <div className="flex flex-col justify-between p-5">
+          <div className="text-4xl font-semibold text-white">
+            <span className="flex gap-2">
+              <Image src={speach_bubble} alt="speach_bubble" />
+              <span> 안녕하세요!</span>
+            </span>
+            <span className="text-primary">{session?.user.name}</span> 교수님을
+            도와드릴 AI Tutor예요
           </div>
-
-          <Button
-            label="새 과목 만들기"
-            variant="create"
-            onClick={() => {
-              setIsEditMode(false);
-              setSubject("");
-              setProfessor("");
-              setShowModal(true);
-            }}
-          />
+          <div className="w-full align-middle flex py-5">
+            <div className="flex flex-row gap-2 w-full">
+              <p className="flex flex-col text-white font-semibold text-lg">
+                홈
+              </p>
+            </div>
+            <Button
+              label="새 과목 만들기"
+              variant="create"
+              onClick={() => {
+                setIsEditMode(false);
+                setSubject("");
+                setProfessor("");
+                setShowModal(true);
+              }}
+            />
+          </div>
         </div>
 
         {folders.length === 0 ? (
