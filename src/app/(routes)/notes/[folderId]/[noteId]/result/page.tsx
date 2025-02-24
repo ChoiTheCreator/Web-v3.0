@@ -54,7 +54,6 @@ const ResultPage = () => {
       </div>
 
       <div className="flex flex-col">
-        {/* 탭 메뉴 */}
         <div className="w-full flex justify-center items-stretch">
           <button
             className={`w-full py-2 border-b-2 font-medium ${
