@@ -95,11 +95,11 @@ const HomePage = () => {
           </div>
         ) : (
           // 폴더가 있을 때
-          <div className="flex flex-wrap justify-start items-start gap-4 mx-5">
+          <div className="flex flex-wrap gap-4 mx-5 h-full">
             {folders.map((folder) => (
               <div
                 key={folder.folderId}
-                className="relative min-w-[240px] flex flex-col items-center"
+                className="relative min-w-60 min-h-48 flex flex-col items-center"
               >
                 <SectionFolder
                   section={folder}
