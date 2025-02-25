@@ -74,11 +74,12 @@ const HomePage = () => {
             label="새 과목 만들기"
             variant="create"
             onClick={() => {
-              setIsEditMode(false); // 생성 모드
+              setIsEditMode(false);
               setSubject("");
               setProfessor("");
               setShowModal(true);
             }}
+            disabled={folders.length > 11 ? true : false}
           />
         </div>
         {/* 폴더가 없을 때 */}
