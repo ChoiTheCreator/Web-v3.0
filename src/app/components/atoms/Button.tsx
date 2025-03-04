@@ -5,6 +5,7 @@ interface ButtonProps {
   label?: string;
   disabled?: boolean;
   imgSrc?: string;
+  imgAlt?: string;
   isSelected?: boolean;
   onClick?: () => void;
   onMouseEnter?: () => void;
@@ -25,7 +26,6 @@ const Button: React.FC<ButtonProps> = ({
   onMouseLeave,
   type = "button",
   variant = "create",
-  iconPosition = "right",
   iconPosition = "right",
 }) => {
   const getButtonStyles = () => {
