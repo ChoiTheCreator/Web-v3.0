@@ -1,18 +1,16 @@
 import React from "react";
 import Image from "next/image";
 
-// 통합된 Button Prop 타입 정의
 interface ButtonProps {
-  label?: string; 
-  disabled?: boolean; 
-  imgSrc?: string; 
-  imgAlt?: string; 
+  label?: string;
+  disabled?: boolean;
+  imgSrc?: string;
   isSelected?: boolean;
-  onClick?: () => void; 
-  onMouseEnter?: () => void; 
+  onClick?: () => void;
+  onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  type?: "button" | "submit" | "reset"; // 버튼 타입
-  variant?: "select" | "next" | "create" | "cancel" | "save"; 
+  type?: "button" | "submit" | "reset";
+  variant?: "select" | "next" | "create" | "cancel" | "save";
   iconPosition?: "left" | "right";
 }
 
@@ -28,14 +26,15 @@ const Button: React.FC<ButtonProps> = ({
   type = "button",
   variant = "create",
   iconPosition = "right",
+  iconPosition = "right",
 }) => {
   const getButtonStyles = () => {
     switch (variant) {
       case "select":
-        return `rounded-full ${isSelected ? "bg-primary" : "bg-[#3F3F3F]"}`;
+        return `rounded-full ${isSelected ? "bg-primary" : "bg-black-70"}`;
       case "next":
       case "create":
-        return `bg-[#3F3F3F] rounded-full border border-[#565656] hover:bg-[#222222]`;
+        return `bg-black-70 rounded-full border border-black-60 hover:bg-black-80`;
       case "cancel":
         return `bg-[#3F3F3F] rounded-[10px] border border-[#565656] hover:bg-[#222222]`;
       case "save":
@@ -48,7 +47,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={`flex items-center justify-center gap-2 py-1.5 px-4 text-white ${getButtonStyles()}`}
+      className={`flex items-center justify-center py-1.5 px-4 text-white whitespace-nowrap ${getButtonStyles()}`}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -57,7 +56,11 @@ const Button: React.FC<ButtonProps> = ({
       {imgSrc && iconPosition === "left" && (
         <Image src={`/${imgSrc}.svg`} alt={imgAlt} width={16} height={16} />
       )}
-      <p className="font-Pretendard font-normal text-center text-base">{label}</p>
+
+      <p className="font-Pretendard rounded-full font-normal text-center text-base">
+        {label}
+      </p>
+
       {imgSrc && iconPosition === "right" && (
         <Image src={`/${imgSrc}.svg`} alt={imgAlt} width={16} height={16} />
       )}
