@@ -1,25 +1,39 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import Button from '@/app/components/atoms/Button';
-import CheckCircle from '@/app/components/atoms/CheckCircle';
-import { FormInput } from '@/app/components/atoms/FormInput';
-import FileUpload from '@/app/components/atoms/FileUpload';
-import Icon from '@/app/components/atoms/Icon';
-import TabComponent from '@/app/components/atoms/Tab';
-import Popover from '@/app/components/molecules/PopOver';
-import CountInput from '@/app/components/atoms/CountInput';
-import { SectionFolder, SectionModal, SectionModify } from '@/app/components/molecules/Modal';
-import { FolderListData } from '@/app/types/folder';
-import { createFolder, deleteFolder, fetchFolderName, getFolders, updateFolder } from '@/app/api/folders';
-import Info from '@/app/components/molecules/Info';
-import NoteList from '@/app/components/organisms/NoteList';
-import ReviewQuestions from '@/app/components/organisms/ReviewQuestions';
+import React, { useEffect, useState } from "react";
+import Button from "@/app/components/atoms/Button";
+import CheckCircle from "@/app/components/atoms/CheckCircle";
+import { FormInput } from "@/app/components/atoms/FormInput";
+import FileUpload from "@/app/components/atoms/FileUpload";
+import Icon from "@/app/components/atoms/Icon";
+import TabComponent from "@/app/components/atoms/Tab";
+import Popover from "@/app/components/molecules/PopOver";
+import CountInput from "@/app/components/atoms/CountInput";
+import {
+  SectionFolder,
+  SectionModal,
+  SectionModify,
+} from "@/app/components/molecules/Modal";
+import { FolderListData } from "@/app/types/folder";
+import {
+  createFolder,
+  deleteFolder,
+  fetchFolderName,
+  getFolders,
+  updateFolder,
+} from "@/app/api/folders";
+import Info from "@/app/components/molecules/Info";
+import NoteList from "@/app/components/organisms/NoteList";
+import ReviewQuestions from "@/app/components/organisms/ReviewQuestions";
+import { useSession } from "next-auth/react";
 
 const Page = () => {
-  // 폴더 관련 상태관리
+  const { data: session } = useSession();
+  const token = session?.user.aiTutorToken;
   const [folders, setFolders] = useState<FolderListData[]>([]);
-  const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(
+    null
+  );
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
   const [subject, setSubject] = useState("");
@@ -27,7 +41,6 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // SelectButton의 상태관리
   const [isSelected, setIsSelected] = useState([false, false, false, false]);
   const [checkedStates, setCheckedStates] = useState([false, false]);
   const [formInputValue, setFormInputValue] = useState("");
@@ -38,25 +51,22 @@ const Page = () => {
   const [showPopover, setShowPopover] = useState<"OX" | "단답형" | null>(null);
   const [count, setCount] = useState("");
 
-  //fetchFolderName에 대한 응답값을 확인할 수 있는 함수
   const fetchFolderNames = async () => {
     try {
-      const data = await fetchFolderName();
+      const data = await fetchFolderName(token || "");
       console.log(data);
     } catch (error) {
       console.error("Error fetching folder names:", error);
     }
   };
 
-  // 마운트 될 때 한번만 실행되도록 함
   useEffect(() => {
     fetchFolderNames();
   }, []);
 
-  // 폴더 목록 조회 함수
   const fetchFolders = async () => {
     try {
-      const data = await getFolders();
+      const data = await getFolders(token || "");
       setFolders(data);
     } catch (error) {
       console.error("Error fetching folders:", error);
@@ -64,16 +74,18 @@ const Page = () => {
     }
   };
 
-  // 컴포넌트 마운트 시 폴더 목록 조회
   useEffect(() => {
     fetchFolders();
   }, []);
 
-  // 폴더 생성
   const handleCreateFolder = async () => {
     setIsLoading(true);
     try {
-      await createFolder({ folderName: subject, professorName: professor });
+      await createFolder({
+        token: token || "",
+        folderName: subject,
+        professorName: professor,
+      });
       await fetchFolders();
       setSubject("");
       setProfessor("");
@@ -85,11 +97,11 @@ const Page = () => {
     }
   };
 
-  // 폴더 수정
   const handleUpdateFolder = async () => {
     if (selectedFolder) {
       try {
         await updateFolder({
+          token: token || "",
           folderId: selectedFolder.folderId,
           folderName: subject,
           professorName: professor,
@@ -106,10 +118,9 @@ const Page = () => {
     }
   };
 
-  // 폴더 삭제
   const handleDeleteFolder = async (folderId: number) => {
     try {
-      await deleteFolder(folderId);
+      await deleteFolder(token || "", folderId);
       await fetchFolders();
       setSelectedFolder(null);
       setShowModify((prevState) => ({
@@ -123,7 +134,7 @@ const Page = () => {
 
   const handleKeywordChange = (value: string) => setKeywords(value);
   const handleRequirementChange = (value: string) => setRequirement(value);
-  
+
   const handleUploadSuccess = (response: any) => {
     setResponseData(response);
     setError(null);
@@ -151,7 +162,8 @@ const Page = () => {
     );
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setFormInputValue(event.target.value);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setFormInputValue(event.target.value);
 
   return (
     <>
@@ -335,11 +347,7 @@ const Page = () => {
       </div>
 
       {/* NextButton */}
-      <Button
-        label="복습 문제 생성"
-        variant="next"
-        imgSrc="arrow_next"
-      />
+      <Button label="복습 문제 생성" variant="next" imgSrc="arrow_next" />
 
       {/* CheckCircle 컴포넌트 */}
       <h1>CheckedCircle</h1>
@@ -358,8 +366,8 @@ const Page = () => {
       <Icon label="ic_side_home" />
       <Icon label="ic_side_folder" />
       <Icon label="guide" />
-      <Icon label="kebab-menu" invert={true}/>
-      <Icon label="kebab-menu" invert={false}/>
+      <Icon label="kebab-menu" invert={true} />
+      <Icon label="kebab-menu" invert={false} />
       <Icon label="delete-icon" />
       <Icon label="update" />
 
@@ -371,11 +379,7 @@ const Page = () => {
       /> */}
 
       {/* 저장 버튼 */}
-      <Button
-        label="저장"
-        variant="save"
-        type="submit"
-      />
+      <Button label="저장" variant="save" type="submit" />
       {/* <NoteList /> */}
     </>
   );
