@@ -11,10 +11,13 @@ import { NoteData, NoteResponse } from "@/app/types/note";
 import Skeleton from "@/app/components/utils/Skeleton";
 import NewNoteForm from "@/app/components/organisms/NewNoteForm";
 import { usePracticeContext } from "@/app/context/PracticeContext";
+import { useSession } from "next-auth/react";
 
 const NotesPage = () => {
   const router = useRouter();
   const { folderId } = useParams();
+  const { data: session } = useSession();
+  const token = session?.user.aiTutorToken;
 
   const {
     setFile,
@@ -35,7 +38,7 @@ const NotesPage = () => {
     if (folderId) {
       const loadNotes = async () => {
         try {
-          const folders = await getFolders();
+          const folders = await getFolders(token || "");
           const currentFolder = folders.find(
             (folder) => folder.folderId === Number(folderId)
           );

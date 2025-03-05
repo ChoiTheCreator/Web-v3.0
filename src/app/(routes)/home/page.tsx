@@ -8,19 +8,21 @@ import {
   SectionModify,
 } from "@/app/components/molecules/Modal";
 import { FolderListData } from "@/app/types/folder";
-import { useFolderStore } from "@/app/store/useFolderStore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import speach_bubble from "../../../../public/speech_bubble.svg";
+import {
+  getFolders,
+  createFolder,
+  updateFolder,
+  deleteFolder,
+} from "@/app/api/folders";
 
 const HomePage = () => {
-  const folders = useFolderStore((state) => state.folders);
-  const fetchFolders = useFolderStore((state) => state.fetchFolders);
-  const addFolder = useFolderStore((state) => state.addFolder);
-  const updateFolder = useFolderStore((state) => state.updateFolder);
-  const removeFolder = useFolderStore((state) => state.removeFolder);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
+  const token = session?.user.aiTutorToken;
 
+  const [folders, setFolders] = useState<FolderListData[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(
     null
   );
@@ -30,38 +32,72 @@ const HomePage = () => {
   const [professor, setProfessor] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
 
+  const fetchFolders = async () => {
+    if (!token) return;
+    try {
+      const data = await getFolders(token);
+      setFolders(data);
+    } catch (error) {
+      console.error("폴더 불러오기 실패:", error);
+    }
+  };
+
   useEffect(() => {
     fetchFolders();
-  }, [fetchFolders]);
+  }, [token]);
 
   const handleCreateFolder = async () => {
-    await addFolder(subject, professor);
-    setSubject("");
-    setProfessor("");
-    setShowModal(false);
+    if (!token) return;
+    try {
+      await createFolder({
+        token,
+        folderName: subject,
+        professorName: professor,
+      });
+      setShowModal(false);
+      setSubject("");
+      setProfessor("");
+      fetchFolders();
+    } catch (error) {
+      console.error("폴더 생성 실패:", error);
+    }
   };
 
   const handleUpdateFolder = async () => {
-    if (selectedFolder) {
-      await updateFolder(selectedFolder.folderId, subject, professor);
+    if (!token || !selectedFolder) return;
+    try {
+      await updateFolder({
+        token,
+        folderId: selectedFolder.folderId,
+        folderName: subject,
+        professorName: professor,
+      });
       setShowModify((prevState) => ({
         ...prevState,
         [selectedFolder.folderId]: false,
       }));
       setShowModal(false);
+      fetchFolders();
+    } catch (error) {
+      console.error("폴더 수정 실패:", error);
     }
   };
 
   const handleDeleteFolder = async (folderId: number) => {
-    await removeFolder(folderId);
-    setSelectedFolder(null);
+    if (!token) return;
+    try {
+      await deleteFolder(token, folderId);
+      setSelectedFolder(null);
+      fetchFolders();
+    } catch (error) {
+      console.error("폴더 삭제 실패:", error);
+    }
   };
 
-  console.log(session?.user.name, "section");
   return (
     <div className="flex flex-col justify-between h-full w-full">
       <div className="flex flex-col h-full rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
-        <div className="flex flex-col justify-between p-5">
+        <div className="flex flex-col justify-between p-5 gap-8">
           <div className="text-4xl font-semibold text-white">
             <span className="flex gap-2">
               <Image src={speach_bubble} alt="speach_bubble" />
@@ -71,7 +107,7 @@ const HomePage = () => {
             도와드릴 AI Tutor예요
           </div>
           <div className="w-full align-middle flex pt-5">
-            <div className="flex flex-row gap-2 w-full">
+            <div className="flex flex-row w-full">
               <p className="flex flex-col text-white font-semibold text-lg">
                 홈
               </p>
