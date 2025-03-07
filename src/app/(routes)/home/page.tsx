@@ -17,10 +17,11 @@ import {
   updateFolder,
   deleteFolder,
 } from "@/app/api/folders";
+import apiClient, { setAuthToken } from "@/app/utils/api";
 
 const HomePage = () => {
   const { data: session } = useSession();
-  const token = session?.user.aiTutorToken;
+  const token = session?.user?.aiTutorToken;
 
   const [folders, setFolders] = useState<FolderListData[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(
@@ -32,10 +33,16 @@ const HomePage = () => {
   const [professor, setProfessor] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
 
+  useEffect(() => {
+    if (token) {
+      setAuthToken(token);
+      fetchFolders();
+    }
+  }, [token]);
+
   const fetchFolders = async () => {
-    if (!token) return;
     try {
-      const data = await getFolders(token);
+      const data = await getFolders();
       setFolders(data);
     } catch (error) {
       console.error("폴더 불러오기 실패:", error);
@@ -44,13 +51,11 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchFolders();
-  }, [token]);
+  }, []);
 
   const handleCreateFolder = async () => {
-    if (!token) return;
     try {
       await createFolder({
-        token,
         folderName: subject,
         professorName: professor,
       });
@@ -64,10 +69,9 @@ const HomePage = () => {
   };
 
   const handleUpdateFolder = async () => {
-    if (!token || !selectedFolder) return;
+    if (!selectedFolder) return;
     try {
       await updateFolder({
-        token,
         folderId: selectedFolder.folderId,
         folderName: subject,
         professorName: professor,
@@ -84,9 +88,8 @@ const HomePage = () => {
   };
 
   const handleDeleteFolder = async (folderId: number) => {
-    if (!token) return;
     try {
-      await deleteFolder(token, folderId);
+      await deleteFolder(folderId);
       setSelectedFolder(null);
       fetchFolders();
     } catch (error) {

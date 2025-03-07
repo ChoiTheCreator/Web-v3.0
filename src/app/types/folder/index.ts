@@ -9,13 +9,11 @@ export interface FolderListResponse {
 }
 
 export interface PostFolderProps {
-  token: string;
   folderName: string;
   professorName: string;
 }
 
 export interface PatchFolderProps {
-  token: string;
   folderName: string;
   professorName: string;
   folderId: number;

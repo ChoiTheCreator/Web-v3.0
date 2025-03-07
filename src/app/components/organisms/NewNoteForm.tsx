@@ -37,7 +37,7 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({
   useEffect(() => {
     const fetchFolderDetails = async () => {
       try {
-        const folders = await getFolders(token || "");
+        const folders = await getFolders();
 
         const currentFolder = folders.find(
           (folder) => folder.folderId === folderId
