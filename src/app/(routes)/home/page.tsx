@@ -1,17 +1,20 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import Button from "@/app/components/atoms/Button";
+import React, { useEffect, useState } from 'react';
+import Button from '@/app/components/atoms/Button';
 import {
   SectionFolder,
   SectionModal,
   SectionModify,
-} from "@/app/components/molecules/Modal";
-import { FolderListData } from "@/app/types/folder";
-import { useFolderStore } from "@/app/store/useFolderStore";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import speach_bubble from "../../../../public/speech_bubble.svg";
+} from '@/app/components/molecules/Modal';
+import { FolderListData } from '@/app/types/folder';
+import { useFolderStore } from '@/app/store/useFolderStore';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import speach_bubble from '../../../../public/speech_bubble.svg';
+import { useOnboarding } from '@/app/hooks/useOnboarding';
+import OnBoardingCarousel from '@/app/components/molecules/OnBoardingCarousel';
+import OnBoardingModal from '@/app/components/molecules/OnBoardingModal';
 
 const HomePage = () => {
   const folders = useFolderStore((state) => state.folders);
@@ -20,14 +23,15 @@ const HomePage = () => {
   const updateFolder = useFolderStore((state) => state.updateFolder);
   const removeFolder = useFolderStore((state) => state.removeFolder);
   const { data: session, status } = useSession();
+  const { showOnboarding, closeOnboarding } = useOnboarding(); //onBoarding Show&Close Hook
 
   const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(
     null
   );
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [professor, setProfessor] = useState("");
+  const [subject, setSubject] = useState('');
+  const [professor, setProfessor] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
@@ -36,8 +40,8 @@ const HomePage = () => {
 
   const handleCreateFolder = async () => {
     await addFolder(subject, professor);
-    setSubject("");
-    setProfessor("");
+    setSubject('');
+    setProfessor('');
     setShowModal(false);
   };
 
@@ -57,9 +61,12 @@ const HomePage = () => {
     setSelectedFolder(null);
   };
 
-  console.log(session?.user.name, "section");
+  console.log(session?.user.name, 'section');
   return (
     <div className="flex flex-col justify-between h-full w-full">
+      {showOnboarding && (
+        <OnBoardingModal onClose={closeOnboarding}></OnBoardingModal>
+      )}
       <div className="flex flex-col h-full rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
         <div className="flex flex-col justify-between p-5">
           <div className="text-4xl font-semibold text-white">
@@ -81,8 +88,8 @@ const HomePage = () => {
               variant="create"
               onClick={() => {
                 setIsEditMode(false);
-                setSubject("");
-                setProfessor("");
+                setSubject('');
+                setProfessor('');
                 setShowModal(true);
               }}
             />
