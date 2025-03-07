@@ -2,8 +2,10 @@ import React from 'react';
 
 import Image from 'next/image';
 import OnBoardingCarousel from './OnBoardingCarousel';
+
 interface OnBoardingModalProps {
   onClose: () => void;
+  //필요 props 추가할거 있으면 해야할듯 합니다.
 }
 
 const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
@@ -22,7 +24,13 @@ const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
             height={200}
           ></Image>
         </div>
-        <OnBoardingCarousel></OnBoardingCarousel>
+        <OnBoardingCarousel></OnBoardingCarousel>l{' '}
+        <button
+          className="absolute top-4 right-4 bg-gray-800 text-white px-3 py-1 rounded-md"
+          onClick={onClose}
+        >
+          ✕
+        </button>
       </div>
     </div>
   );
