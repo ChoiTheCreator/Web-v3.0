@@ -53,7 +53,7 @@ const Page = () => {
 
   const fetchFolderNames = async () => {
     try {
-      const data = await fetchFolderName(token || "");
+      const data = await fetchFolderName();
       console.log(data);
     } catch (error) {
       console.error("Error fetching folder names:", error);
@@ -66,7 +66,7 @@ const Page = () => {
 
   const fetchFolders = async () => {
     try {
-      const data = await getFolders(token || "");
+      const data = await getFolders();
       setFolders(data);
     } catch (error) {
       console.error("Error fetching folders:", error);
@@ -82,7 +82,6 @@ const Page = () => {
     setIsLoading(true);
     try {
       await createFolder({
-        token: token || "",
         folderName: subject,
         professorName: professor,
       });
@@ -101,7 +100,6 @@ const Page = () => {
     if (selectedFolder) {
       try {
         await updateFolder({
-          token: token || "",
           folderId: selectedFolder.folderId,
           folderName: subject,
           professorName: professor,
@@ -120,7 +118,7 @@ const Page = () => {
 
   const handleDeleteFolder = async (folderId: number) => {
     try {
-      await deleteFolder(token || "", folderId);
+      await deleteFolder(folderId);
       await fetchFolders();
       setSelectedFolder(null);
       setShowModify((prevState) => ({

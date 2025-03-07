@@ -27,7 +27,7 @@ export const useFolderStore = create<FolderState>((set, get) => ({
   fetchFolders: async () => {
     try {
       const token = "";
-      const data = await getFolders(token);
+      const data = await getFolders();
       set({ folders: data });
     } catch (error) {
       console.error("Error fetching folders:", error);
@@ -37,7 +37,7 @@ export const useFolderStore = create<FolderState>((set, get) => ({
   addFolder: async (folderName, professorName) => {
     try {
       const token = "";
-      await createFolder({ token, folderName, professorName });
+      await createFolder({ folderName, professorName });
       await get().fetchFolders();
     } catch (error) {
       console.error("Error creating folder:", error);
@@ -47,7 +47,7 @@ export const useFolderStore = create<FolderState>((set, get) => ({
   updateFolder: async (folderId, folderName, professorName) => {
     try {
       const token = "";
-      await updateFolder({ token, folderId, folderName, professorName });
+      await updateFolder({ folderId, folderName, professorName });
       await get().fetchFolders();
     } catch (error) {
       console.error("Error updating folder:", error);
@@ -57,7 +57,7 @@ export const useFolderStore = create<FolderState>((set, get) => ({
   removeFolder: async (folderId) => {
     try {
       const token = "";
-      await deleteFolder(token, folderId);
+      await deleteFolder(folderId);
       await get().fetchFolders();
     } catch (error) {
       console.error("Error deleting folder:", error);
