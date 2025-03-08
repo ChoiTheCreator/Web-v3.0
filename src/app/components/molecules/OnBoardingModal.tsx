@@ -11,22 +11,24 @@ interface OnBoardingModalProps {
 const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
   return (
     <div
-      className="fixed flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed flex inset-0 items-center justify-center bg-black bg-opacity-50 backdrop-blur-md"
       onClick={onClose}
     >
-      <div className="relative w-[800px] h-[600px] max-w-full bg-transparent">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-[800px] h-[200px] max-w-full bg-transparent -translate-y-20
+      "
+      >
         <div className="relative w-full">
           <Image
             className="w-full object-cover rounded-t-lg"
             src="/IMG/onboardingBg.jpeg"
             alt="온보딩 배경"
             width={600}
-            height={200}
+            height={100}
           ></Image>
         </div>
-        <div className="p-8">
-          <OnBoardingCarousel></OnBoardingCarousel>{' '}
-        </div>
+        <OnBoardingCarousel></OnBoardingCarousel>{' '}
         <button
           className="absolute top-4 right-1 bg-transparent text-white px-3 py-1 rounded-md"
           onClick={onClose}

@@ -64,9 +64,6 @@ const HomePage = () => {
   console.log(session?.user.name, 'section');
   return (
     <div className="flex flex-col justify-between h-full w-full">
-      {showOnboarding && (
-        <OnBoardingModal onClose={closeOnboarding}></OnBoardingModal>
-      )}
       <div className="flex flex-col h-full rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
         <div className="flex flex-col justify-between p-5">
           <div className="text-4xl font-semibold text-white">
@@ -99,6 +96,12 @@ const HomePage = () => {
         <div className="bg-black-80 rounded-lg rounded-b-none mx-4 h-full">
           {folders.length === 0 ? (
             <div className="flex flex-col justify-center items-center h-full text-center text-white">
+              <div className="flex items-center justify-center">
+                {' '}
+                {showOnboarding && (
+                  <OnBoardingModal onClose={closeOnboarding}></OnBoardingModal>
+                )}
+              </div>
               <p className="text-xl font-bold mb-4">
                 강의 과목 폴더를 만들어 보세요.
               </p>
