@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchNotes, deleteNote, createNote } from "@/app/api/notes";
@@ -127,7 +126,7 @@ const NotesPage = () => {
       ) : (
         <div className="flex flex-row justify-between">
           <Info folderName={folderName} professorName={professor} />
-          <div className="flex flex-col justify-center items-center pr-8">
+          <div className="flex flex-col justify-center items-center p-8">
             <Button
               label="새 노트 만들기"
               variant="create"
