@@ -14,7 +14,7 @@ const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
       className="fixed flex items-center justify-center bg-black bg-opacity-50"
       onClick={onClose}
     >
-      <div className="relative w-[600px] max-w-full bg-transparent">
+      <div className="relative w-[800px] h-[600px] max-w-full bg-transparent">
         <div className="relative w-full">
           <Image
             className="w-full object-cover rounded-t-lg"
@@ -24,9 +24,11 @@ const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
             height={200}
           ></Image>
         </div>
-        <OnBoardingCarousel></OnBoardingCarousel>l{' '}
+        <div className="p-8">
+          <OnBoardingCarousel></OnBoardingCarousel>{' '}
+        </div>
         <button
-          className="absolute top-4 right-4 bg-gray-800 text-white px-3 py-1 rounded-md"
+          className="absolute top-4 right-1 bg-transparent text-white px-3 py-1 rounded-md"
           onClick={onClose}
         >
           ✕
