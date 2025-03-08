@@ -1,68 +1,44 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "@/app/components/atoms/Button";
 import {
   SectionFolder,
   SectionModal,
   SectionModify,
 } from "@/app/components/molecules/Modal";
-import { FolderListData } from "@/app/types/folder";
+import { useFetchFolders } from "@/app/hooks/folder/useFetchFolders";
+import { useCreateFolder } from "@/app/hooks/folder/useCreateFolder";
+import { useUpdateFolder } from "@/app/hooks/folder/useUpdateFolder";
+import { useDeleteFolder } from "@/app/hooks/folder/useDeleteFolder";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import speach_bubble from "../../../../public/speech_bubble.svg";
-import {
-  getFolders,
-  createFolder,
-  updateFolder,
-  deleteFolder,
-} from "@/app/api/folders";
-import apiClient, { setAuthToken } from "@/app/utils/api";
+import { Folder } from "@/app/types/folder";
 
 const HomePage = () => {
   const { data: session } = useSession();
-  const token = session?.user?.aiTutorToken;
+  const { data: folders = [] } = useFetchFolders();
+  const createFolder = useCreateFolder();
+  const updateFolder = useUpdateFolder();
+  const deleteFolder = useDeleteFolder();
 
-  const [folders, setFolders] = useState<FolderListData[]>([]);
-  const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(
-    null
-  );
+  const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
   const [subject, setSubject] = useState("");
   const [professor, setProfessor] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
 
-  useEffect(() => {
-    if (token) {
-      setAuthToken(token);
-      fetchFolders();
-    }
-  }, [token]);
-
-  const fetchFolders = async () => {
-    try {
-      const data = await getFolders();
-      setFolders(data);
-    } catch (error) {
-      console.error("폴더 불러오기 실패:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchFolders();
-  }, []);
-
   const handleCreateFolder = async () => {
     try {
-      await createFolder({
+      await createFolder.mutateAsync({
         folderName: subject,
         professorName: professor,
       });
       setShowModal(false);
       setSubject("");
       setProfessor("");
-      fetchFolders();
     } catch (error) {
       console.error("폴더 생성 실패:", error);
     }
@@ -71,17 +47,13 @@ const HomePage = () => {
   const handleUpdateFolder = async () => {
     if (!selectedFolder) return;
     try {
-      await updateFolder({
+      await updateFolder.mutateAsync({
         folderId: selectedFolder.folderId,
         folderName: subject,
         professorName: professor,
       });
-      setShowModify((prevState) => ({
-        ...prevState,
-        [selectedFolder.folderId]: false,
-      }));
+      setShowModify((prev) => ({ ...prev, [selectedFolder.folderId]: false }));
       setShowModal(false);
-      fetchFolders();
     } catch (error) {
       console.error("폴더 수정 실패:", error);
     }
@@ -89,9 +61,8 @@ const HomePage = () => {
 
   const handleDeleteFolder = async (folderId: number) => {
     try {
-      await deleteFolder(folderId);
+      await deleteFolder.mutateAsync(folderId);
       setSelectedFolder(null);
-      fetchFolders();
     } catch (error) {
       console.error("폴더 삭제 실패:", error);
     }
@@ -154,9 +125,9 @@ const HomePage = () => {
                       setProfessor(folder.professor);
                     }}
                     onMenuClick={() =>
-                      setShowModify((prevState) => ({
-                        ...prevState,
-                        [folder.folderId]: !prevState[folder.folderId],
+                      setShowModify((prev) => ({
+                        ...prev,
+                        [folder.folderId]: !prev[folder.folderId],
                       }))
                     }
                     showModify={showModify[folder.folderId] || false}
@@ -167,8 +138,8 @@ const HomePage = () => {
                         section={folder}
                         onEditClick={() => {
                           setIsEditMode(true);
-                          setShowModify((prevState) => ({
-                            ...prevState,
+                          setShowModify((prev) => ({
+                            ...prev,
                             [folder.folderId]: false,
                           }));
                           setSelectedFolder(folder);
@@ -192,13 +163,7 @@ const HomePage = () => {
             professor={professor}
             setSubject={setSubject}
             setProfessor={setProfessor}
-            onSave={() => {
-              if (isEditMode) {
-                handleUpdateFolder();
-              } else {
-                handleCreateFolder();
-              }
-            }}
+            onSave={isEditMode ? handleUpdateFolder : handleCreateFolder}
             onClose={() => setShowModal(false)}
           />
         )}
