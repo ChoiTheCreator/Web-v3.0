@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useFolderStore } from "@/app/store/useFolderStore"; // zustand store import
+import { useFolderStore } from "@/app/store/useFolderStore";
 import Icon from "../atoms/Icon";
 
 const Sidebar: React.FC = () => {
@@ -11,7 +11,6 @@ const Sidebar: React.FC = () => {
   const fetchFolders = useFolderStore((state) => state.fetchFolders);
   const [showSections, setShowSections] = useState(false);
 
-  // 컴포넌트가 마운트될 때 폴더 목록을 가져옴
   useEffect(() => {
     fetchFolders();
   }, [fetchFolders]);
@@ -40,7 +39,7 @@ const Sidebar: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <div
-              className="px-8 py-2 flex flex-row text-center gap-3 cursor-pointer hover:bg-[#3c3c3c] hover:rounded-md transition-colors duration-200"
+              className="px-8 py-2 flex flex-row text-center gap-3 cursor-pointer hover:bg-[#3c3c3c] hover:rounded-md rounded-md transition-colors duration-200"
               onClick={toggleSections}
             >
               <Icon

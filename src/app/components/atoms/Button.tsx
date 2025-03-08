@@ -47,7 +47,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={`flex items-center justify-center py-1.5 px-4 text-white whitespace-nowrap ${getButtonStyles()}`}
+      className={`flex items-center justify-center gap-2 py-1.5 px-4 text-white whitespace-nowrap ${getButtonStyles()}`}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -62,7 +62,7 @@ const Button: React.FC<ButtonProps> = ({
       </p>
 
       {imgSrc && iconPosition === "right" && (
-        <Image src={`/${imgSrc}.svg`} alt={imgAlt} width={16} height={16} />
+        <Image src={`/${imgSrc}.svg`} alt={imgAlt} width={10} height={10} />
       )}
     </button>
   );
