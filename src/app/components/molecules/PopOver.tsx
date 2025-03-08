@@ -7,37 +7,35 @@ interface PopoverProps {
 
 const Popover: React.FC<PopoverProps> = ({ type, position }) => (
   <div
-    className="absolute bg-[#343434] text-white w-[380px] p-4 rounded-lg shadow-lg z-50" // `z-50`으로 Popover가 항상 위에 표시되도록 설정
-    style={{ top: position.top, left: position.left, transform: 'translate(-50%, 0)' }} // `transform`을 통해 중앙 정렬 조정
+    className="absolute text-white z-50"
+    style={{
+      top: position.top,
+      left: position.left,
+      transform: "translate(0%, 0)",
+    }}
   >
-    {type === "OX" ? (
-      <>
-        <p className="text-left text-sm">문제 예시</p>
-        <p className="text-[20px] font-bold my-2 text-center">
-          수요 곡선은 일반적으로 우하향한다.
-        </p>
-        <div className="flex justify-center gap-4 mt-4">
-          <div className="px-4 py-2 rounded-md text-[18px] bg-black text-white flex justify-center items-center">
-            O
+    <p className="py-2 text-black-70">* 문제 예시</p>
+    <div className="bg-black-80 w-[300px] p-4 rounded-lg shadow-lg">
+      {type === "OX" ? (
+        <>
+          <p className="text-base font-semibold text-white">
+            Q. 수요 곡선은 일반적으로 우하향한다.
+          </p>
+          <div className="flex justify-end gap-4 mt-2">
+            <div className=" text-white">A : O</div>
           </div>
-          <div className="px-4 py-2 rounded-md text-[18px] bg-black text-white flex justify-center items-center">
-            X
+        </>
+      ) : (
+        <>
+          <p className="text-base text-white font-semibold">
+            Q. 컴퓨터의 주기억장치는?
+          </p>
+          <div className="flex justify-end gap-4 mt-2">
+            <div className=" rounded-md text-white">A : RAM</div>
           </div>
-        </div>
-      </>
-    ) : (
-      <>
-        <p className="text-left text-sm">문제 예시</p>
-        <p className="text-[20px] font-bold my-2 text-center">
-          컴퓨터의 주기억장치는?
-        </p>
-        <div className="flex justify-center gap-4 mt-4">
-          <div className="px-4 py-2 rounded-md text-[18px] bg-black text-white flex justify-center items-center">
-            RAM
-          </div>
-        </div>
-      </>
-    )}
+        </>
+      )}
+    </div>
   </div>
 );
 
