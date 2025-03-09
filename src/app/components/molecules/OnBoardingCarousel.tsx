@@ -38,27 +38,27 @@ interface OnBoardingCarouselProps {
   slides: SlideData[];
   onSlideChange: (index: number) => void;
 }
+
 const OnBoardingCarousel: React.FC<OnBoardingCarouselProps> = ({
   slides,
   onSlideChange,
 }) => {
   const carouselSetting = {
     dots: true,
-
     customPaging: (i: number) => (
       <div className="w-1 h-1 rounded-full bg-gray-300" />
     ),
-
     appendDots: (dots: React.ReactNode) => (
       <ul className="flex justify-center gap-3 list-none absolute w-full top-1">
         {React.Children.map(dots, (dot) => {
-          // dot.props.className는 Slick이 active 상태일 때 'slick-active'를 포함합니다.
+          const element = dot as React.ReactElement<any>;
           const isActive =
-            dot.props.className && dot.props.className.includes('slick-active');
+            element.props.className &&
+            element.props.className.includes('slick-active');
           return (
             <li
-              key={dot.key || Math.random()}
-              onClick={dot.props.onClick}
+              key={element.key || Math.random()}
+              onClick={element.props.onClick}
               className="cursor-pointer"
             >
               <div
