@@ -69,6 +69,7 @@ const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
             alt="온보딩 배경"
             width={600}
             height={100}
+            priority
           ></Image>
         </div>
         <OnBoardingCarousel
