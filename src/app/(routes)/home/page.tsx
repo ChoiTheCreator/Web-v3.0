@@ -25,18 +25,12 @@ const HomePage = () => {
   const { data: session, status } = useSession();
   const { showOnboarding, closeOnboarding } = useOnboarding(); //onBoarding Show&Close Hook
 
-  const [selectedFolder, setSelectedFolder] = useState<FolderListData | null>(
-    null
-  );
+  const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
   const [subject, setSubject] = useState('');
   const [professor, setProfessor] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
-
-  useEffect(() => {
-    fetchFolders();
-  }, [fetchFolders]);
 
   const handleCreateFolder = async () => {
     await addFolder(subject, professor);
@@ -46,26 +40,34 @@ const HomePage = () => {
   };
 
   const handleUpdateFolder = async () => {
-    if (selectedFolder) {
-      await updateFolder(selectedFolder.folderId, subject, professor);
-      setShowModify((prevState) => ({
-        ...prevState,
-        [selectedFolder.folderId]: false,
-      }));
+    if (!selectedFolder) return;
+    try {
+      await updateFolder.mutateAsync({
+        folderId: selectedFolder.folderId,
+        folderName: subject,
+        professorName: professor,
+      });
+      setShowModify((prev) => ({ ...prev, [selectedFolder.folderId]: false }));
       setShowModal(false);
+    } catch (error) {
+      console.error('폴더 수정 실패:', error);
     }
   };
 
   const handleDeleteFolder = async (folderId: number) => {
-    await removeFolder(folderId);
-    setSelectedFolder(null);
+    try {
+      await deleteFolder.mutateAsync(folderId);
+      setSelectedFolder(null);
+    } catch (error) {
+      console.error('폴더 삭제 실패:', error);
+    }
   };
 
   console.log(session?.user.name, 'section');
   return (
     <div className="flex flex-col justify-between h-full w-full">
       <div className="flex flex-col h-full rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
-        <div className="flex flex-col justify-between p-5">
+        <div className="flex flex-col justify-between p-5 gap-8">
           <div className="text-4xl font-semibold text-white">
             <span className="flex gap-2">
               <Image src={speach_bubble} alt="speach_bubble" />
@@ -75,7 +77,7 @@ const HomePage = () => {
             도와드릴 AI Tutor예요
           </div>
           <div className="w-full align-middle flex pt-5">
-            <div className="flex flex-row gap-2 w-full">
+            <div className="flex flex-row w-full">
               <p className="flex flex-col text-white font-semibold text-lg">
                 홈
               </p>
@@ -125,9 +127,9 @@ const HomePage = () => {
                       setProfessor(folder.professor);
                     }}
                     onMenuClick={() =>
-                      setShowModify((prevState) => ({
-                        ...prevState,
-                        [folder.folderId]: !prevState[folder.folderId],
+                      setShowModify((prev) => ({
+                        ...prev,
+                        [folder.folderId]: !prev[folder.folderId],
                       }))
                     }
                     showModify={showModify[folder.folderId] || false}
@@ -138,8 +140,8 @@ const HomePage = () => {
                         section={folder}
                         onEditClick={() => {
                           setIsEditMode(true);
-                          setShowModify((prevState) => ({
-                            ...prevState,
+                          setShowModify((prev) => ({
+                            ...prev,
                             [folder.folderId]: false,
                           }));
                           setSelectedFolder(folder);
@@ -163,13 +165,7 @@ const HomePage = () => {
             professor={professor}
             setSubject={setSubject}
             setProfessor={setProfessor}
-            onSave={() => {
-              if (isEditMode) {
-                handleUpdateFolder();
-              } else {
-                handleCreateFolder();
-              }
-            }}
+            onSave={isEditMode ? handleUpdateFolder : handleCreateFolder}
             onClose={() => setShowModal(false)}
           />
         )}

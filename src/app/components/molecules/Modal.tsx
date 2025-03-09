@@ -112,7 +112,7 @@ export const SectionModal: React.FC<{
 
   return (
     <div className="fixed inset-0 flex flex-col gap-4 items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 ">
-      <div className="w-1/3">
+      <div className="md:w-1/3">
         <form onSubmit={handleSave}>
           <div className="flex flex-col gap-4">
             <div className="bg-black-80 py-8 px-6 rounded-lg shadow-lg relative flex flex-col h-full whitespace-nowrap gap-6">

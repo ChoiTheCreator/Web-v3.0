@@ -2,20 +2,26 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { useFolderStore } from "@/app/store/useFolderStore"; // zustand store import
 import Icon from "../atoms/Icon";
+import { useFetchFolders } from "@/app/hooks/folder/useFetchFolders";
+import { setAuthToken } from "@/app/utils/api";
+import { useSession } from "next-auth/react";
 
 const Sidebar: React.FC = () => {
-  const folders = useFolderStore((state) => state.folders);
-  const fetchFolders = useFolderStore((state) => state.fetchFolders);
-  const [showSections, setShowSections] = useState(false);
+  const { data: session } = useSession();
+  const token = session?.user?.aiTutorToken;
+  const [isAuthSet, setIsAuthSet] = useState(false);
 
-  // 컴포넌트가 마운트될 때 폴더 목록을 가져옴
   useEffect(() => {
-    fetchFolders();
-  }, [fetchFolders]);
+    if (token) {
+      setAuthToken(token);
+      setIsAuthSet(true);
+    }
+  }, [token]);
 
+  const { data: folders = [], isLoading, error } = useFetchFolders();
+
+  const [showSections, setShowSections] = useState(false);
   const toggleSections = () => setShowSections(!showSections);
 
   return (
@@ -40,7 +46,7 @@ const Sidebar: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <div
-              className="px-8 py-2 flex flex-row text-center gap-3 cursor-pointer hover:bg-[#3c3c3c] hover:rounded-md transition-colors duration-200"
+              className="px-8 py-2 flex flex-row text-center gap-3 cursor-pointer hover:bg-[#3c3c3c] hover:rounded-md rounded-md transition-colors duration-200"
               onClick={toggleSections}
             >
               <Icon
