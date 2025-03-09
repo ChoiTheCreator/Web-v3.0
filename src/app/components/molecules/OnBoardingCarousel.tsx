@@ -5,7 +5,7 @@ import React from 'react';
 
 const Slider = dynamic(() => import('react-slick'), { ssr: false });
 
-const CustomPrevArrow = (props) => {
+const CustomPrevArrow = (props: any) => {
   const { onClick } = props;
   return (
     <div
@@ -17,7 +17,7 @@ const CustomPrevArrow = (props) => {
   );
 };
 
-const CustomNextArrow = (props) => {
+const CustomNextArrow = (props: any) => {
   const { onClick } = props;
   return (
     <div
@@ -29,25 +29,40 @@ const CustomNextArrow = (props) => {
   );
 };
 
-const OnBoardingCarousel = () => {
+interface SlideData {
+  background: string;
+  title: string;
+  desc: string;
+}
+interface OnBoardingCarouselProps {
+  slides: SlideData[];
+  onSlideChange: (index: number) => void;
+}
+const OnBoardingCarousel: React.FC<OnBoardingCarouselProps> = ({
+  slides,
+  onSlideChange,
+}) => {
   const carouselSetting = {
     dots: true,
 
-    customPaging: (i) => <div className="w-1 h-1 rounded-full bg-gray-300" />,
+    customPaging: (i: number) => (
+      <div className="w-1 h-1 rounded-full bg-gray-300" />
+    ),
 
-    appendDots: (dots) => (
-      <ul className=" flex justify-center gap-3 list-none absolute w-full top-1">
-        {dots.map((dot, index) => {
+    appendDots: (dots: React.ReactNode) => (
+      <ul className="flex justify-center gap-3 list-none absolute w-full top-1">
+        {React.Children.map(dots, (dot) => {
+          // dot.props.className는 Slick이 active 상태일 때 'slick-active'를 포함합니다.
           const isActive =
             dot.props.className && dot.props.className.includes('slick-active');
           return (
             <li
-              key={index}
+              key={dot.key || Math.random()}
               onClick={dot.props.onClick}
               className="cursor-pointer"
             >
               <div
-                className={`w-3  h-3 rounded-full relative bottom-6 ${
+                className={`w-3 h-3 rounded-full relative bottom-6 ${
                   isActive ? 'bg-primary' : 'bg-gray-300'
                 }`}
               ></div>
@@ -63,28 +78,23 @@ const OnBoardingCarousel = () => {
     arrows: true,
     prevArrow: <CustomPrevArrow />,
     nextArrow: <CustomNextArrow />,
+    afterChange: (current: number) => {
+      if (onSlideChange) onSlideChange(current);
+    },
   };
 
   return (
     <div className="relative w-full h-[130px] bg-white">
       <Slider className="w-full h-full" {...carouselSetting}>
-        <div className="flex flex-col justify-center items-center h-full">
-          <h2 className="text-black font-semibold mt-4">
-            {' '}
-            새 과목 폴더를 만들어보세요.
-          </h2>
-          <p className="mt-2 text-black">
-            이미 만든 폴더는 수정하거나 삭제할 수 있어요!
-          </p>
-        </div>
-        <div className="flex flex-col justify-center items-center h-full">
-          <h2 className="text-black font-semibold">📁 강의 관리하기</h2>
-          <p className="mt-2 text-black">강의 내용을 효과적으로 관리하세요!</p>
-        </div>
-        <div className="flex flex-col justify-center items-center h-full ">
-          <h2 className="text-black font-semibold">🎯 목표 설정</h2>
-          <p className="mt-2 text-black">학습 목표를 설정하고 달성해 보세요!</p>
-        </div>
+        {slides.map((slide, idx) => (
+          <div
+            key={idx}
+            className="flex flex-col justify-center items-center h-full"
+          >
+            <p className="text-black font-semibold mt-4">{slide.title}</p>
+            <p className="mt-2 text-black">{slide.desc}</p>
+          </div>
+        ))}
       </Slider>
     </div>
   );
