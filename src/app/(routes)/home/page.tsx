@@ -1,29 +1,31 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@/app/components/atoms/Button';
 import {
   SectionFolder,
   SectionModal,
   SectionModify,
 } from '@/app/components/molecules/Modal';
-import { FolderListData } from '@/app/types/folder';
-import { useFolderStore } from '@/app/store/useFolderStore';
+import { useFetchFolders } from '@/app/hooks/folder/useFetchFolders';
+import { useCreateFolder } from '@/app/hooks/folder/useCreateFolder';
+import { useUpdateFolder } from '@/app/hooks/folder/useUpdateFolder';
+import { useDeleteFolder } from '@/app/hooks/folder/useDeleteFolder';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import speach_bubble from '../../../../public/speech_bubble.svg';
+import { Folder } from '@/app/types/folder';
+
 import { useOnboarding } from '@/app/hooks/useOnboarding';
-import OnBoardingCarousel from '@/app/components/molecules/OnBoardingCarousel';
+
 import OnBoardingModal from '@/app/components/molecules/OnBoardingModal';
 
 const HomePage = () => {
-  const folders = useFolderStore((state) => state.folders);
-  const fetchFolders = useFolderStore((state) => state.fetchFolders);
-  const addFolder = useFolderStore((state) => state.addFolder);
-  const updateFolder = useFolderStore((state) => state.updateFolder);
-  const removeFolder = useFolderStore((state) => state.removeFolder);
-  const { data: session, status } = useSession();
-  const { showOnboarding, closeOnboarding } = useOnboarding(); //onBoarding Show&Close Hook
+  const { data: session } = useSession();
+  const { data: folders = [] } = useFetchFolders();
+  const createFolder = useCreateFolder();
+  const updateFolder = useUpdateFolder();
+  const deleteFolder = useDeleteFolder();
 
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
@@ -33,10 +35,17 @@ const HomePage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleCreateFolder = async () => {
-    await addFolder(subject, professor);
-    setSubject('');
-    setProfessor('');
-    setShowModal(false);
+    try {
+      await createFolder.mutateAsync({
+        folderName: subject,
+        professorName: professor,
+      });
+      setShowModal(false);
+      setSubject('');
+      setProfessor('');
+    } catch (error) {
+      console.error('폴더 생성 실패:', error);
+    }
   };
 
   const handleUpdateFolder = async () => {
@@ -62,6 +71,7 @@ const HomePage = () => {
       console.error('폴더 삭제 실패:', error);
     }
   };
+  const { showOnboarding, closeOnboarding } = useOnboarding();
 
   console.log(session?.user.name, 'section');
   return (
@@ -114,7 +124,7 @@ const HomePage = () => {
             </div>
           ) : (
             <div className="flex flex-wrap justify-start items-start gap-4 mx-5 py-4">
-              {folders.map((folder) => (
+              {folders.map((folder: any) => (
                 <div
                   key={folder.folderId}
                   className="relative flex flex-col items-center"
