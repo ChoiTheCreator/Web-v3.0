@@ -81,6 +81,9 @@ const OnBoardingCarousel: React.FC<OnBoardingCarouselProps> = ({
     afterChange: (current: number) => {
       if (onSlideChange) onSlideChange(current);
     },
+    beforeChange: (oldIndex: number, newIndex: number) => {
+      if (onSlideChange) onSlideChange(newIndex);
+    },
   };
 
   return (
