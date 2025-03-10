@@ -15,7 +15,7 @@ const Popover: React.FC<PopoverProps> = ({ type, position }) => {
 
   return (
     <div
-      className={`absolute -translate-y-12 text-white z-50 transition-all duration-500 ease-out transform  ${
+      className={`absolute text-white z-50 transition-all duration-500 ease-out transform  ${
         isVisible ? "opacity-100 scale-100" : "opacity-0 scale-90"
       }`}
       style={{
