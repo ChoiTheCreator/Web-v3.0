@@ -82,7 +82,6 @@ const NewPracticeForm: React.FC = () => {
                 setPracticeSize(0);
               }}
             />
-            <p>복습에 필요한 진짜 문제를 제공해드려요</p>
           </div>
 
           <div className="flex items-center gap-4">
@@ -106,37 +105,39 @@ const NewPracticeForm: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center mb-8 gap-4">
         <span className="text-white">문제 유형</span>
-        <div
-          ref={oxRef}
-          onMouseEnter={() => setShowPopover("OX")}
-          onMouseLeave={() => setShowPopover(null)}
-        >
-          <Button
-            label="O X 퀴즈"
-            variant="select"
-            isSelected={type === "OX" || type === "BOTH"}
-            onClick={() => toggleType("OX")}
-          />
-          {showPopover === "OX" && (
-            <Popover type="OX" position={oxPopoverPosition} />
-          )}
-        </div>
-        <div
-          ref={shortRef}
-          onMouseEnter={() => setShowPopover("SHORT")}
-          onMouseLeave={() => setShowPopover(null)}
-        >
-          <Button
-            label="단답형"
-            variant="select"
-            isSelected={type === "SHORT" || type === "BOTH"}
-            onClick={() => toggleType("SHORT")}
-          />
-          {showPopover === "SHORT" && (
-            <Popover type="단답형" position={shortPopoverPosition} />
-          )}
+        <div className="flex flex-row gap-2">
+          <div
+            ref={oxRef}
+            onMouseEnter={() => setShowPopover("OX")}
+            onMouseLeave={() => setShowPopover(null)}
+          >
+            <Button
+              label="O X 퀴즈"
+              variant="select"
+              isSelected={type === "OX" || type === "BOTH"}
+              onClick={() => toggleType("OX")}
+            />
+            {showPopover === "OX" && (
+              <Popover type="OX" position={oxPopoverPosition} />
+            )}
+          </div>
+          <div
+            ref={shortRef}
+            onMouseEnter={() => setShowPopover("SHORT")}
+            onMouseLeave={() => setShowPopover(null)}
+          >
+            <Button
+              label="단답형"
+              variant="select"
+              isSelected={type === "SHORT" || type === "BOTH"}
+              onClick={() => toggleType("SHORT")}
+            />
+            {showPopover === "SHORT" && (
+              <Popover type="단답형" position={shortPopoverPosition} />
+            )}
+          </div>
         </div>
       </div>
     </div>
