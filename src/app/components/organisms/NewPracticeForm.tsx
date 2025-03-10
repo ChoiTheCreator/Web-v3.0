@@ -22,6 +22,10 @@ const NewPracticeForm: React.FC = () => {
     top: string;
     left: string;
   }>({
+  const [shortPopoverPosition, setShortPopoverPosition] = useState<{
+    top: string;
+    left: string;
+  }>({
     top: "0px",
     left: "0px",
   });
@@ -33,9 +37,17 @@ const NewPracticeForm: React.FC = () => {
         top: `${rect.bottom + window.scrollY + 15}px`,
         left: `${rect.left + window.scrollX}`,
       });
+      setOXPopoverPosition({
+        top: `${rect.bottom + window.scrollY + 15}px`,
+        left: `${rect.left + window.scrollX}`,
+      });
     }
     if (shortRef.current) {
       const rect = shortRef.current.getBoundingClientRect();
+      setShortPopoverPosition({
+        top: `${rect.bottom + window.scrollY + 15}px`,
+        left: `${rect.left + window.scrollX}`,
+      });
       setShortPopoverPosition({
         top: `${rect.bottom + window.scrollY + 15}px`,
         left: `${rect.left + window.scrollX}`,
@@ -45,6 +57,7 @@ const NewPracticeForm: React.FC = () => {
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = Number(event.target.value);
+    setPracticeSize(isNaN(newSize) ? 0 : newSize);
     setPracticeSize(isNaN(newSize) ? 0 : newSize);
   };
 

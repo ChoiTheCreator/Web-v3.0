@@ -18,3 +18,9 @@ export interface PatchFolderProps {
   professorName: string;
   folderId: number;
 }
+
+export interface Folder {
+  folderId: number;
+  folderName: string;
+  professor: string;
+}

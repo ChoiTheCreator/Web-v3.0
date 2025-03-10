@@ -12,7 +12,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [cookies] = useCookies(["aiTutorToken", "refreshToken"]);
   const pathname = usePathname();
   const isLoginPage = pathname.startsWith("/login");
 
@@ -22,7 +21,7 @@ export default function RootLayout({
         <div className="flex bg-black">
           {!isLoginPage && <Sidebar />}
           <div className="flex flex-col w-full">
-            <Header />
+            {!isLoginPage && <Header />}
             <div className="flex-1 bg-black-90">{children}</div>
           </div>
         </div>

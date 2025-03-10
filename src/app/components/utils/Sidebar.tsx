@@ -2,19 +2,26 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { useFolderStore } from "@/app/store/useFolderStore";
 import Icon from "../atoms/Icon";
+import { useFetchFolders } from "@/app/hooks/folder/useFetchFolders";
+import { setAuthToken } from "@/app/utils/api";
+import { useSession } from "next-auth/react";
 
 const Sidebar: React.FC = () => {
-  const folders = useFolderStore((state) => state.folders);
-  const fetchFolders = useFolderStore((state) => state.fetchFolders);
-  const [showSections, setShowSections] = useState(false);
+  const { data: session } = useSession();
+  const token = session?.user?.aiTutorToken;
+  const [isAuthSet, setIsAuthSet] = useState(false);
 
   useEffect(() => {
-    fetchFolders();
-  }, [fetchFolders]);
+    if (token) {
+      setAuthToken(token);
+      setIsAuthSet(true);
+    }
+  }, [token]);
 
+  const { data: folders = [], isLoading, error } = useFetchFolders();
+
+  const [showSections, setShowSections] = useState(false);
   const toggleSections = () => setShowSections(!showSections);
 
   return (
