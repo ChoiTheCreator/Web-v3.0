@@ -69,40 +69,31 @@ const NewPracticeForm: React.FC = () => {
   return (
     <div className="flex flex-col justify-start h-full">
       <div className="flex flex-row gap-4 mb-8">
-        <span className="text-white font-semibold flex flex-col justify-start items-start mt-2">
+        <span className="text-white font-semibold flex flex-col justify-start items-start mt-2 whitespace-nowrap">
           문제 개수
         </span>
-        <div className="flex flex-col items-start gap-4">
-          <div className="flex flex-row items-center gap-4">
-            <Button
-              label="AI 추천"
-              variant="select"
-              isSelected={countOption === "AI"}
-              onClick={() => {
-                setCountOption("AI");
+        <div className="flex flex-row">
+          <ToggleSelect
+            items={["AI 추천", "직접 입력"]}
+            onClick={(selectedItem) => {
+              setCountOption(selectedItem === "AI 추천" ? "AI" : "manual");
+              if (selectedItem === "AI 추천") {
                 setPracticeSize(0);
-              }}
-            />
-          </div>
+              }
+            }}
+            isSelected={countOption === "manual"}
+          />
 
-          <div className="flex items-center gap-4">
-            <Button
-              label="직접 입력"
-              variant="select"
-              isSelected={countOption === "manual"}
-              onClick={() => setCountOption("manual")}
+          {countOption === "manual" && (
+            <CountInput
+              name="count"
+              defaultValue={
+                practiceSize !== null ? practiceSize.toString() : ""
+              }
+              onChange={handleCountChange}
+              placeholder="문제 개수를 입력하세요"
             />
-            {countOption === "manual" && (
-              <CountInput
-                name="count"
-                defaultValue={
-                  practiceSize !== null ? practiceSize.toString() : ""
-                }
-                onChange={handleCountChange}
-                placeholder="0"
-              />
-            )}
-          </div>
+          )}
         </div>
       </div>
 
