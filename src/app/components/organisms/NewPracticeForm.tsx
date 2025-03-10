@@ -22,10 +22,6 @@ const NewPracticeForm: React.FC = () => {
     top: string;
     left: string;
   }>({
-  const [shortPopoverPosition, setShortPopoverPosition] = useState<{
-    top: string;
-    left: string;
-  }>({
     top: "0px",
     left: "0px",
   });
@@ -37,17 +33,9 @@ const NewPracticeForm: React.FC = () => {
         top: `${rect.bottom + window.scrollY + 15}px`,
         left: `${rect.left + window.scrollX}`,
       });
-      setOXPopoverPosition({
-        top: `${rect.bottom + window.scrollY + 15}px`,
-        left: `${rect.left + window.scrollX}`,
-      });
     }
     if (shortRef.current) {
       const rect = shortRef.current.getBoundingClientRect();
-      setShortPopoverPosition({
-        top: `${rect.bottom + window.scrollY + 15}px`,
-        left: `${rect.left + window.scrollX}`,
-      });
       setShortPopoverPosition({
         top: `${rect.bottom + window.scrollY + 15}px`,
         left: `${rect.left + window.scrollX}`,
@@ -57,7 +45,6 @@ const NewPracticeForm: React.FC = () => {
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = Number(event.target.value);
-    setPracticeSize(isNaN(newSize) ? 0 : newSize);
     setPracticeSize(isNaN(newSize) ? 0 : newSize);
   };
 
@@ -82,31 +69,40 @@ const NewPracticeForm: React.FC = () => {
   return (
     <div className="flex flex-col justify-start h-full">
       <div className="flex flex-row gap-4 mb-8">
-        <span className="text-white font-semibold flex flex-col justify-start items-start mt-2 whitespace-nowrap">
+        <span className="text-white font-semibold flex flex-col justify-start items-start mt-2">
           문제 개수
         </span>
-        <div className="flex flex-row">
-          <ToggleSelect
-            items={["AI 추천", "직접 입력"]}
-            onClick={(selectedItem) => {
-              setCountOption(selectedItem === "AI 추천" ? "AI" : "manual");
-              if (selectedItem === "AI 추천") {
+        <div className="flex flex-col items-start gap-4">
+          <div className="flex flex-row items-center gap-4">
+            <Button
+              label="AI 추천"
+              variant="select"
+              isSelected={countOption === "AI"}
+              onClick={() => {
+                setCountOption("AI");
                 setPracticeSize(0);
-              }
-            }}
-            isSelected={countOption === "manual"}
-          />
-
-          {countOption === "manual" && (
-            <CountInput
-              name="count"
-              defaultValue={
-                practiceSize !== null ? practiceSize.toString() : ""
-              }
-              onChange={handleCountChange}
-              placeholder="문제 개수를 입력하세요"
+              }}
             />
-          )}
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Button
+              label="직접 입력"
+              variant="select"
+              isSelected={countOption === "manual"}
+              onClick={() => setCountOption("manual")}
+            />
+            {countOption === "manual" && (
+              <CountInput
+                name="count"
+                defaultValue={
+                  practiceSize !== null ? practiceSize.toString() : ""
+                }
+                onChange={handleCountChange}
+                placeholder="0"
+              />
+            )}
+          </div>
         </div>
       </div>
 

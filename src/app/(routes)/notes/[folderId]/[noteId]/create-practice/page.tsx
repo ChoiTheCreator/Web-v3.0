@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { usePracticeContext } from "@/app/context/PracticeContext";
-import { usePracticeContext } from "@/app/context/PracticeContext";
 import NewPracticeForm from "@/app/components/organisms/NewPracticeForm";
 import Button from "@/app/components/atoms/Button";
 import { createPractice } from "@/app/api/practice/createPractice";
@@ -22,21 +21,9 @@ const CreatePracticePage = () => {
     type,
     setType,
   } = usePracticeContext();
-  const { folderId, noteId } = useParams();
-  const {
-    file,
-    keywords,
-    requirement,
-    practiceSize,
-    setQuestions,
-    setSummary,
-    type,
-    setType,
-  } = usePracticeContext();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreatePractice = async () => {
-    if (!noteId || !file || file.size === 0) {
     if (!noteId || !file || file.size === 0) {
       alert("파일이 업로드되지 않았습니다. 파일을 선택해주세요.");
       return;
@@ -64,16 +51,12 @@ const CreatePracticePage = () => {
       };
 
       if (practiceSize !== null) {
-
-      if (practiceSize !== null) {
         createPracticeReq.practiceSize = practiceSize;
       }
 
       const practiceResponse = await createPractice({
         noteId: Number(noteId),
-        noteId: Number(noteId),
         createPracticeReq,
-        file,
         file,
       });
 
@@ -83,12 +66,7 @@ const CreatePracticePage = () => {
         const formattedQuestions = practiceResList.map((question: any) => ({
           ...question,
           content: question.content.replace(/^\d+:\s*/, ""),
-          content: question.content.replace(/^\d+:\s*/, ""),
         }));
-
-        setQuestions(formattedQuestions);
-
-        setSummary(summary);
 
         setQuestions(formattedQuestions);
 
@@ -96,7 +74,6 @@ const CreatePracticePage = () => {
       } else {
         console.log("응답 데이터에 information이 없습니다.", practiceResponse);
       }
-
 
       router.push(`/notes/${folderId}/${noteId}/result?tab=questions`);
     } catch (error) {
@@ -108,10 +85,6 @@ const CreatePracticePage = () => {
           console.log("응답 데이터: ", axiosError.response.data);
           console.log("응답 상태 코드: ", axiosError.response.status);
           console.log("응답 헤더: ", axiosError.response.headers);
-          const axiosError = error as any;
-          console.log("응답 데이터: ", axiosError.response.data);
-          console.log("응답 상태 코드: ", axiosError.response.status);
-          console.log("응답 헤더: ", axiosError.response.headers);
         } else if (error.message) {
           console.log("오류 메시지: ", error.message);
         }
@@ -119,7 +92,6 @@ const CreatePracticePage = () => {
         console.log("알 수 없는 오류 발생", error);
       }
     } finally {
-      setIsLoading(false);
       setIsLoading(false);
     }
   };
