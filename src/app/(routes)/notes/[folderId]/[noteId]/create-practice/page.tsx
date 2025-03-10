@@ -104,22 +104,23 @@ const CreatePracticePage = () => {
         </div>
       )}
       <div className="flex flex-col justify-between h-full p-8">
-        <div className="flex flex-col justify-start mb-8">
-          <p className="text-white text-sm font-normal">
-            복습 문제 생성 옵션을 선택해주세요
-          </p>
-          <p className="text-white text-2xl font-normal">새로운 복습 문제지</p>
+        <div className="flex flex-row w-full justify-between items-center align-middle pb-8">
+          <div className="flex flex-col justify-start gap-2">
+            <p className="text-white text-2xl font-bold">새로운 수업</p>
+            <p className="text-white text-sm font-normal">
+              복습 문제 옵션을 선택하세요
+            </p>
+          </div>
+          <div>
+            <Button
+              label="만들기"
+              variant="next"
+              onClick={handleCreatePractice}
+            />
+          </div>
         </div>
 
         <NewPracticeForm />
-
-        <div className="flex justify-end">
-          <Button
-            label="복습 문제 생성"
-            variant="next"
-            onClick={handleCreatePractice}
-          />
-        </div>
       </div>
     </>
   );

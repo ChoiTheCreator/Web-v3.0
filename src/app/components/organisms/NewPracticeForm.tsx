@@ -3,6 +3,7 @@ import Button from "@/app/components/atoms/Button";
 import CountInput from "@/app/components/atoms/CountInput";
 import Popover from "@/app/components/molecules/PopOver";
 import { usePracticeContext } from "@/app/context/PracticeContext";
+import ToggleSelect from "../atoms/ToggleSelect";
 
 const NewPracticeForm: React.FC = () => {
   const { practiceSize, setPracticeSize, type, setType } = usePracticeContext();
@@ -68,7 +69,7 @@ const NewPracticeForm: React.FC = () => {
   return (
     <div className="flex flex-col justify-start h-full">
       <div className="flex flex-row gap-4 mb-8">
-        <span className="text-white flex flex-col justify-start items-start mt-2">
+        <span className="text-white font-semibold flex flex-col justify-start items-start mt-2">
           문제 개수
         </span>
         <div className="flex flex-col items-start gap-4">
@@ -106,7 +107,7 @@ const NewPracticeForm: React.FC = () => {
       </div>
 
       <div className="flex items-center mb-8 gap-4">
-        <span className="text-white">문제 유형</span>
+        <span className="text-white font-semibold">문제 유형</span>
         <div className="flex flex-row gap-2">
           <div
             ref={oxRef}
@@ -114,7 +115,7 @@ const NewPracticeForm: React.FC = () => {
             onMouseLeave={() => setShowPopover(null)}
           >
             <Button
-              label="O X 퀴즈"
+              label="OX 퀴즈"
               variant="select"
               isSelected={type === "OX" || type === "BOTH"}
               onClick={() => toggleType("OX")}
