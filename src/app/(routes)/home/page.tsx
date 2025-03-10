@@ -106,14 +106,14 @@ const HomePage = () => {
         </div>
 
         <div className="bg-black-80 rounded-lg rounded-b-none mx-4 h-full">
+          <div className="flex text-center">
+            {showOnboarding && (
+              <OnBoardingModal onClose={closeOnboarding}></OnBoardingModal>
+            )}
+          </div>
           {folders.length === 0 ? (
             <div className="flex flex-col justify-center items-center h-full text-center text-white">
-              <div className="flex items-center justify-center">
-                {' '}
-                {showOnboarding && (
-                  <OnBoardingModal onClose={closeOnboarding}></OnBoardingModal>
-                )}
-              </div>
+              <div className="flex items-center justify-center"> </div>
               <p className="text-xl font-bold mb-4">
                 강의 과목 폴더를 만들어 보세요.
               </p>
