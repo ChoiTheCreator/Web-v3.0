@@ -54,7 +54,7 @@ const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
 
   return (
     <div
-      className="fixed flex inset-0 items-center justify-center bg-black bg-opacity-50 backdrop-blur-md"
+      className="fixed flex flex-col z-50 inset-0 items-center justify-center bg-black bg-opacity-50 backdrop-blur-md"
       onClick={onClose}
     >
       <div
