@@ -5,7 +5,7 @@ import { PracticeProvider } from "@/app/context/PracticeContext";
 import { usePathname } from "next/navigation";
 import Header from "@/app/components/utils/Header";
 import "@/app/globals.css";
-import { useCookies } from "react-cookie";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <div>
       <PracticeProvider>
+        <Toaster />
         <div className="flex bg-black">
           {!isLoginPage && <Sidebar />}
           <div className="flex flex-col w-full">
