@@ -3,15 +3,14 @@ import Button from "@/app/components/atoms/Button";
 import CountInput from "@/app/components/atoms/CountInput";
 import Popover from "@/app/components/molecules/PopOver";
 import { usePracticeContext } from "@/app/context/PracticeContext";
+import ToggleSelect from "../atoms/ToggleSelect";
 
 const NewPracticeForm: React.FC = () => {
   const { practiceSize, setPracticeSize, type, setType } = usePracticeContext();
   const [countOption, setCountOption] = useState<"AI" | "manual">("AI");
-
   const [showPopover, setShowPopover] = useState<"OX" | "SHORT" | null>(null);
-  const oxRef = useRef<HTMLDivElement>(null); // OX 버튼에 대한 ref
-  const shortRef = useRef<HTMLDivElement>(null); // 단답형 버튼에 대한 ref
-
+  const oxRef = useRef<HTMLDivElement>(null);
+  const shortRef = useRef<HTMLDivElement>(null);
   const [oxPopoverPosition, setOXPopoverPosition] = useState<{
     top: string;
     left: string;
@@ -70,76 +69,67 @@ const NewPracticeForm: React.FC = () => {
   return (
     <div className="flex flex-col justify-start h-full">
       <div className="flex flex-row gap-4 mb-8">
-        <span className="text-white flex flex-col justify-start items-start mt-2">
+        <span className="text-white font-semibold flex flex-col justify-start items-start mt-2 whitespace-nowrap">
           문제 개수
         </span>
-        <div className="flex flex-col items-start gap-4">
-          <div className="flex flex-row items-center gap-4">
-            <Button
-              label="AI 추천"
-              variant="select"
-              isSelected={countOption === "AI"}
-              onClick={() => {
-                setCountOption("AI");
+        <div className="flex flex-row">
+          <ToggleSelect
+            items={["AI 추천", "직접 입력"]}
+            onClick={(selectedItem) => {
+              setCountOption(selectedItem === "AI 추천" ? "AI" : "manual");
+              if (selectedItem === "AI 추천") {
                 setPracticeSize(0);
-              }}
-            />
-            <p className="text-white">복습에 필요한 진짜 문제를 제공해드려요</p>
-          </div>
+              }
+            }}
+            isSelected={countOption === "manual"}
+          />
 
-          <div className="flex items-center gap-4">
-            <Button
-              label="직접 입력"
-              variant="select"
-              isSelected={countOption === "manual"}
-              onClick={() => setCountOption("manual")}
+          {countOption === "manual" && (
+            <CountInput
+              name="count"
+              defaultValue={
+                practiceSize !== null ? practiceSize.toString() : ""
+              }
+              onChange={handleCountChange}
+              placeholder="문제 개수를 입력하세요"
             />
-
-            {countOption === "manual" && (
-              <CountInput
-                name="count"
-                defaultValue={
-                  practiceSize !== null ? practiceSize.toString() : ""
-                }
-                onChange={handleCountChange}
-                placeholder="0"
-              />
-            )}
-          </div>
+          )}
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mb-8">
-        <span className="text-white">문제 유형</span>
-        <div
-          ref={oxRef}
-          onMouseEnter={() => setShowPopover("OX")}
-          onMouseLeave={() => setShowPopover(null)}
-        >
-          <Button
-            label="O X 퀴즈"
-            variant="select"
-            isSelected={type === "OX" || type === "BOTH"}
-            onClick={() => toggleType("OX")}
-          />
-          {showPopover === "OX" && (
-            <Popover type="OX" position={oxPopoverPosition} />
-          )}
-        </div>
-        <div
-          ref={shortRef}
-          onMouseEnter={() => setShowPopover("SHORT")}
-          onMouseLeave={() => setShowPopover(null)}
-        >
-          <Button
-            label="단답형"
-            variant="select"
-            isSelected={type === "SHORT" || type === "BOTH"}
-            onClick={() => toggleType("SHORT")}
-          />
-          {showPopover === "SHORT" && (
-            <Popover type="단답형" position={shortPopoverPosition} />
-          )}
+      <div className="flex items-center gap-4">
+        <span className="text-white font-semibold">문제 유형</span>
+        <div className="flex flex-row gap-2">
+          <div
+            ref={oxRef}
+            onMouseEnter={() => setShowPopover("OX")}
+            onMouseLeave={() => setShowPopover(null)}
+          >
+            <Button
+              label="OX 퀴즈"
+              variant="select"
+              isSelected={type === "OX" || type === "BOTH"}
+              onClick={() => toggleType("OX")}
+            />
+            {showPopover === "OX" && (
+              <Popover type="OX" position={oxPopoverPosition} />
+            )}
+          </div>
+          <div
+            ref={shortRef}
+            onMouseEnter={() => setShowPopover("SHORT")}
+            onMouseLeave={() => setShowPopover(null)}
+          >
+            <Button
+              label="단답형"
+              variant="select"
+              isSelected={type === "SHORT" || type === "BOTH"}
+              onClick={() => toggleType("SHORT")}
+            />
+            {showPopover === "SHORT" && (
+              <Popover type="단답형" position={shortPopoverPosition} />
+            )}
+          </div>
         </div>
       </div>
     </div>

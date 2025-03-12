@@ -13,6 +13,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   variant?: "select" | "next" | "create" | "cancel" | "save";
   iconPosition?: "left" | "right";
+  className?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -27,18 +28,22 @@ const Button: React.FC<ButtonProps> = ({
   type = "button",
   variant = "create",
   iconPosition = "right",
+  className = "",
 }) => {
   const getButtonStyles = () => {
     switch (variant) {
       case "select":
-        return `rounded-full ${isSelected ? "bg-primary" : "bg-black-70"}`;
+        return `rounded-full w-full transition-all duration-300 ease-in-out transform ${
+          isSelected ? "bg-primary shadow-lg" : "bg-black-80 opacity-80"
+        }`;
       case "next":
+        return `rounded-full border-black-70 border hover:bg-black-80 transition-all duration-300 ease-in-out`;
       case "create":
-        return `bg-black-70 rounded-full border border-black-60 hover:bg-black-80`;
+        return `bg-black-70 rounded-full border border-black-60 hover:bg-black-80 transition-all duration-300`;
       case "cancel":
-        return `bg-[#3F3F3F] rounded-[10px] border border-[#565656] hover:bg-[#222222]`;
+        return `bg-[#3F3F3F] rounded-[10px] border border-[#565656] hover:bg-[#222222] transition-all duration-300`;
       case "save":
-        return `bg-mainGreen rounded-[10px] border border-[#4CE5A9] hover:bg-[#00A264]`;
+        return `bg-mainGreen rounded-[10px] border border-[#4CE5A9] hover:bg-[#00A264] transition-all duration-300`;
       default:
         return "";
     }
@@ -47,7 +52,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={`flex items-center justify-center gap-2 py-1.5 px-4 text-white whitespace-nowrap ${getButtonStyles()}`}
+      className={`flex px-8 items-center font-semibold justify-center gap-2 pt-2 pb-1.5 flex-row text-white whitespace-nowrap align-middle ${getButtonStyles()} ${className}`}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -57,7 +62,7 @@ const Button: React.FC<ButtonProps> = ({
         <Image src={`/${imgSrc}.svg`} alt={imgAlt} width={16} height={16} />
       )}
 
-      <p className="font-Pretendard rounded-full font-normal text-center text-base">
+      <p className="font-Pretendard rounded-full flex flex-col text-center text-base align-middle items-center">
         {label}
       </p>
 
