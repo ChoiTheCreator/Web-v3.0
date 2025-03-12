@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import Header from "@/app/components/utils/Header";
 import "@/app/globals.css";
 import { Toaster } from "react-hot-toast";
+import useAuthInterceptor from "../hooks/auth/useAuthInterceptor";
 
 export default function RootLayout({
   children,
@@ -14,6 +15,7 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
   const isLoginPage = pathname.startsWith("/login");
+  useAuthInterceptor();
 
   return (
     <div>
