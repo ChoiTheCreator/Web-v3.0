@@ -9,9 +9,10 @@ export const useCreateFolder = () => {
     mutationFn: createFolder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["folders"] });
+      toast.error("폴더가 생성되었습니다");
     },
     onError: () => {
-      toast.error("폴더 조회를 실패하였습니다 ");
+      toast.error("폴더 생성을 실패하였습니다 ");
     },
   });
 };
