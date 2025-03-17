@@ -37,7 +37,7 @@ const useAuthInterceptor = () => {
     }, BASE_TIMEOUT);
 
     return () => clearTimeout(timer);
-  }, [session, update]);
+  }, [session, update, BASE_TIMEOUT]);
 
   return null;
 };
