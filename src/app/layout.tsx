@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import ClientSessionProvider from "./ClientSessionProvider";
+import { Metadata } from "next";
 import ReactQueryProvider from "@/app/providers/ReactQueryProvider";
+import ClientSessionProvider from "./ClientSessionProvider";
+import Head from "next/head";
+
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +20,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Head>
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+      </Head>
       <body className={inter.className}>
         <ReactQueryProvider>
           <ClientSessionProvider>{children}</ClientSessionProvider>
