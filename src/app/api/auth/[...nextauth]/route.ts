@@ -28,16 +28,16 @@ const handler = NextAuth({
             if (response.accessToken) {
               cookies().set("aiTutorToken", response.accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
+                secure: true,
+                sameSite: "none",
                 path: "/",
               });
 
               if (typeof response.refreshToken === "string") {
                 cookies().set("refreshToken", response.refreshToken, {
                   httpOnly: true,
-                  secure: process.env.NODE_ENV === "production",
-                  sameSite: "lax",
+                  secure: true,
+                  sameSite: "none",
                   path: "/",
                 });
               }
