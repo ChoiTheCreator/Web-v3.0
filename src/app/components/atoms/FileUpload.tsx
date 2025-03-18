@@ -84,7 +84,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           <div className="flex flex-col">
             <div
               {...getRootProps()}
-              className="flex flex-col justify-start w-[730px] h-32 rounded-md p-5 cursor-pointer bg-black-80 text-gray-400 hover:text-gray-500 hover:bg-bgDeepGray"
+              className="flex flex-col justify-start md:w-[730px] h-32 rounded-md p-5 cursor-pointer bg-black-80 text-gray-400 hover:text-gray-500 hover:bg-bgDeepGray"
             >
               <input {...getInputProps()} />
               {file ? (

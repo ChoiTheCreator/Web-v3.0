@@ -26,7 +26,6 @@ const CreatePracticePage = () => {
   const handleCreatePractice = async () => {
     if (!noteId || !file || file.size === 0) {
       alert("파일이 업로드되지 않았습니다. 파일을 선택해주세요.");
-      console.log("Missing noteId or file:", { noteId, file });
       return;
     }
 
@@ -37,19 +36,15 @@ const CreatePracticePage = () => {
 
     try {
       setIsLoading(true);
-      console.log("파일 및 문제 설정 준비 완료");
-      console.log("file: ", file);
-      console.log("practiceSize: ", practiceSize);
-      console.log("keywords: ", keywords);
-      console.log("requirement: ", requirement);
-      console.log("type: ", type);
 
-      const createPracticeReq: {
+      interface CreatePracticeReq {
         type: "OX" | "SHORT" | "BOTH";
         keywords: string;
         requirement: string;
         practiceSize?: number;
-      } = {
+      }
+
+      const createPracticeReq: CreatePracticeReq = {
         type,
         keywords: keywords || "",
         requirement: requirement || "",
@@ -59,20 +54,15 @@ const CreatePracticePage = () => {
         createPracticeReq.practiceSize = practiceSize;
       }
 
-      console.log("백엔드에게 전달될 데이터: ", createPracticeReq);
-
       const practiceResponse = await createPractice({
         noteId: Number(noteId),
         createPracticeReq,
         file,
       });
 
-      console.log("API 응답1: ", practiceResponse);
-
       if (practiceResponse && practiceResponse.information) {
         const { practiceResList, summary } = practiceResponse.information;
         console.log("practiceResList: ", practiceResList);
-
         const formattedQuestions = practiceResList.map((question: any) => ({
           ...question,
           content: question.content.replace(/^\d+:\s*/, ""),
@@ -88,7 +78,6 @@ const CreatePracticePage = () => {
       router.push(`/notes/${folderId}/${noteId}/result?tab=questions`);
     } catch (error) {
       alert("지금은 요청이 많아, 생성이 어려워요. 5분 후에 다시 시도해주세요.");
-      console.error("문제 생성 중 오류 발생");
 
       if (error instanceof Error) {
         if ((error as any).response) {
@@ -115,22 +104,23 @@ const CreatePracticePage = () => {
         </div>
       )}
       <div className="flex flex-col justify-between h-full p-8">
-        <div className="flex flex-col justify-start mb-8">
-          <p className="text-white text-sm font-normal">
-            복습 문제 생성 옵션을 선택해주세요
-          </p>
-          <p className="text-white text-2xl font-normal">새로운 복습 문제지</p>
+        <div className="flex flex-row w-full justify-between items-center align-middle pb-8">
+          <div className="flex flex-col justify-start gap-2">
+            <p className="text-white text-2xl font-bold">새로운 수업</p>
+            <p className="text-white text-sm font-normal">
+              복습 문제 옵션을 선택하세요
+            </p>
+          </div>
+          <div>
+            <Button
+              label="만들기"
+              variant="next"
+              onClick={handleCreatePractice}
+            />
+          </div>
         </div>
 
         <NewPracticeForm />
-
-        <div className="flex justify-end">
-          <Button
-            label="복습 문제 생성"
-            variant="next"
-            onClick={handleCreatePractice}
-          />
-        </div>
       </div>
     </>
   );

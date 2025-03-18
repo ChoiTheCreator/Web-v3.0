@@ -34,6 +34,7 @@ const HomePage = () => {
   const [professor, setProfessor] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
 
+
   const handleCreateFolder = async () => {
     try {
       await createFolder.mutateAsync({
@@ -46,10 +47,11 @@ const HomePage = () => {
     } catch (error) {
       console.error('폴더 생성 실패:', error);
     }
+
   };
 
-  const handleUpdateFolder = async () => {
-    if (!selectedFolder) return;
+  const handleUpdateFolder = () => {
+    if (!selectedFolder) return;<<<<<<< feat/onboard-Modal
     try {
       await updateFolder.mutateAsync({
         folderId: selectedFolder.folderId,
@@ -70,6 +72,21 @@ const HomePage = () => {
     } catch (error) {
       console.error('폴더 삭제 실패:', error);
     }
+
+    updateFolder.mutate({
+      folderId: selectedFolder.folderId,
+      folderName: subject,
+      professorName: professor,
+    });
+
+    setShowModify((prev) => ({ ...prev, [selectedFolder.folderId]: false }));
+    setShowModal(false);
+  };
+
+  const handleDeleteFolder = (folderId: number) => {
+    deleteFolder.mutate(folderId);
+    setSelectedFolder(null);
+
   };
   const { showOnboarding, closeOnboarding } = useOnboarding();
 

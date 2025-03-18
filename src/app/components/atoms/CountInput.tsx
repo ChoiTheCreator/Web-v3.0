@@ -1,5 +1,5 @@
 import React from "react";
-import { FormInput } from "../atoms/FormInput"; // 경로에 따라 수정하세요.
+import { FormInput } from "../atoms/FormInput";
 
 interface CountInputProps {
   name: string;
@@ -16,7 +16,6 @@ const CountInput: React.FC<CountInputProps> = ({
   onChange,
   disabled = false,
 }) => {
-  // handleChange 함수에서 value를 체크하여 20개를 초과하면 alert를 띄움
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     if (value > 20) {
@@ -32,7 +31,7 @@ const CountInput: React.FC<CountInputProps> = ({
         name={name}
         defaultValue={defaultValue}
         placeholder={placeholder}
-        onChange={handleChange} // handleChange 함수를 사용하여 변경
+        onChange={handleChange}
         variant="square"
         labelClassName="mr-2"
         disabled={disabled}
