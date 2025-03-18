@@ -24,18 +24,6 @@ export default function RootLayout({
 
   const [hasShownToast, setHasShownToast] = useState(false);
 
-  useEffect(() => {
-    if (status === "loading") return;
-
-    if (!session?.user?.aiTutorToken && !isLoginPage) {
-      if (!hasShownToast) {
-        toast.error("로그인 상태가 아닙니다");
-        setHasShownToast(true);
-      }
-      router.push("/login");
-    }
-  }, [session, status, hasShownToast, isLoginPage, router]);
-
   useAuthInterceptor();
 
   return (
