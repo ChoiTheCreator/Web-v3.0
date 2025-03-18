@@ -8,13 +8,14 @@ import {
 import { baseURL } from "..";
 import apiClient from "@/app/utils/api";
 
-// 노트 목록 조회(GET)
 export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
-  const response = await apiClient.get(`/api/v1/folders/${folderId}/notes`);
+  const response = await apiClient.get(
+    `${baseURL}/api/v1/folders/${folderId}/notes`
+  );
+
   return response.data;
 };
 
-// 새로운 노트 생성(POST)
 export const createNote = async (
   folderId: number,
   noteData: CreateNoteRequest
@@ -26,7 +27,6 @@ export const createNote = async (
   return response.data;
 };
 
-// 노트에 대한 폴더 정보 조회(GET)
 export const fetchFolderInfo = async (
   folderId: number
 ): Promise<FolderInfo> => {
@@ -36,7 +36,6 @@ export const fetchFolderInfo = async (
   return response.data;
 };
 
-// 노트 삭제(DELETE)
 export const deleteNote = async (
   noteId: number
 ): Promise<DeleteNoteResponse> => {
