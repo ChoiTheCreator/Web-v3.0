@@ -1,20 +1,24 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Button from "@/app/components/atoms/Button";
+import React, { useState } from 'react';
+import Button from '@/app/components/atoms/Button';
 import {
   SectionFolder,
   SectionModal,
   SectionModify,
-} from "@/app/components/molecules/Modal";
-import { useFetchFolders } from "@/app/hooks/folder/useFetchFolders";
-import { useCreateFolder } from "@/app/hooks/folder/useCreateFolder";
-import { useUpdateFolder } from "@/app/hooks/folder/useUpdateFolder";
-import { useDeleteFolder } from "@/app/hooks/folder/useDeleteFolder";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import speach_bubble from "../../../../public/speech_bubble.svg";
-import { Folder } from "@/app/types/folder";
+} from '@/app/components/molecules/Modal';
+import { useFetchFolders } from '@/app/hooks/folder/useFetchFolders';
+import { useCreateFolder } from '@/app/hooks/folder/useCreateFolder';
+import { useUpdateFolder } from '@/app/hooks/folder/useUpdateFolder';
+import { useDeleteFolder } from '@/app/hooks/folder/useDeleteFolder';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import speach_bubble from '../../../../public/speech_bubble.svg';
+import { Folder } from '@/app/types/folder';
+
+import { useOnboarding } from '@/app/hooks/useOnboarding';
+
+import OnBoardingModal from '@/app/components/molecules/OnBoardingModal';
 
 const HomePage = () => {
   const { data: session } = useSession();
@@ -26,18 +30,22 @@ const HomePage = () => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [professor, setProfessor] = useState("");
+  const [subject, setSubject] = useState('');
+  const [professor, setProfessor] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const handleCreateFolder = () => {
-    createFolder.mutate({
-      folderName: subject,
-      professorName: professor,
-    });
-    setShowModal(false);
-    setSubject("");
-    setProfessor("");
+  const handleCreateFolder = async () => {
+    try {
+      await createFolder.mutateAsync({
+        folderName: subject,
+        professorName: professor,
+      });
+      setShowModal(false);
+      setSubject('');
+      setProfessor('');
+    } catch (error) {
+      console.error('폴더 생성 실패:', error);
+    }
   };
 
   const handleUpdateFolder = () => {
@@ -57,7 +65,9 @@ const HomePage = () => {
     deleteFolder.mutate(folderId);
     setSelectedFolder(null);
   };
+  const { showOnboarding, closeOnboarding } = useOnboarding();
 
+  console.log(session?.user.name, 'section');
   return (
     <div className="flex flex-col justify-between h-full w-full">
       <div className="flex flex-col h-full rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
@@ -81,8 +91,8 @@ const HomePage = () => {
               variant="create"
               onClick={() => {
                 setIsEditMode(false);
-                setSubject("");
-                setProfessor("");
+                setSubject('');
+                setProfessor('');
                 setShowModal(true);
               }}
             />
@@ -90,8 +100,14 @@ const HomePage = () => {
         </div>
 
         <div className="bg-black-80 rounded-lg rounded-b-none mx-4 h-full">
+          <div className="flex text-center">
+            {showOnboarding && (
+              <OnBoardingModal onClose={closeOnboarding}></OnBoardingModal>
+            )}
+          </div>
           {folders.length === 0 ? (
             <div className="flex flex-col justify-center items-center h-full text-center text-white">
+              <div className="flex items-center justify-center"> </div>
               <p className="text-xl font-bold mb-4">
                 강의 과목 폴더를 만들어 보세요.
               </p>
@@ -102,7 +118,7 @@ const HomePage = () => {
             </div>
           ) : (
             <div className="flex flex-wrap justify-start items-start gap-4 mx-5 py-4">
-              {folders.map((folder) => (
+              {folders.map((folder: any) => (
                 <div
                   key={folder.folderId}
                   className="relative flex flex-col items-center"
