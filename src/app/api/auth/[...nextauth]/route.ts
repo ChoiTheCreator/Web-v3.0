@@ -29,16 +29,26 @@ const handler = NextAuth({
               cookies().set("aiTutorToken", response.accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
+                sameSite:
+                  process.env.NODE_ENV === "production" ? "none" : "lax",
                 path: "/",
+                domain:
+                  process.env.NODE_ENV === "production"
+                    ? ".ai-tutor.co.kr"
+                    : undefined,
               });
 
               if (typeof response.refreshToken === "string") {
                 cookies().set("refreshToken", response.refreshToken, {
                   httpOnly: true,
                   secure: process.env.NODE_ENV === "production",
-                  sameSite: "lax",
+                  sameSite:
+                    process.env.NODE_ENV === "production" ? "none" : "lax",
                   path: "/",
+                  domain:
+                    process.env.NODE_ENV === "production"
+                      ? ".ai-tutor.co.kr"
+                      : undefined,
                 });
               }
 
