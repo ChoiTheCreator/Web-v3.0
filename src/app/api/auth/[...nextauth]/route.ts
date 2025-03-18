@@ -27,26 +27,28 @@ const handler = NextAuth({
 
             if (response.accessToken) {
               cookies().set("aiTutorToken", response.accessToken, {
-                httpOnly: false,
-                secure: true,
-                sameSite: "none",
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite:
+                  process.env.NODE_ENV === "production" ? "none" : "lax",
                 path: "/",
                 domain:
                   process.env.NODE_ENV === "production"
                     ? ".ai-tutor.co.kr"
-                    : "localhost",
+                    : undefined,
               });
 
               if (typeof response.refreshToken === "string") {
                 cookies().set("refreshToken", response.refreshToken, {
-                  httpOnly: false,
-                  secure: true,
-                  sameSite: "none",
+                  httpOnly: true,
+                  secure: process.env.NODE_ENV === "production",
+                  sameSite:
+                    process.env.NODE_ENV === "production" ? "none" : "lax",
                   path: "/",
                   domain:
                     process.env.NODE_ENV === "production"
                       ? ".ai-tutor.co.kr"
-                      : "localhost",
+                      : undefined,
                 });
               }
 
