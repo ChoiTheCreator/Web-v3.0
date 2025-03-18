@@ -27,18 +27,26 @@ const handler = NextAuth({
 
             if (response.accessToken) {
               cookies().set("aiTutorToken", response.accessToken, {
-                httpOnly: true,
+                httpOnly: false,
                 secure: true,
                 sameSite: "none",
                 path: "/",
+                domain:
+                  process.env.NODE_ENV === "production"
+                    ? ".ai-tutor.co.kr"
+                    : "localhost",
               });
 
               if (typeof response.refreshToken === "string") {
                 cookies().set("refreshToken", response.refreshToken, {
-                  httpOnly: true,
+                  httpOnly: false,
                   secure: true,
                   sameSite: "none",
                   path: "/",
+                  domain:
+                    process.env.NODE_ENV === "production"
+                      ? ".ai-tutor.co.kr"
+                      : "localhost",
                 });
               }
 
