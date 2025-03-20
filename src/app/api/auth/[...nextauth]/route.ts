@@ -26,32 +26,6 @@ const handler = NextAuth({
             );
 
             if (response.accessToken) {
-              cookies().set("aiTutorToken", response.accessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite:
-                  process.env.NODE_ENV === "production" ? "none" : "lax",
-                path: "/",
-                domain:
-                  process.env.NODE_ENV === "production"
-                    ? ".ai-tutor.co.kr"
-                    : undefined,
-              });
-
-              if (typeof response.refreshToken === "string") {
-                cookies().set("refreshToken", response.refreshToken, {
-                  httpOnly: true,
-                  secure: process.env.NODE_ENV === "production",
-                  sameSite:
-                    process.env.NODE_ENV === "production" ? "none" : "lax",
-                  path: "/",
-                  domain:
-                    process.env.NODE_ENV === "production"
-                      ? ".ai-tutor.co.kr"
-                      : undefined,
-                });
-              }
-
               return {
                 ...token,
                 aiTutorToken: response.accessToken,
@@ -69,6 +43,33 @@ const handler = NextAuth({
     async session({ session, token }) {
       session.user.aiTutorToken = token.aiTutorToken;
       session.user.refreshToken = token.refreshToken;
+
+      if (token.aiTutorToken) {
+        cookies().set("aiTutorToken", token.aiTutorToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          domain:
+            process.env.NODE_ENV === "production"
+              ? ".ai-tutor.co.kr"
+              : undefined,
+        });
+
+        if (token.refreshToken) {
+          cookies().set("refreshToken", token.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            domain:
+              process.env.NODE_ENV === "production"
+                ? ".ai-tutor.co.kr"
+                : undefined,
+          });
+        }
+      }
+
       return session;
     },
   },
