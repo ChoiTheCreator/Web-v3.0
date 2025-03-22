@@ -11,40 +11,40 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account, user }) {
-      console.log("🔹 [JWT 콜백 실행] 현재 토큰:", token);
+    async jwt({ token, account, user, trigger }) {
+      console.log("🔹 [JWT 콜백 실행]");
+      console.log("🔸 token:", token);
+      console.log("🔸 account:", account);
+      console.log("🔸 user:", user);
+      console.log("🔸 trigger:", trigger);
 
-      if (account && account.access_token) {
-        token.accessToken = account.access_token as string;
+      if (trigger === "signIn" && account && user) {
+        const accessToken = account.access_token as string;
+        const providerId = account.providerAccountId;
 
-        const providerId = account.providerAccountId ?? user.id;
+        token.accessToken = accessToken;
 
-        if (user?.email) {
-          console.log("🚀 aiTutorSignIn 호출:", {
-            email: user.email,
+        console.log("🚀 aiTutorSignIn 호출:", {
+          email: user.email,
+          providerId,
+        });
+
+        try {
+          const response = await aiTutorSignIn(accessToken, {
+            email: user.email!,
             providerId,
           });
 
-          try {
-            const response = await aiTutorSignIn(token.accessToken as string, {
-              email: user.email,
-              providerId,
-            });
+          console.log("✅ aiTutorSignIn 응답:", response);
 
-            console.log("✅ aiTutorSignIn 응답:", response);
-
-            if (response.accessToken) {
-              return {
-                ...token,
-                aiTutorToken: response.accessToken,
-                refreshToken: response.refreshToken,
-              };
-            } else {
-              console.warn("⚠️ aiTutor 응답에 토큰이 없음");
-            }
-          } catch (e) {
-            console.error("❌ aiTutorSignIn 실패:", e);
+          if (response.accessToken) {
+            token.aiTutorToken = response.accessToken;
+            token.refreshToken = response.refreshToken;
+          } else {
+            console.warn("⚠️ aiTutor 응답에 토큰이 없음");
           }
+        } catch (e) {
+          console.error("❌ aiTutorSignIn 실패:", e);
         }
       }
 
