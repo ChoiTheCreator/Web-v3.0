@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Image from 'next/image';
 import OnBoardingCarousel from './OnBoardingCarousel';
-import { slides } from '@/app/constants/\bOnBoardingModalImageList';
+import { slides } from '@/app/constants/OnBoardingModalImageList';
 
 interface OnBoardingModalProps {
   onClose: () => void;
@@ -11,7 +11,6 @@ interface OnBoardingModalProps {
 
 const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
   //carousel IMG Array
-
   const [slideIndex, setSlideIndex] = useState(0);
 
   const handleSlideClicked = (index: number) => {
