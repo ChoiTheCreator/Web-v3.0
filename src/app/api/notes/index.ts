@@ -3,9 +3,9 @@ import {
   FolderInfo,
   CreateNoteRequest,
   DeleteNoteResponse,
-} from '@/app/types/note';
-import { baseURL } from '..';
-import apiClient from '@/app/utils/api';
+} from "@/app/types/note";
+import { baseURL } from "..";
+import apiClient from "@/app/utils/api";
 
 export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
   const response = await apiClient.get(
@@ -34,7 +34,7 @@ export const createSTT = async (
   file: File
 ): Promise<any> => {
   const formData = new FormData();
-  formData.append('file', file); // Swagger에서 요구한 key: file
+  formData.append("file", file); // Swagger에서 요구한 key: file
 
   try {
     const response = await apiClient.post(
@@ -42,13 +42,13 @@ export const createSTT = async (
       formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       }
     );
     return response.data;
   } catch (error) {
-    console.error('STT 생성 실패:', error);
+    console.error("STT 생성 실패:", error);
     throw error;
   }
 };
@@ -59,8 +59,8 @@ export const createNoteSTT = async (
   keywords: string | null,
   requirement: string | null
 ): Promise<any> => {
-  console.log('🟡 createNoteSTT 시작');
-  console.log('📨 요청 인자:', { folderId, noteId, keywords, requirement });
+  console.log("🟡 createNoteSTT 시작");
+  console.log("📨 요청 인자:", { folderId, noteId, keywords, requirement });
 
   try {
     const res = await apiClient.post(
@@ -74,22 +74,22 @@ export const createNoteSTT = async (
       }
     );
 
-    console.log('✅ createNoteSTT 응답:', res.data);
+    console.log("✅ createNoteSTT 응답:", res.data);
     return res.data;
   } catch (error) {
-    console.error('❌ createNoteSTT 요청 실패');
+    console.error("❌ createNoteSTT 요청 실패");
 
     if (error instanceof Error && (error as any).response) {
       const axiosError = error as any;
-      console.error('응답 데이터:', axiosError.response.data);
-      console.error('응답 상태 코드:', axiosError.response.status);
+      console.error("응답 데이터:", axiosError.response.data);
+      console.error("응답 상태 코드:", axiosError.response.status);
     } else {
-      console.error('일반 에러:', error);
+      console.error("일반 에러:", error);
     }
 
     throw error;
   } finally {
-    console.log('🔚 createNoteSTT 종료');
+    console.log("🔚 createNoteSTT 종료");
   }
 };
 
@@ -127,7 +127,7 @@ export const sumamryNote = async (
     );
     return response.data;
   } catch (e) {
-    console.log('summaryNote 상에서 오류 발생', e);
+    console.log("summaryNote 상에서 오류 발생", e);
     throw e;
   }
 };
