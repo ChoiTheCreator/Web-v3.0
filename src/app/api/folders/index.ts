@@ -2,22 +2,10 @@ import {
   FolderListData,
   PatchFolderProps,
   PostFolderProps,
-} from '@/app/types/folder';
-import { baseURL } from '..';
+} from "@/app/types/folder";
+import { baseURL } from "..";
 
-import apiClient from '@/app/utils/api';
-
-export const getFolders = async (): Promise<FolderListData[]> => {
-  //folder -> folders로 수정
-  try {
-    const response = await apiClient.get(`${baseURL}/api/v1/folders`);
-    console.log('폴더 펫칭 성공했습니다.');
-    return response.data.information;
-  } catch (e) {
-    console.log('폴더 펫칭중 에러 발생', e);
-  }
-  return [];
-};
+import apiClient from "@/app/utils/api";
 
 export const createFolder = async ({
   folderName,
@@ -58,4 +46,9 @@ export const deleteFolder = async (folderId: number) => {
 export const fetchFolderName = async () => {
   const response = await apiClient.get(`${baseURL}/api/v1/folders/names`);
   return response.data;
+};
+
+export const getFolders = async () => {
+  const response = await apiClient.get(`${baseURL}/api/v1/folders`);
+  return response.data.information;
 };
