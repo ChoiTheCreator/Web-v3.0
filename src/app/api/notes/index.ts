@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   NoteResponse,
   FolderInfo,
   CreateNoteRequest,
   DeleteNoteResponse,
-} from "@/app/types/note";
-import { baseURL } from "..";
-import apiClient from "@/app/utils/api";
+} from '@/app/types/note';
+import { baseURL } from '..';
+import apiClient from '@/app/utils/api';
 
 export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
   const response = await apiClient.get(
@@ -21,7 +21,7 @@ export const createNote = async (
   noteData: CreateNoteRequest
 ): Promise<{ message: string }> => {
   const response = await apiClient.post(
-    `/api/v1/professor/note/${folderId}`,
+    `/api/v1/folders/${folderId}/notes`,
     noteData
   );
   return response.data;
