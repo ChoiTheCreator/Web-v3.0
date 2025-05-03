@@ -1,17 +1,18 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { fetchNotes, deleteNote, createNote } from "@/app/api/notes";
-import { getFolders } from "@/app/api/folders";
-import Info from "@/app/components/molecules/Info";
-import NoteList from "@/app/components/organisms/NoteList";
-import Button from "@/app/components/atoms/Button";
-import { NoteData, NoteResponse } from "@/app/types/note";
-import Skeleton from "@/app/components/utils/Skeleton";
-import NewNoteForm from "@/app/components/organisms/NewNoteForm";
-import { usePracticeContext } from "@/app/context/PracticeContext";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { fetchNotes, deleteNote, createNote, createSTT } from '@/app/api/notes';
+import { getFolders } from '@/app/api/folders';
+import Info from '@/app/components/molecules/Info';
+import NoteList from '@/app/components/organisms/NoteList';
+import Button from '@/app/components/atoms/Button';
+import { NoteData, NoteResponse } from '@/app/types/note';
+import Skeleton from '@/app/components/utils/Skeleton';
+import NewNoteForm from '@/app/components/organisms/NewNoteForm';
+import { usePracticeContext } from '@/app/context/PracticeContext';
 
 const NotesPage = () => {
+  const { file } = usePracticeContext();
   const router = useRouter();
   const { folderId } = useParams();
 
@@ -28,7 +29,7 @@ const NotesPage = () => {
   const [notes, setNotes] = useState<NoteData[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [noteName, setNoteName] = useState("");
+  const [noteName, setNoteName] = useState('');
 
   useEffect(() => {
     if (folderId) {
@@ -42,13 +43,13 @@ const NotesPage = () => {
             setFolderName(currentFolder.folderName);
             setProfessor(currentFolder.professor);
           } else {
-            console.error("Folder not found");
+            console.error('Folder not found');
           }
 
           const notesData: NoteResponse = await fetchNotes(Number(folderId));
           setNotes(notesData.noteListDetailRes);
         } catch (error) {
-          console.error("Failed to load notes:", error);
+          console.error('Failed to load notes:', error);
         } finally {
           setLoading(false);
         }
@@ -64,29 +65,50 @@ const NotesPage = () => {
       const notesData: NoteResponse = await fetchNotes(Number(folderId));
       setNotes(notesData.noteListDetailRes);
     } catch (error) {
-      console.error("Failed to delete note:", error);
+      console.error('Failed to delete note:', error);
     }
   };
 
   const handleCreateNote = async () => {
+    console.log('🟡 handleCreateNote 시작');
+
     try {
       if (!noteName) {
-        alert("노트 이름을 입력해 주세요.");
+        alert('❌ 노트 이름을 입력해 주세요.');
         return;
       }
 
+      console.log('📤 노트 생성 요청', { folderId, noteName });
       const createdNoteResponse = await createNote(Number(folderId), {
         title: noteName,
       });
+      console.log('✅ 노트 생성 응답:', createdNoteResponse);
 
       if (createdNoteResponse) {
         const notesData: NoteResponse = await fetchNotes(Number(folderId));
+        console.log('📚 최신 노트 목록:', notesData);
+
         const newNote =
           notesData.noteListDetailRes[notesData.noteListDetailRes.length - 1];
+        console.log('🆕 새 노트 정보:', newNote);
+
+        if (file) {
+          console.log('🎧 STT 변환 시작 - 파일:', file);
+          await createSTT(Number(folderId), newNote.noteId, file);
+          alert('✅ STT 변환 성공');
+        } else {
+          console.warn('⚠️ STT 변환 생략 - 파일 없음');
+        }
+
+        console.log(
+          '➡️ 라우팅 이동:',
+          `/notes/${folderId}/${newNote.noteId}/create-practice`
+        );
         router.push(`/notes/${folderId}/${newNote.noteId}/create-practice`);
       }
     } catch (error) {
-      console.error("Failed to create note:", error);
+      console.error('❌ Failed to create note:', error);
+      alert('노트 생성 중 오류 발생! 콘솔을 확인해주세요.');
     }
   };
 
@@ -168,6 +190,7 @@ const NotesPage = () => {
 
       {isFormOpen && (
         <div className="flex justify-end p-8">
+          {/* 찾았다 이새끼 */}
           <Button
             label="다음"
             variant="next"
