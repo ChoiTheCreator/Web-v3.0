@@ -16,6 +16,7 @@ export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
   return response.data;
 };
 
+//새 노트 만들기
 export const createNote = async (
   folderId: number,
   noteData: CreateNoteRequest
@@ -103,10 +104,11 @@ export const fetchFolderInfo = async (
 };
 
 export const deleteNote = async (
+  folderId: number,
   noteId: number
 ): Promise<DeleteNoteResponse> => {
   const response = await apiClient.delete(
-    `${baseURL}/api/v1/professor/note/${noteId}`
+    `${baseURL}/api/v1/folders/${folderId}/notes/${noteId}`
   );
   return response.data;
 };
