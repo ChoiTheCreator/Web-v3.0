@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { FormInput } from "@/app/components/atoms/FormInput";
-import FileUpload from "@/app/components/atoms/FileUpload";
-import TabComponent from "@/app/components/atoms/Tab";
-import { usePracticeContext } from "@/app/context/PracticeContext";
-import { getFolders } from "@/app/api/folders";
-import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from 'react';
+import { FormInput } from '@/app/components/atoms/FormInput';
+import FileUpload from '@/app/components/atoms/FileUpload';
+import TabComponent from '@/app/components/atoms/Tab';
+import { usePracticeContext } from '@/app/context/PracticeContext';
+import { getFolders } from '@/app/api/folders';
+import { useSession } from 'next-auth/react';
 
 interface NewNoteFormProps {
   folderId: number;
@@ -22,16 +22,16 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({
 }) => {
   const { setFile, setKeywords, setRequirement } = usePracticeContext();
   const { data: session } = useSession();
-  const token = session?.user.aiTutorToken;
+  const token = session?.user.aiTutorToken; //이건 머임
 
-  const [keywords, setLocalKeywords] = useState("");
-  const [requirement, setLocalRequirement] = useState("");
+  const [keywords, setLocalKeywords] = useState('');
+  const [requirement, setLocalRequirement] = useState('');
   const [folderInfo, setFolderInfo] = useState<{
     folderName: string;
     professor: string;
   }>({
-    folderName: "",
-    professor: "",
+    folderName: '',
+    professor: '',
   });
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({
         const folders = await getFolders();
 
         const currentFolder = folders.find(
-          (folder) => folder.folderId === folderId
+          (folder: any) => folder.folderId === folderId
         );
         if (currentFolder) {
           setFolderInfo({
@@ -48,10 +48,10 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({
             professor: currentFolder.professor,
           });
         } else {
-          console.error("Folder not found");
+          console.error('Folder not found');
         }
       } catch (error) {
-        console.error("Failed to fetch folder details:", error);
+        console.error('Failed to fetch folder details:', error);
       }
     };
 

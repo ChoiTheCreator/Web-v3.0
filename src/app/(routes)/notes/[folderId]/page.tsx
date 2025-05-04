@@ -1,15 +1,15 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { fetchNotes, deleteNote, createNote } from "@/app/api/notes";
-import { getFolders } from "@/app/api/folders";
-import Info from "@/app/components/molecules/Info";
-import NoteList from "@/app/components/organisms/NoteList";
-import Button from "@/app/components/atoms/Button";
-import { NoteData, NoteResponse } from "@/app/types/note";
-import Skeleton from "@/app/components/utils/Skeleton";
-import NewNoteForm from "@/app/components/organisms/NewNoteForm";
-import { usePracticeContext } from "@/app/context/PracticeContext";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { fetchNotes, deleteNote, createNote, createSTT } from '@/app/api/notes';
+import { getFolders } from '@/app/api/folders';
+import Info from '@/app/components/molecules/Info';
+import NoteList from '@/app/components/organisms/NoteList';
+import Button from '@/app/components/atoms/Button';
+import { NoteData, NoteResponse } from '@/app/types/note';
+import Skeleton from '@/app/components/utils/Skeleton';
+import NewNoteForm from '@/app/components/organisms/NewNoteForm';
+import { usePracticeContext } from '@/app/context/PracticeContext';
 
 const NotesPage = () => {
   const router = useRouter();
@@ -28,7 +28,7 @@ const NotesPage = () => {
   const [notes, setNotes] = useState<NoteData[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [noteName, setNoteName] = useState("");
+  const [noteName, setNoteName] = useState('');
 
   useEffect(() => {
     if (folderId) {
@@ -36,19 +36,19 @@ const NotesPage = () => {
         try {
           const folders = await getFolders();
           const currentFolder = folders.find(
-            (folder) => folder.folderId === Number(folderId)
+            (folder: any) => folder.folderId === Number(folderId)
           );
           if (currentFolder) {
             setFolderName(currentFolder.folderName);
             setProfessor(currentFolder.professor);
           } else {
-            console.error("Folder not found");
+            console.error('Folder not found');
           }
 
           const notesData: NoteResponse = await fetchNotes(Number(folderId));
           setNotes(notesData.noteListDetailRes);
         } catch (error) {
-          console.error("Failed to load notes:", error);
+          console.error('Failed to load notes:', error);
         } finally {
           setLoading(false);
         }
@@ -60,33 +60,43 @@ const NotesPage = () => {
 
   const handleDeleteNote = async (noteId: number) => {
     try {
-      await deleteNote(noteId);
+      await deleteNote(folderId, noteId);
       const notesData: NoteResponse = await fetchNotes(Number(folderId));
       setNotes(notesData.noteListDetailRes);
     } catch (error) {
-      console.error("Failed to delete note:", error);
+      console.error('Failed to delete note:', error);
     }
   };
 
-  const handleCreateNote = async () => {
+  const handleNoteNextBtn = async () => {
+    console.log('🟡 handleNoteNextBtn 시작');
+
     try {
       if (!noteName) {
-        alert("노트 이름을 입력해 주세요.");
+        alert('❌ 노트 이름을 입력해 주세요.');
         return;
       }
 
+      console.log('📤 노트 생성 요청', { folderId, noteName });
       const createdNoteResponse = await createNote(Number(folderId), {
         title: noteName,
       });
 
+      console.log('✅ 노트 생성 응답:', createdNoteResponse);
+
       if (createdNoteResponse) {
         const notesData: NoteResponse = await fetchNotes(Number(folderId));
+        console.log('📚 최신 노트 목록:', notesData);
+
         const newNote =
           notesData.noteListDetailRes[notesData.noteListDetailRes.length - 1];
-        router.push(`/notes/${folderId}/${newNote.noteId}/create-practice`);
+        console.log('🆕 새 노트 정보:', newNote);
+
+        router.push(`/notes/${folderId}/${newNote.noteId}/confirm`);
       }
     } catch (error) {
-      console.error("Failed to create note:", error);
+      console.error('❌ Failed to create note:', error);
+      alert('노트 생성 중 오류 발생! 콘솔을 확인해주세요.');
     }
   };
 
@@ -172,7 +182,8 @@ const NotesPage = () => {
             label="다음"
             variant="next"
             imgSrc="arrow_next"
-            onClick={handleCreateNote}
+            // onClick={handleCreateNote}
+            onClick={handleNoteNextBtn}
           />
         </div>
       )}

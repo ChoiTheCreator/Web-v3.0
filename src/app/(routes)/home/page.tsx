@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Button from "@/app/components/atoms/Button";
+import React, { useState } from 'react';
+import Button from '@/app/components/atoms/Button';
 import {
   SectionFolder,
   SectionModal,
   SectionModify,
-} from "@/app/components/molecules/Modal";
-import { useFetchFolders } from "@/app/hooks/folder/useFetchFolders";
-import { useCreateFolder } from "@/app/hooks/folder/useCreateFolder";
-import { useUpdateFolder } from "@/app/hooks/folder/useUpdateFolder";
-import { useDeleteFolder } from "@/app/hooks/folder/useDeleteFolder";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import speach_bubble from "../../../../public/speech_bubble.svg";
-import { Folder } from "@/app/types/folder";
+} from '@/app/components/molecules/Modal';
+import { useFetchFolders } from '@/app/hooks/folder/useFetchFolders';
+import { useCreateFolder } from '@/app/hooks/folder/useCreateFolder';
+import { useUpdateFolder } from '@/app/hooks/folder/useUpdateFolder';
+import { useDeleteFolder } from '@/app/hooks/folder/useDeleteFolder';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import speach_bubble from '../../../../public/speech_bubble.svg';
+import { Folder } from '@/app/types/folder';
 
-import { useOnboarding } from "@/app/hooks/useOnboarding";
+import { useOnboarding } from '@/app/hooks/useOnboarding';
 
-import OnBoardingModal from "@/app/components/molecules/OnBoardingModal";
+import OnBoardingModal from '@/app/components/molecules/OnBoardingModal';
 
 const HomePage = () => {
   const { data: session } = useSession();
@@ -30,8 +30,8 @@ const HomePage = () => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [professor, setProfessor] = useState("");
+  const [subject, setSubject] = useState('');
+  const [professor, setProfessor] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleCreateFolder = async () => {
@@ -41,10 +41,10 @@ const HomePage = () => {
         professorName: professor,
       });
       setShowModal(false);
-      setSubject("");
-      setProfessor("");
+      setSubject('');
+      setProfessor('');
     } catch (error) {
-      console.error("폴더 생성 실패:", error);
+      console.error('폴더 생성 실패:', error);
     }
   };
 
@@ -67,7 +67,7 @@ const HomePage = () => {
   };
   const { showOnboarding, closeOnboarding } = useOnboarding();
 
-  console.log(session?.user.name, "section");
+  console.log(session?.user.name, 'section');
   return (
     <div className="flex flex-col justify-between h-full w-full">
       <div className="flex flex-col h-full rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
@@ -91,8 +91,8 @@ const HomePage = () => {
               variant="create"
               onClick={() => {
                 setIsEditMode(false);
-                setSubject("");
-                setProfessor("");
+                setSubject('');
+                setProfessor('');
                 setShowModal(true);
               }}
             />
