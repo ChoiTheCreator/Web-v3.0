@@ -91,15 +91,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
               {file ? (
                 <div className="flex flex-row w-full justify-between items-center">
                   <div className="flex items-center gap-2">
-                    {isUploading ? (
-                      <>
-                        <div className="w-4 h-4 animate-spin border-2 border-primary border-t-transparent rounded-full"></div>
-
-                        <p className="text-sm text-green-400 font-medium">
-                          {progress}%
-                        </p>
-                      </>
-                    ) : null}
                     <p className="text-base text-black-70 flex font-semibold gap-4">
                       <Image
                         src={`/active_folder.svg`}

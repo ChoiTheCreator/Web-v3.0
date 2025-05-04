@@ -135,12 +135,7 @@ const NotesPage = () => {
             </p>
           </div>
           <div>
-            <Button
-              label="다음"
-              variant="next"
-              // onClick={handleCreateNote}
-              onClick={handleNoteNextBtn}
-            />
+            <Button label="다음" variant="next" onClick={handleNoteNextBtn} />
           </div>
         </div>
       ) : (

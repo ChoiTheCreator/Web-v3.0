@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormInput } from "@/app/components/atoms/FormInput";
 import FileUpload from "@/app/components/atoms/FileUpload";
-import TabComponent from "@/app/components/atoms/Tab";
+import TabComponent from "@/app/components/atoms/TextInputSection";
 import { usePracticeContext } from "@/app/context/PracticeContext";
 import { getFolders } from "@/app/api/folders";
 import { useSession } from "next-auth/react";
