@@ -111,3 +111,23 @@ export const deleteNote = async (
   );
   return response.data;
 };
+
+export const sumamryNote = async (
+  folderId: number,
+  noteId: number,
+  keywords: string,
+  requirement: string
+): Promise<any> => {
+  try {
+    const response = await apiClient.post(
+      `${baseURL}/api/v1/folders/${folderId}/notes/${noteId}/summaries`,
+      {},
+      //swagger 상 param값 두개.
+      { params: { keywords, requirement } }
+    );
+    return response.data;
+  } catch (e) {
+    console.log('summaryNote 상에서 오류 발생', e);
+    throw e;
+  }
+};

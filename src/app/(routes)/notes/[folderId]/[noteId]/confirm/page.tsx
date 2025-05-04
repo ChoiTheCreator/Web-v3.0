@@ -3,18 +3,20 @@ import { useEffect, useState } from 'react';
 import Button from '@/app/components/atoms/Button';
 import TabComponent from '@/app/components/atoms/Tab';
 import { usePracticeContext } from '@/app/context/PracticeContext';
-import { createSTT } from '@/app/api/notes';
+import { createSTT, sumamryNote } from '@/app/api/notes';
 import { useParams, useRouter } from 'next/navigation';
 
 import Loader from '@/app/components/utils/Loader';
 
 const ConfirmNotePage = () => {
   //라우팅 경로의 useParams 중 fileID, folderID는 이전 페이지에서 확보
-  const { file, setKeywords, setRequirement } = usePracticeContext();
+  const { file, setKeywords, setRequirement, keywords, requirement } =
+    usePracticeContext();
   const [sttLoading, setSttLoading] = useState(true);
   //STT의 await을 차라리 여기 UseEffect에서 해버리는 구조가 더 적절해보임
   const { folderId, noteId } = useParams();
   const router = useRouter();
+
   useEffect(() => {
     const runSTT = async () => {
       if (file) {
@@ -45,7 +47,12 @@ const ConfirmNotePage = () => {
   }
 
   const handleNoteFinalBtn = () => {
-    router.push(`/notes/${folderId}/${noteId}/create-practice`);
+    try {
+      sumamryNote(Number(folderId), Number(noteId), keywords, requirement);
+      router.push(`/notes/${folderId}/${noteId}/create-practice`);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

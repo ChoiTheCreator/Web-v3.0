@@ -1,6 +1,4 @@
-import axios from "axios";
-import { baseURL } from "@/app/api/index"; // baseURL로 서버 주소를 관리하도록 import
-import apiClient from "@/app/utils/api";
+import apiClient from '@/app/utils/api';
 interface CreatePracticeReq {
   practiceSize: number;
   type: string; // 문제의 유형 (예: "OX")
@@ -20,13 +18,13 @@ export const postSummary = async ({ file, request }: PostSummaryProps) => {
   const formData = new FormData();
 
   // 파일을 FormData에 추가
-  formData.append("file", file);
+  formData.append('file', file);
 
   // JSON 데이터를 문자열로 변환 후 FormData에 추가
   formData.append(
-    "createPracticeReq",
+    'createPracticeReq',
     new Blob([JSON.stringify(request)], {
-      type: "application/json", // Blob을 올바른 MIME 타입으로 생성
+      type: 'application/json', // Blob을 올바른 MIME 타입으로 생성
     })
   );
 
@@ -37,15 +35,15 @@ export const postSummary = async ({ file, request }: PostSummaryProps) => {
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data", // FormData를 전송할 때 올바른 Content-Type 설정
+          'Content-Type': 'multipart/form-data', // FormData를 전송할 때 올바른 Content-Type 설정
         },
       }
     );
 
-    console.log("Response:", response.data);
+    console.log('Response:', response.data);
     return response.data;
   } catch (error) {
-    console.error("Upload error:", error);
+    console.error('Upload error:', error);
     throw error;
   }
 };

@@ -97,7 +97,10 @@ const CreatePracticePage = () => {
     <>
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Loader />
+          <Loader
+            message="노트만드는중 stt 기반으로"
+            subMessage="1분정도걸림 ㄱㄷ"
+          />
         </div>
       )}
       <div className="flex flex-col justify-between h-full p-8">
