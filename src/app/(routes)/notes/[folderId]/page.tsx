@@ -24,6 +24,8 @@ const NotesPage = () => {
     setProfessor,
     folderName,
     professor,
+    sttLoading,
+    setSttLoading,
   } = usePracticeContext();
 
   const [notes, setNotes] = useState<NoteData[]>([]);
@@ -69,8 +71,8 @@ const NotesPage = () => {
     }
   };
 
-  const handleCreateNote = async () => {
-    console.log('🟡 handleCreateNote 시작');
+  const handleNoteNextBtn = async () => {
+    console.log('🟡 handleNoteNextBtn 시작');
 
     try {
       if (!noteName) {
@@ -92,19 +94,11 @@ const NotesPage = () => {
           notesData.noteListDetailRes[notesData.noteListDetailRes.length - 1];
         console.log('🆕 새 노트 정보:', newNote);
 
-        if (file) {
-          console.log('🎧 STT 변환 시작 - 파일:', file);
-          await createSTT(Number(folderId), newNote.noteId, file);
-          alert('✅ STT 변환 성공');
-        } else {
-          console.warn('⚠️ STT 변환 생략 - 파일 없음');
-        }
-
         console.log(
           '➡️ 라우팅 이동:',
           `/notes/${folderId}/${newNote.noteId}/create-practice`
         );
-        router.push(`/notes/${folderId}/${newNote.noteId}/create-practice`);
+        router.push(`/notes/${folderId}/${newNote.noteId}/confirm`);
       }
     } catch (error) {
       console.error('❌ Failed to create note:', error);
@@ -112,9 +106,10 @@ const NotesPage = () => {
     }
   };
 
-  const handleNextClick = () => {
-    router.push(`/notes/${folderId}/${noteId}/confirm`);
-  };
+  //STT 변환을 위한 다음 버튼을 클릭하고 요구사항 입력 단계 페이지
+  // const handleNextClick = () => {
+  //   router.push(`/notes/${folderId}/${noteId}/confirm`);
+  // };
   if (loading) {
     return (
       <div className="h-full flex flex-col justify-start">
@@ -193,12 +188,12 @@ const NotesPage = () => {
 
       {isFormOpen && (
         <div className="flex justify-end p-8">
-          {/* 찾았다 이새끼 */}
           <Button
             label="다음"
             variant="next"
             imgSrc="arrow_next"
-            onClick={handleCreateNote}
+            // onClick={handleCreateNote}
+            onClick={handleNoteNextBtn}
           />
         </div>
       )}
