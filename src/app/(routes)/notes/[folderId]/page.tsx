@@ -12,9 +12,8 @@ import NewNoteForm from '@/app/components/organisms/NewNoteForm';
 import { usePracticeContext } from '@/app/context/PracticeContext';
 
 const NotesPage = () => {
-  const { file } = usePracticeContext();
   const router = useRouter();
-  const { folderId, noteId } = useParams();
+  const { folderId } = useParams();
 
   const {
     setFile,
@@ -24,8 +23,6 @@ const NotesPage = () => {
     setProfessor,
     folderName,
     professor,
-    sttLoading,
-    setSttLoading,
   } = usePracticeContext();
 
   const [notes, setNotes] = useState<NoteData[]>([]);
@@ -84,6 +81,7 @@ const NotesPage = () => {
       const createdNoteResponse = await createNote(Number(folderId), {
         title: noteName,
       });
+
       console.log('✅ 노트 생성 응답:', createdNoteResponse);
 
       if (createdNoteResponse) {

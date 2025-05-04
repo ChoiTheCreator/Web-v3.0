@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 interface TabProps {
   onKeywordChange: (keywords: string) => void;
@@ -11,14 +11,14 @@ const TabComponent: React.FC<TabProps> = ({
   onRequirementChange,
   labelClassName,
 }) => {
-  const [activeTab, setActiveTab] = useState<"keywords" | "requirements">(
-    "keywords"
+  const [activeTab, setActiveTab] = useState<'keywords' | 'requirements'>(
+    'keywords'
   );
 
-  const [keywords, setKeywords] = useState("");
-  const [requirement, setRequirement] = useState("");
+  const [keywords, setKeywords] = useState('');
+  const [requirement, setRequirement] = useState('');
 
-  const handleTabChange = (tab: "keywords" | "requirements") => {
+  const handleTabChange = (tab: 'keywords' | 'requirements') => {
     setActiveTab(tab);
   };
 
@@ -46,21 +46,21 @@ const TabComponent: React.FC<TabProps> = ({
       <div className="w-full max-w-[730px] bg-black-80 rounded-lg">
         <div className="flex">
           <button
-            onClick={() => handleTabChange("keywords")}
+            onClick={() => handleTabChange('keywords')}
             className={`flex-1 py-3 text-center font-medium transition-colors duration-200 ${
-              activeTab === "keywords"
-                ? "bg-[#05D686] text-black"
-                : "bg-[#5F5F5F] text-white"
+              activeTab === 'keywords'
+                ? 'bg-[#05D686] text-black'
+                : 'bg-[#5F5F5F] text-white'
             } rounded-tl-md`}
           >
             핵심 키워드 입력
           </button>
           <button
-            onClick={() => handleTabChange("requirements")}
+            onClick={() => handleTabChange('requirements')}
             className={`flex-1 py-3 text-center font-medium transition-colors duration-200 ${
-              activeTab === "requirements"
-                ? "bg-[#05D686] text-black"
-                : "bg-[#5F5F5F] text-white"
+              activeTab === 'requirements'
+                ? 'bg-[#05D686] text-black'
+                : 'bg-[#5F5F5F] text-white'
             } rounded-tr-md`}
           >
             요구사항 입력
@@ -68,7 +68,7 @@ const TabComponent: React.FC<TabProps> = ({
         </div>
 
         <div className="p-6 bg-[#252424] rounded-b-lg">
-          {activeTab === "keywords" && (
+          {activeTab === 'keywords' && (
             <div>
               <p className="text-gray-300 mb-2">
                 요약문을 작성할 때 강조하고 싶은 키워드를 입력해주세요.
@@ -81,7 +81,7 @@ const TabComponent: React.FC<TabProps> = ({
               />
             </div>
           )}
-          {activeTab === "requirements" && (
+          {activeTab === 'requirements' && (
             <div>
               <p className="text-gray-300 mb-2">
                 강의에서 강조하고 싶은 내용 혹은 어투, 분량을 정해주세요!
