@@ -22,7 +22,7 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({
 }) => {
   const { setFile, setKeywords, setRequirement } = usePracticeContext();
   const { data: session } = useSession();
-  const token = session?.user.aiTutorToken;
+  const token = session?.user.aiTutorToken; //이건 머임
 
   const [keywords, setLocalKeywords] = useState('');
   const [requirement, setLocalRequirement] = useState('');
@@ -40,7 +40,7 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({
         const folders = await getFolders();
 
         const currentFolder = folders.find(
-          (folder) => folder.folderId === folderId
+          (folder: any) => folder.folderId === folderId
         );
         if (currentFolder) {
           setFolderInfo({
