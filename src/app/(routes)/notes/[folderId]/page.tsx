@@ -14,7 +14,7 @@ import { usePracticeContext } from '@/app/context/PracticeContext';
 const NotesPage = () => {
   const { file } = usePracticeContext();
   const router = useRouter();
-  const { folderId } = useParams();
+  const { folderId, noteId } = useParams();
 
   const {
     setFile,
@@ -37,7 +37,7 @@ const NotesPage = () => {
         try {
           const folders = await getFolders();
           const currentFolder = folders.find(
-            (folder) => folder.folderId === Number(folderId)
+            (folder: any) => folder.folderId === Number(folderId)
           );
           if (currentFolder) {
             setFolderName(currentFolder.folderName);
@@ -61,7 +61,7 @@ const NotesPage = () => {
 
   const handleDeleteNote = async (noteId: number) => {
     try {
-      await deleteNote(noteId);
+      await deleteNote(folderId, noteId);
       const notesData: NoteResponse = await fetchNotes(Number(folderId));
       setNotes(notesData.noteListDetailRes);
     } catch (error) {
@@ -112,6 +112,9 @@ const NotesPage = () => {
     }
   };
 
+  const handleNextClick = () => {
+    router.push(`/notes/${folderId}/${noteId}/confirm`);
+  };
   if (loading) {
     return (
       <div className="h-full flex flex-col justify-start">

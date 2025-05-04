@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   NoteResponse,
   FolderInfo,
@@ -104,7 +103,7 @@ export const fetchFolderInfo = async (
 };
 
 export const deleteNote = async (
-  folderId: number,
+  folderId: any,
   noteId: number
 ): Promise<DeleteNoteResponse> => {
   const response = await apiClient.delete(
