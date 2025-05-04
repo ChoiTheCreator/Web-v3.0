@@ -127,11 +127,21 @@ const NotesPage = () => {
   return (
     <div className="h-full flex flex-col justify-between">
       {isFormOpen ? (
-        <div className="flex flex-col justify-start p-8">
-          <p className="text-white text-sm font-normal">
-            수업 정보를 입력해 주세요
-          </p>
-          <p className="text-white text-2xl font-normal">새로운 수업</p>
+        <div className="flex flex-row justify-between p-8 gap-2">
+          <div>
+            <p className="text-white text-2xl font-normal">새로운 수업</p>
+            <p className="text-white text-sm font-normal">
+              수업 정보를 입력해 주세요
+            </p>
+          </div>
+          <div>
+            <Button
+              label="다음"
+              variant="next"
+              // onClick={handleCreateNote}
+              onClick={handleNoteNextBtn}
+            />
+          </div>
         </div>
       ) : (
         <div className="flex flex-row justify-between">
@@ -175,18 +185,6 @@ const NotesPage = () => {
           </div>
         )}
       </div>
-
-      {isFormOpen && (
-        <div className="flex justify-end p-8">
-          <Button
-            label="다음"
-            variant="next"
-            imgSrc="arrow_next"
-            // onClick={handleCreateNote}
-            onClick={handleNoteNextBtn}
-          />
-        </div>
-      )}
     </div>
   );
 };

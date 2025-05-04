@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import Icon from "./Icon"; // 아이콘 컴포넌트 import
 import useFileDuration from "@/app/hooks/useFileDuration";
 import Button from "./Button";
+import Image from "next/image";
 
 interface FileUploadProps {
   noteId?: number;
@@ -73,7 +74,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   });
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 h-fit">
       <div className="flex flex-row justify-between">
         <div className="flex flex-row">
           <div
@@ -84,11 +85,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
           <div className="flex flex-col">
             <div
               {...getRootProps()}
-              className="flex flex-col justify-start md:w-[730px] h-32 rounded-md p-5 cursor-pointer bg-black-80 text-gray-400 hover:text-gray-500 hover:bg-bgDeepGray"
+              className="flex flex-col justify-start md:w-[730px] rounded-md p-5 cursor-pointer bg-neutral-800 text-gray-400 hover:text-gray-500 "
             >
               <input {...getInputProps()} />
               {file ? (
-                <div className="flex flex-row">
+                <div className="flex flex-row w-full justify-between items-center">
                   <div className="flex items-center gap-2">
                     {isUploading ? (
                       <>
@@ -99,8 +100,19 @@ const FileUpload: React.FC<FileUploadProps> = ({
                         </p>
                       </>
                     ) : null}
-                    <p className="text-base text-white font-normal">
-                      {file.name} {duration !== null && `(${duration}분)`}
+                    <p className="text-base text-black-70 flex font-semibold gap-4">
+                      <Image
+                        src={`/active_folder.svg`}
+                        alt={"active_folder"}
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex flex-col gap-1">
+                        <div className="text-white">{file.name}</div>
+                        <p className="font-medium text-sm">
+                          {duration !== null && `${duration}분`}
+                        </p>
+                      </div>
                     </p>
                   </div>
 
@@ -109,32 +121,25 @@ const FileUpload: React.FC<FileUploadProps> = ({
                     className="ml-3"
                     disabled={isUploading}
                   >
-                    <Icon label="ic_delete" size={12} />
+                    <Icon label="delete_bin_red" size={16} />
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col text-start items-start justify-start">
-                  <div className="flex items-center gap-2">
-                    <p className="text-base text-black-60">
+                <div className="flex flex-col items-center text-center justify-start ">
+                  <div className="flex items-center gap-3">
+                    <p className="text-base text-white">
                       파일 첨부를 클릭하거나 파일을 마우스로 끌어 오세요
                     </p>
                   </div>
                   <p className="text-base text-black-60 mt-1">
                     (파일 크기: 최대 120분, 지원 형식: m4a, mp3, wav)
                   </p>
+
+                  <label className="cursor-pointer pt-3">
+                    <Button label="파일 첨부" variant="select" onClick={open} />
+                  </label>
                 </div>
               )}
-            </div>
-            <div className="flex justify-end mt-4">
-              <label className="cursor-pointer">
-                <Button
-                  label="파일 선택"
-                  imgSrc="ic_file"
-                  variant="create"
-                  iconPosition="left"
-                  onClick={open}
-                />
-              </label>
             </div>
           </div>
         </div>
