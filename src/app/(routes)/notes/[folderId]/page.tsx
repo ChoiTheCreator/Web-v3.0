@@ -94,10 +94,6 @@ const NotesPage = () => {
           notesData.noteListDetailRes[notesData.noteListDetailRes.length - 1];
         console.log('🆕 새 노트 정보:', newNote);
 
-        console.log(
-          '➡️ 라우팅 이동:',
-          `/notes/${folderId}/${newNote.noteId}/create-practice`
-        );
         router.push(`/notes/${folderId}/${newNote.noteId}/confirm`);
       }
     } catch (error) {
@@ -106,10 +102,6 @@ const NotesPage = () => {
     }
   };
 
-  //STT 변환을 위한 다음 버튼을 클릭하고 요구사항 입력 단계 페이지
-  // const handleNextClick = () => {
-  //   router.push(`/notes/${folderId}/${noteId}/confirm`);
-  // };
   if (loading) {
     return (
       <div className="h-full flex flex-col justify-start">
