@@ -6,7 +6,7 @@ import CheckCircle from "@/app/components/atoms/CheckCircle";
 import { FormInput } from "@/app/components/atoms/FormInput";
 import FileUpload from "@/app/components/atoms/FileUpload";
 import Icon from "@/app/components/atoms/Icon";
-import TabComponent from "@/app/components/atoms/Tab";
+import TabComponent from "@/app/components/atoms/TextInputSection";
 import Popover from "@/app/components/molecules/PopOver";
 import CountInput from "@/app/components/atoms/CountInput";
 import {

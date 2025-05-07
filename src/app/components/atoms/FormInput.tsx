@@ -43,7 +43,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         className={`${inputClassName} ${className} ${
-          disabled ? "cursor-not-allowed opacity-50" : ""
+          disabled ? "cursor-not-allowed opacity-50 bg-black" : ""
         }`}
       />
     </div>
