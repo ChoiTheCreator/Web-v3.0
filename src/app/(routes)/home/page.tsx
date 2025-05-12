@@ -69,7 +69,7 @@ const HomePage = () => {
   return (
     <div className="flex flex-col justify-between h-full w-full">
       <div className="flex flex-col h-full rounded-t-xl rounded-r-ml rounded-l-ml bg-black-90">
-        <div className="flex flex-col justify-between p-5 gap-8">
+        <div className="flex flex-col justify-between p-5 pt-8 gap-8">
           <div className="text-4xl font-semibold text-white">
             <span className="flex gap-2">
               <Image src={speach_bubble} alt="speach_bubble" />
