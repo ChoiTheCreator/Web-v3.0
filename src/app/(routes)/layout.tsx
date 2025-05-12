@@ -33,7 +33,6 @@ export default function RootLayout({
         <div className="flex bg-black">
           {!isLoginPage && <Sidebar />}
           <div className="flex flex-col w-full">
-            {!isLoginPage && <Header />}
             <div className="flex-1 bg-black-90">{children}</div>
           </div>
         </div>
