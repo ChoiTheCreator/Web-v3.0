@@ -70,7 +70,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       "video/*": [".mp4"],
     },
     maxFiles: 1,
-    noClick: false,
+    noClick: true,
   });
 
   return (
