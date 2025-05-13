@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import forder from "../../../../public/folder.svg";
 import delete_bin_red from "../../../../public/delete_bin_red.svg";
 import note from "../../../../public/note.svg";
+import folder_opened from "../../../../public/folder_opened.svg";
+import clsx from "clsx";
 
 export const SectionFolder: React.FC<{
   section: FolderListData;
@@ -16,9 +18,14 @@ export const SectionFolder: React.FC<{
   showModify: boolean;
 }> = ({ section, onClick, onMenuClick }) => {
   const router = useRouter();
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative items-center">
+    <div
+      className="relative items-center"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div
         onClick={() => {
           router.push(`/notes/${section.folderId}`);
@@ -26,14 +33,15 @@ export const SectionFolder: React.FC<{
         }}
       >
         <Image
-          src={forder}
+          src={isHovered ? folder_opened : forder}
           alt="folder"
           width={240}
           height={140}
-          className="cursor-pointer"
+          className={clsx("cursor-pointer transition duration-300 ease-in-out")}
         />
       </div>
-      <div className="flex justify-between w-full px-3 mt-[-60px]">
+
+      <div className="flex justify-between w-full px-3 mt-[-60px] z-">
         <div className="flex flex-col">
           <p className="font-Pretendard text-[20px] text-black">
             {section.folderName}
