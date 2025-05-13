@@ -17,12 +17,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
   const pathname = usePathname();
   const isLoginPage = pathname.startsWith("/login");
-
-  const [hasShownToast, setHasShownToast] = useState(false);
 
   useAuthInterceptor();
 
