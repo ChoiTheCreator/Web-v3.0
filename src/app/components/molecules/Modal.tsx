@@ -9,7 +9,6 @@ import forder from "../../../../public/folder.svg";
 import delete_bin_red from "../../../../public/delete_bin_red.svg";
 import note from "../../../../public/note.svg";
 import folder_opened from "../../../../public/folder_opened.svg";
-import clsx from "clsx";
 
 export const SectionFolder: React.FC<{
   section: FolderListData;
@@ -37,7 +36,7 @@ export const SectionFolder: React.FC<{
           alt="folder"
           width={240}
           height={140}
-          className={clsx("cursor-pointer transition duration-300 ease-in-out")}
+          className={"cursor-pointer transition duration-300 ease-in-out"}
         />
       </div>
 
