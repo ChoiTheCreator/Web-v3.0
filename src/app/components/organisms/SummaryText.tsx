@@ -45,15 +45,16 @@ const PDFDocument = ({ summary }: { summary: string }) => (
 
 interface SummaryTextProps {
   noteId: number;
+  folderId: number;
 }
 
-const SummaryText: React.FC<SummaryTextProps> = ({ noteId }) => {
+const SummaryText: React.FC<SummaryTextProps> = ({ folderId, noteId }) => {
   const { summary, setSummary } = usePracticeContext();
 
   const fetchSummary = async () => {
     try {
       const response = await axios.get(
-        `${baseURL}/api/v1/professor/summary/${noteId}`
+        `${baseURL}/api/v1/folders/${folderId}/notes/${noteId}/summaries`
       );
       setSummary(response.data.information.summary);
     } catch (error) {
