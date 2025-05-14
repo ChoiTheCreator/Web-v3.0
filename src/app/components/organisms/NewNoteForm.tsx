@@ -21,8 +21,6 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({
   setNoteName,
 }) => {
   const { setFile, setKeywords, setRequirement } = usePracticeContext();
-  const { data: session } = useSession();
-  const token = session?.user.aiTutorToken; //이건 머임
 
   const [keywords, setLocalKeywords] = useState("");
   const [requirement, setLocalRequirement] = useState("");

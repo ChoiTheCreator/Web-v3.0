@@ -17,12 +17,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
   const pathname = usePathname();
   const isLoginPage = pathname.startsWith("/login");
-
-  const [hasShownToast, setHasShownToast] = useState(false);
 
   useAuthInterceptor();
 
@@ -33,7 +29,6 @@ export default function RootLayout({
         <div className="flex bg-black">
           {!isLoginPage && <Sidebar />}
           <div className="flex flex-col w-full">
-            {!isLoginPage && <Header />}
             <div className="flex-1 bg-black-90">{children}</div>
           </div>
         </div>

@@ -1,6 +1,9 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { aiTutorSignIn } from "@/app/api/auth/[...nextauth]/auth";
+import {
+  aiTutorSignIn,
+  refreshAuthToken,
+} from "@/app/api/auth/[...nextauth]/auth";
 import { cookies } from "next/headers";
 
 const handler = NextAuth({
@@ -12,11 +15,24 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, account, user, trigger }) {
-      console.log("🔹 [JWT 콜백 실행]");
-      console.log("🔸 token:", token);
-      console.log("🔸 account:", account);
-      console.log("🔸 user:", user);
-      console.log("🔸 trigger:", trigger);
+      const now = Math.floor(Date.now() / 1000);
+
+      if (
+        token.aiTutorToken &&
+        token.refreshToken &&
+        typeof token.exp === "number" &&
+        now > token.exp
+      ) {
+        try {
+          const newTokens = await refreshAuthToken(token.refreshToken);
+
+          if (newTokens?.accessToken) {
+            token.aiTutorToken = newTokens.accessToken;
+            token.refreshToken = newTokens.refreshToken;
+            token.exp = decodeJwtExp(newTokens.accessToken);
+          }
+        } catch {}
+      }
 
       if (trigger === "signIn" && account && user) {
         const accessToken = account.access_token as string;
@@ -24,27 +40,15 @@ const handler = NextAuth({
 
         token.accessToken = accessToken;
 
-        console.log("🚀 aiTutorSignIn 호출:", {
-          email: user.email,
+        const response = await aiTutorSignIn(accessToken, {
+          email: user.email!,
           providerId,
         });
 
-        try {
-          const response = await aiTutorSignIn(accessToken, {
-            email: user.email!,
-            providerId,
-          });
-
-          console.log("✅ aiTutorSignIn 응답:", response);
-
-          if (response.accessToken) {
-            token.aiTutorToken = response.accessToken;
-            token.refreshToken = response.refreshToken;
-          } else {
-            console.warn("⚠️ aiTutor 응답에 토큰이 없음");
-          }
-        } catch (e) {
-          console.error("❌ aiTutorSignIn 실패:", e);
+        if (response.accessToken) {
+          token.aiTutorToken = response.accessToken;
+          token.refreshToken = response.refreshToken;
+          token.exp = decodeJwtExp(response.accessToken);
         }
       }
 
@@ -52,14 +56,10 @@ const handler = NextAuth({
     },
 
     async session({ session, token }) {
-      console.log("🔹 [Session 콜백 실행] 토큰 정보:", token);
-
       session.user.aiTutorToken = token.aiTutorToken;
       session.user.refreshToken = token.refreshToken;
 
       if (token.aiTutorToken) {
-        console.log("✅ [Session] AI Tutor 토큰을 쿠키에 저장");
-
         cookies().set("aiTutorToken", token.aiTutorToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
@@ -83,8 +83,6 @@ const handler = NextAuth({
                 : undefined,
           });
         }
-      } else {
-        console.warn("⚠️ [Session] AI Tutor 토큰이 없음");
       }
 
       return session;
@@ -97,3 +95,12 @@ const handler = NextAuth({
 });
 
 export { handler as GET, handler as POST };
+
+function decodeJwtExp(token: string): number | undefined {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp;
+  } catch {
+    return undefined;
+  }
+}

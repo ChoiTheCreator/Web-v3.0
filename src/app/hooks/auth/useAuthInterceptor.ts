@@ -6,49 +6,61 @@ import { refreshAuthToken } from "@/app/api/auth/[...nextauth]/auth";
 
 const useAuthInterceptor = () => {
   const { data: session, update } = useSession();
-  const BASE_TIMEOUT = 1000 * 60 * 50;
+
+  const REFRESH_TIMEOUT = 1000 * 60 * 60;
+
+  const REDIRECT_TIMEOUT = 1000 * 60 * 60;
 
   useEffect(() => {
     if (!session?.user?.aiTutorToken) {
       setAuthToken(null);
       return;
     }
-
     setAuthToken(session.user.aiTutorToken);
 
-    const timer = setTimeout(async () => {
-      if (!session.user.refreshToken) return;
-
+    const refreshTimer = setTimeout(async () => {
+      if (!session.user.refreshToken) {
+        return;
+      }
       try {
         const newTokens = await refreshAuthToken(session.user.refreshToken);
-
-        if (newTokens) {
-          await update({
+        if (newTokens && newTokens.accessToken && newTokens.refreshToken) {
+          await apiClient.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`,
+            {
+              aiTutorToken: newTokens.accessToken,
+              refreshToken: newTokens.refreshToken,
+            }
+          );
+          const updatedSession = await update({
             user: {
               ...session.user,
               aiTutorToken: newTokens.accessToken,
               refreshToken: newTokens.refreshToken,
             },
           });
-
-          await apiClient.post("/api/auth/updateSession", {
-            aiTutorToken: newTokens.accessToken,
-            refreshToken: newTokens.refreshToken,
-          });
-
-          setAuthToken(newTokens.accessToken);
+          if (updatedSession?.user?.aiTutorToken) {
+            setAuthToken(updatedSession.user.aiTutorToken);
+          } else {
+            toast.error("세션 업데이트 실패, 다시 로그인 해주세요.");
+          }
         } else {
           toast.error("토큰 갱신 실패, 다시 로그인 해주세요.");
-          signOut({ callbackUrl: "/login" });
         }
       } catch (error: any) {
         toast.error(`세션 업데이트 실패: ${error.message}`);
-        signOut({ callbackUrl: "/login" });
       }
-    }, BASE_TIMEOUT);
+    }, REFRESH_TIMEOUT);
 
-    return () => clearTimeout(timer);
-  }, [session, update, BASE_TIMEOUT]);
+    const redirectTimer = setTimeout(() => {
+      signOut({ callbackUrl: "/login" });
+    }, REDIRECT_TIMEOUT);
+
+    return () => {
+      clearTimeout(refreshTimer);
+      clearTimeout(redirectTimer);
+    };
+  }, [session, update, REDIRECT_TIMEOUT, REFRESH_TIMEOUT]);
 
   return null;
 };
