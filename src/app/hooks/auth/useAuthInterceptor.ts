@@ -1,54 +1,67 @@
 import { useSession, signOut } from "next-auth/react";
-import { useEffect } from "react";
-import apiClient, { setAuthToken } from "@/app/utils/api";
+import { useEffect, useRef } from "react";
+import { setAuthToken } from "@/app/utils/api";
 import toast from "react-hot-toast";
 import { refreshAuthToken } from "@/app/api/auth/[...nextauth]/auth";
 
 const useAuthInterceptor = () => {
   const { data: session, update } = useSession();
+  const isRefreshing = useRef(false);
 
-  const REFRESH_TIMEOUT = 1000 * 60 * 60;
-
-  const REDIRECT_TIMEOUT = 1000 * 60 * 60;
+  const REFRESH_TIMEOUT = 1000 * 30;
+  const REDIRECT_TIMEOUT = 1000 * 60 * 60 * 24;
 
   useEffect(() => {
     if (!session?.user?.aiTutorToken) {
       setAuthToken(null);
       return;
     }
+
+    console.log("Initial token setup:", session.user.aiTutorToken);
     setAuthToken(session.user.aiTutorToken);
 
     const refreshTimer = setTimeout(async () => {
-      if (!session.user.refreshToken) {
+      if (isRefreshing.current) {
         return;
       }
+
+      if (!session.user.refreshToken) {
+        toast.error("리프레시 토큰이 없습니다. 다시 로그인해주세요.");
+        signOut({ callbackUrl: "/login" });
+        return;
+      }
+
       try {
+        isRefreshing.current = true;
+
         const newTokens = await refreshAuthToken(session.user.refreshToken);
-        if (newTokens && newTokens.accessToken && newTokens.refreshToken) {
-          await apiClient.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`,
-            {
-              aiTutorToken: newTokens.accessToken,
-              refreshToken: newTokens.refreshToken,
-            }
-          );
-          const updatedSession = await update({
-            user: {
-              ...session.user,
-              aiTutorToken: newTokens.accessToken,
-              refreshToken: newTokens.refreshToken,
-            },
-          });
-          if (updatedSession?.user?.aiTutorToken) {
-            setAuthToken(updatedSession.user.aiTutorToken);
-          } else {
-            toast.error("세션 업데이트 실패, 다시 로그인 해주세요.");
-          }
-        } else {
-          toast.error("토큰 갱신 실패, 다시 로그인 해주세요.");
+
+        if (!newTokens?.accessToken || !newTokens?.refreshToken) {
+          throw new Error("토큰 갱신 응답이 올바르지 않습니다.");
         }
+
+        setAuthToken(newTokens.accessToken);
+
+        const updatedSession = await update({
+          user: {
+            ...session.user,
+            aiTutorToken: newTokens.accessToken,
+            refreshToken: newTokens.refreshToken,
+          },
+        });
+
+        if (!updatedSession?.user?.aiTutorToken) {
+          throw new Error("세션 업데이트 실패");
+        }
+
+        console.log("Session updated successfully with new token");
+        toast.success("세션이 갱신되었습니다.");
       } catch (error: any) {
-        toast.error(`세션 업데이트 실패: ${error.message}`);
+        console.error("토큰 갱신 실패:", error);
+        toast.error(`세션 갱신 실패: ${error.message}`);
+        signOut({ callbackUrl: "/login" });
+      } finally {
+        isRefreshing.current = false;
       }
     }, REFRESH_TIMEOUT);
 
@@ -60,7 +73,7 @@ const useAuthInterceptor = () => {
       clearTimeout(refreshTimer);
       clearTimeout(redirectTimer);
     };
-  }, [session, update, REDIRECT_TIMEOUT, REFRESH_TIMEOUT]);
+  }, [session?.user?.aiTutorToken]);
 
   return null;
 };
