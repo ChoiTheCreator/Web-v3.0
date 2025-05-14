@@ -52,7 +52,6 @@ const useAuthInterceptor = () => {
       }
     }, REFRESH_TIMEOUT);
 
-    // 1시간 후에 로그인으로 리다이렉트
     const redirectTimer = setTimeout(() => {
       signOut({ callbackUrl: "/login" });
     }, REDIRECT_TIMEOUT);
@@ -61,7 +60,7 @@ const useAuthInterceptor = () => {
       clearTimeout(refreshTimer);
       clearTimeout(redirectTimer);
     };
-  }, [session, update]);
+  }, [session, update, REDIRECT_TIMEOUT, REFRESH_TIMEOUT]);
 
   return null;
 };
