@@ -8,7 +8,7 @@ const useAuthInterceptor = () => {
   const { data: session, update } = useSession();
   const isRefreshing = useRef(false);
 
-  const REFRESH_TIMEOUT = 1000 * 30;
+  const REFRESH_TIMEOUT = 1000 * 30 * 60;
   const REDIRECT_TIMEOUT = 1000 * 60 * 60 * 24;
 
   useEffect(() => {
@@ -17,7 +17,6 @@ const useAuthInterceptor = () => {
       return;
     }
 
-    console.log("Initial token setup:", session.user.aiTutorToken);
     setAuthToken(session.user.aiTutorToken);
 
     const refreshTimer = setTimeout(async () => {
@@ -54,7 +53,6 @@ const useAuthInterceptor = () => {
           throw new Error("세션 업데이트 실패");
         }
 
-        console.log("Session updated successfully with new token");
         toast.success("세션이 갱신되었습니다.");
       } catch (error: any) {
         console.error("토큰 갱신 실패:", error);
