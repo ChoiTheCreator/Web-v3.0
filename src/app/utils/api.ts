@@ -9,6 +9,7 @@ const apiClient = axios.create({
 });
 
 export const setAuthToken = (token: string | null) => {
+  console.log("Setting auth token:", token ? "Token exists" : "No token");
   if (token) {
     apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {

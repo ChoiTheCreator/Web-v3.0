@@ -20,8 +20,8 @@ const handler = NextAuth({
       if (
         token.aiTutorToken &&
         token.refreshToken &&
-        typeof token.exp === "number" &&
-        now > token.exp
+        trigger !== "update" &&
+        token.exp
       ) {
         try {
           const newTokens = await refreshAuthToken(token.refreshToken);
