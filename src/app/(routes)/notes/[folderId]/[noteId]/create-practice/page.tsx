@@ -13,7 +13,7 @@ const CreatePracticePage = () => {
   const router = useRouter();
   const { folderId, noteId } = useParams();
   const {
-    file,
+    file, 
     keywords,
     requirement,
     practiceSize,
