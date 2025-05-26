@@ -47,31 +47,6 @@ const CreatePracticePage = () => {
       );
       console.log('✅ 요약 생성 성공');
 
-      // // ✅ 2. 문제 생성
-      // const createPracticeReq = {
-      //   type,
-      //   keywords: keywords || '',
-      //   requirement: requirement || '',
-      //   ...(practiceSize !== null && { practiceSize }),
-      // };
-
-      // const practiceResponse = await createPractice({
-      //   noteId: Number(noteId),
-      //   createPracticeReq,
-      //   file,
-      // });
-
-      // if (practiceResponse?.information) {
-      //   const { practiceResList, summary } = practiceResponse.information;
-      //   const formattedQuestions = practiceResList.map((q: any) => ({
-      //     ...q,
-      //     content: q.content.replace(/^\d+:\s*/, ''),
-      //   }));
-
-      //   setQuestions(formattedQuestions);
-      //   setSummary(summary);
-      // }
-
       router.push(`/notes/${folderId}/${noteId}/result?tab=questions`);
     } catch (error) {
       alert('지금은 요청이 많아, 생성이 어려워요. 5분 후에 다시 시도해주세요.');
