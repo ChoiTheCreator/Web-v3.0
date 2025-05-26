@@ -48,12 +48,34 @@ const ConfirmNotePage = () => {
     );
   }
 
-  const handleNoteFinalBtn = () => {
+  const handleNoteFinalBtn = async () => {
     try {
-      summaryNote(Number(folderId), Number(noteId), keywords, requirement);
+      console.log('🟢 summaryNote 호출');
+      console.log('📌 folderId:', folderId);
+      console.log('📌 noteId:', noteId);
+      console.log('📌 keywords:', keywords);
+      console.log('📌 requirement:', requirement);
+
+      if (!keywords || !requirement) {
+        alert('⚠️ 키워드와 요구사항을 모두 입력해주세요.');
+        return;
+      }
+
+      const res = await summaryNote(
+        Number(folderId),
+        Number(noteId),
+        keywords,
+        requirement
+      );
+      console.log('✅ summaryNote 응답:', res);
+
       router.push(`/notes/${folderId}/${noteId}/create-practice`);
     } catch (e) {
-      console.log(e);
+      console.error('❌ summaryNote 처리 중 에러 발생:', e);
+      if ((e as any)?.response?.data) {
+        console.error('📩 서버 응답 메시지:', (e as any).response.data);
+      }
+      alert('요약 생성 중 오류가 발생했습니다.');
     }
   };
 

@@ -19,7 +19,7 @@ export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
 export const createNote = async (
   folderId: number,
   noteData: CreateNoteRequest
-): Promise<{ message: string }> => {
+): Promise<any> => {
   const response = await apiClient.post(
     `/api/v1/folders/${folderId}/notes`,
     noteData
@@ -119,14 +119,23 @@ export const summaryNote = async (
 ): Promise<any> => {
   try {
     const response = await apiClient.post(
-      `${baseURL}/api/v1/folders/${folderId}/notes/${noteId}/summaries`,
-      {},
-      //swagger 상 param값 두개.
-      { params: { keywords, requirement } }
+      `/api/v1/folders/${folderId}/notes/${noteId}/summaries`,
+      {
+        keywords: keywords.trim(),
+        requirement: requirement.trim(),
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
     );
     return response.data;
   } catch (e) {
-    console.log('summaryNote 상에서 오류 발생', e);
+    console.error('❌ summaryNote 처리 중 에러 발생:', e);
+    if ((e as any)?.response?.data) {
+      console.error('📩 서버 응답 메시지:', (e as any).response.data);
+    }
     throw e;
   }
 };
