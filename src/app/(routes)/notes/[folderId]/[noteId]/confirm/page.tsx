@@ -19,6 +19,7 @@ const ConfirmNotePage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    if (!file) return;
     const runSTT = async () => {
       if (file) {
         try {
