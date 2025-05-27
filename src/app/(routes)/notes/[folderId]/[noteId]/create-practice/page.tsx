@@ -8,12 +8,13 @@ import Button from '@/app/components/atoms/Button';
 import { createPractice } from '@/app/api/practice/createPractice';
 import Loader from '@/app/components/utils/Loader';
 import { createNoteSTT } from '@/app/api/notes';
+import apiClient from '@/app/utils/api';
 
 const CreatePracticePage = () => {
   const router = useRouter();
   const { folderId, noteId } = useParams();
   const {
-    file, 
+    file,
     keywords,
     requirement,
     practiceSize,
@@ -46,6 +47,19 @@ const CreatePracticePage = () => {
         requirement
       );
       console.log('✅ 요약 생성 성공');
+
+      const createPayLoad = {
+        practiceSize,
+        type,
+        keywords,
+        requirement,
+      };
+
+      await apiClient.post(
+        `/api/v1/professor/practice/${noteId}/new`,
+        createPayLoad
+      );
+      console.log('✅ 문제 미리 생성 (/new) 완료');
 
       router.push(`/notes/${folderId}/${noteId}/result?tab=questions`);
     } catch (error) {
