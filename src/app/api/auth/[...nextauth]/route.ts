@@ -60,28 +60,20 @@ const handler = NextAuth({
       session.user.refreshToken = token.refreshToken;
 
       if (token.aiTutorToken) {
-        cookies().set("aiTutorToken", token.aiTutorToken, {
+        cookies().delete("aiTutorToken");
+        cookies().delete("refreshToken");
+
+        const cookieOptions = {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
+          sameSite: "lax" as const,
           path: "/",
-          domain:
-            process.env.NODE_ENV === "production"
-              ? ".ai-tutor.co.kr"
-              : undefined,
-        });
+        };
+
+        cookies().set("aiTutorToken", token.aiTutorToken, cookieOptions);
 
         if (token.refreshToken) {
-          cookies().set("refreshToken", token.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            domain:
-              process.env.NODE_ENV === "production"
-                ? ".ai-tutor.co.kr"
-                : undefined,
-          });
+          cookies().set("refreshToken", token.refreshToken, cookieOptions);
         }
       }
 
