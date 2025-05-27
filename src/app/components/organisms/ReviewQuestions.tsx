@@ -23,7 +23,9 @@ interface ReviewQuestionsProps {
 
 const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
   const { questions, setQuestions } = usePracticeContext(); // context에서 questions 가져오기
-  const [filteredQuestions, setFilteredQuestions] = useState<any>(questions);
+  const [filteredQuestions, setFilteredQuestions] = useState<ReqList[] | null>(
+    questions
+  );
   const [isEditable, setIsEditable] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +43,18 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
       try {
         setLoading(true);
         const response = await getPractice(noteId);
-        setFilteredQuestions(response.reqList);
+
+        // 정확한 타입 구조 반영해 변환
+        const converted: ReqList[] = response.reqList.map((item) => ({
+          practiceNumber: item.practiceNumber,
+          content: item.content,
+          result: item.result,
+          solution: item.solution,
+          practiceType: item.practiceType as 'OX' | 'SHORT',
+        }));
+
+        setFilteredQuestions(converted);
+
         setIsEditable(false);
       } catch (error) {
         console.error('Failed to load practice questions:', error);

@@ -1,5 +1,20 @@
 import apiClient from '@/app/utils/api';
-import { toHexUtil } from 'pdfjs-dist/types/src/shared/util';
+export interface PracticeItemResponse {
+  praticeId: number; // ← 서버 스펠링 그대로 유지 (오타라면 서버에 수정 요청하는게 좋음)
+  practiceNumber: number;
+  content: string;
+  additionalResults: string[];
+  result: string;
+  solution: string;
+  practiceType: 'OX' | 'SHORT' | string;
+}
+
+export interface PracticeGetResponse {
+  minute: number;
+  second: number;
+  endDate: string;
+  reqList: PracticeItemResponse[];
+}
 export interface PracticeRequestItem {
   practiceNumber: number;
   content: string;
@@ -24,7 +39,7 @@ export interface PracticeCreateItem {
 }
 export const getPractice = async (
   noteId: number
-): Promise<SavePracticeRequest> => {
+): Promise<PracticeGetResponse> => {
   try {
     const response = await apiClient.get(
       `/api/v1/professor/practice/${noteId}`
@@ -43,7 +58,7 @@ export const savePractice = async (
   try {
     const response = await apiClient.post(
       `/api/v1/professor/practice/${noteId}`,
-      [payload]
+      payload
     );
     return response.data;
   } catch (e) {
