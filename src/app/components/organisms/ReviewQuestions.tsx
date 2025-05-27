@@ -1,20 +1,20 @@
 // src/components/ReviewQuestions.tsx
-import React, { useCallback, useEffect, useState } from "react";
-import Button from "@/app/components/atoms/Button";
-import Icon from "@/app/components/atoms/Icon";
-import CheckCircle from "@/app/components/atoms/CheckCircle";
-import { FormInput } from "@/app/components/atoms/FormInput";
-import savePracticeQuestions from "@/app/api/practice/savePracticeQuestions";
-import { PracticeRequest } from "@/app/types/practice";
-import { fetchPractice } from "@/app/api/practice/fetchPractice";
-import { usePracticeContext } from "@/app/context/PracticeContext";
+import React, { useCallback, useEffect, useState } from 'react';
+import Button from '@/app/components/atoms/Button';
+import Icon from '@/app/components/atoms/Icon';
+import CheckCircle from '@/app/components/atoms/CheckCircle';
+import { FormInput } from '@/app/components/atoms/FormInput';
+import savePracticeQuestions from '@/app/api/practice/savePracticeQuestions';
+import { PracticeRequest } from '@/app/types/practice';
+import { getPractice } from '@/app/api/Professor';
+import { usePracticeContext } from '@/app/context/PracticeContext';
 
 interface ReqList {
   practiceNumber: number;
   content: string;
   result: string;
   solution: string;
-  practiceType: "OX" | "SHORT";
+  practiceType: 'OX' | 'SHORT';
 }
 
 interface ReviewQuestionsProps {
@@ -23,11 +23,10 @@ interface ReviewQuestionsProps {
 
 const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
   const { questions, setQuestions } = usePracticeContext(); // context에서 questions 가져오기
-  const [filteredQuestions, setFilteredQuestions] = useState<ReqList[] | null>(
-    questions
-  );
+  const [filteredQuestions, setFilteredQuestions] = useState<any>(questions);
   const [isEditable, setIsEditable] = useState(true);
   const [loading, setLoading] = useState(false);
+
   const [selectedQuestions, setSelectedQuestions] = useState<number[]>([]);
   const [editMode, setEditMode] = useState<Record<number, boolean>>({});
   const [editedQuestions, setEditedQuestions] = useState<
@@ -41,11 +40,11 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
     } else {
       try {
         setLoading(true);
-        const response = await fetchPractice(noteId);
-        setFilteredQuestions(response.information);
+        const response = await getPractice(noteId);
+        setFilteredQuestions(response.reqList);
         setIsEditable(false);
       } catch (error) {
-        console.error("Failed to load practice questions:", error);
+        console.error('Failed to load practice questions:', error);
       } finally {
         setLoading(false);
       }
@@ -100,7 +99,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
 
   const handleInputChange = (
     practiceNumber: number,
-    field: "content" | "result",
+    field: 'content' | 'result',
     value: string
   ) => {
     setEditedQuestions((prev) => ({
@@ -121,24 +120,24 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
 
           return {
             practiceNumber,
-            content: editedQuestion?.content || originalQuestion?.content || "",
+            content: editedQuestion?.content || originalQuestion?.content || '',
             additionalResults: [],
-            result: editedQuestion?.result || originalQuestion?.result || "",
-            solution: "",
-            practiceType: originalQuestion?.practiceType || "OX",
+            result: editedQuestion?.result || originalQuestion?.result || '',
+            solution: '',
+            practiceType: originalQuestion?.practiceType || 'OX',
           };
         }
       );
 
       await savePracticeQuestions(noteId, dataToSave);
-      alert("선택된 문제들이 저장되었습니다.");
+      alert('선택된 문제들이 저장되었습니다.');
 
       setQuestions([]);
       await loadPractice();
       setIsEditable(false);
     } catch (error) {
-      console.error("문제 저장 중 오류 발생:", error);
-      alert("문제 저장에 실패했습니다.");
+      console.error('문제 저장 중 오류 발생:', error);
+      alert('문제 저장에 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -197,7 +196,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
                 <div className="whitespace-nowrap items-center w-full flex flex-col">
                   <Button
                     label={
-                      question.practiceType === "OX" ? "OX 퀴즈" : "단답형"
+                      question.practiceType === 'OX' ? 'OX 퀴즈' : '단답형'
                     }
                     variant="select"
                     disabled={true}
@@ -216,7 +215,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       handleInputChange(
                         question.practiceNumber,
-                        "content",
+                        'content',
                         e.target.value
                       )
                     }
@@ -238,7 +237,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       handleInputChange(
                         question.practiceNumber,
-                        "result",
+                        'result',
                         e.target.value
                       )
                     }

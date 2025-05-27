@@ -8,6 +8,7 @@ import Info from '@/app/components/molecules/Info';
 import { usePracticeContext } from '@/app/context/PracticeContext';
 import { getPractice } from '@/app/api/Professor';
 import { savePractice } from '@/app/api/Professor';
+import ReviewQuestionResult from '@/app/components/molecules/ReviewQuestionResult';
 
 const ResultPage = () => {
   const params = useParams<{ folderId: string; noteId: string }>();
@@ -87,6 +88,7 @@ const ResultPage = () => {
           >
             요약문 확인
           </button>
+          <ReviewQuestionResult></ReviewQuestionResult>
         </div>
 
         <div className="flex justify-between items-center mb-4">

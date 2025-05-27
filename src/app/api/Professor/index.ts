@@ -43,7 +43,7 @@ export const savePractice = async (
   try {
     const response = await apiClient.post(
       `/api/v1/professor/practice/${noteId}`,
-      payload
+      [payload]
     );
     return response.data;
   } catch (e) {
