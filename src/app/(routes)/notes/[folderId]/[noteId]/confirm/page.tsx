@@ -8,12 +8,19 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
-import Loader from "@/app/components/utils/Loader";
+import Loader, { SmallLoader } from "@/app/components/utils/Loader";
 
 const ConfirmNotePage = () => {
-  const { file, setKeywords, setRequirement, keywords, requirement } =
-    usePracticeContext();
-  const [sttLoading, setSttLoading] = useState(true);
+  const {
+    file,
+    setKeywords,
+    setRequirement,
+    keywords,
+    requirement,
+    sttLoading,
+    setSttLoading,
+  } = usePracticeContext();
+  const [alreadyRun, setAlreadyRun] = useState(false);
 
   const { folderId, noteId } = useParams();
   const router = useRouter();
@@ -26,28 +33,21 @@ const ConfirmNotePage = () => {
     const runSTT = async () => {
       if (alreadyRun) return;
       alreadyRun = true;
+      setSttLoading(true);
 
       try {
         console.log("🎧 STT 변환 시작 - 파일:", file);
         await createSTT(Number(folderId), Number(noteId), file);
-        toast.success(" STT 변환 성공하였습니다");
       } catch (error) {
         toast.error("STT 처리 중 오류가 발생했습니다.");
       } finally {
+        setAlreadyRun(false);
         setSttLoading(false);
       }
     };
 
     runSTT();
-  }, [file, folderId, noteId]);
-  if (sttLoading) {
-    return (
-      <Loader
-        message="음성 변환 중이에요."
-        subMessage="30초 정도만 기다려 주세요!"
-      ></Loader>
-    );
-  }
+  }, [file, folderId, noteId, setSttLoading]);
 
   const handleNoteFinalBtn = async () => {
     try {
@@ -103,7 +103,11 @@ const ConfirmNotePage = () => {
               * 파일 업로드 중에 다른 페이지로 이동하면 입력한 내용이 모두
               사라져요!
             </p>
-            <p className="text-base border-[0.5px] py-3 px-4 w-full border-black-80 rounded-md p-2 text-black-70 flex font-semibold gap-4">
+            <p
+              className={`text-base border-[0.5px] py-3 px-4 w-full border-black-80 rounded-md p-2 text-black-70 flex font-semibold gap-4 transition-colors duration-300 ${
+                !sttLoading && file ? "bg-primary/10" : ""
+              }`}
+            >
               <Image
                 src={`/active_folder.svg`}
                 alt={"active_folder"}
@@ -111,7 +115,17 @@ const ConfirmNotePage = () => {
                 height={40}
               />
               <div className="flex flex-col gap-1 whitespace-nowrap">
-                <div className="text-white">{file?.name}</div>
+                <div className="text-white flex items-center gap-2">
+                  <div className="flex items-center gap-2">
+                    {file?.name && (
+                      <>
+                        {file.name.slice(0, 15)}
+                        {file.name.length > 15 && "..."}
+                      </>
+                    )}
+                    {sttLoading && <SmallLoader />}
+                  </div>
+                </div>
               </div>
             </p>
           </div>

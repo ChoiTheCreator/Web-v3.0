@@ -25,6 +25,7 @@ const NotesPage = () => {
     setProfessor,
     folderName,
     professor,
+    setSttLoading,
   } = usePracticeContext();
 
   const [notes, setNotes] = useState<NoteData[]>([]);
@@ -77,7 +78,7 @@ const NotesPage = () => {
         return;
       }
 
-      toast.loading("노트 생성 중...");
+      setSttLoading(true);
       const createdNoteResponse = await createNote(Number(folderId), {
         title: noteName,
       });
@@ -91,9 +92,11 @@ const NotesPage = () => {
         router.push(`/notes/${folderId}/${newNote.noteId}/confirm`);
       } else {
         toast.error("생성된 노트를 찾을 수 없습니다.");
+        setSttLoading(false);
       }
     } catch (error) {
       toast.error("노트 생성 중 오류가 발생했습니다.");
+      setSttLoading(false);
     }
   };
 

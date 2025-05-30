@@ -107,7 +107,6 @@ export const SectionModal: React.FC<{
     setIsSaving(true);
 
     try {
-      toast.loading("폴더 저장 중...");
       await onSave();
       toast.success("폴더가 성공적으로 저장되었습니다.");
       onClose();
@@ -189,7 +188,6 @@ export const DeleteModal: React.FC<{
     setIsSaving(true);
 
     try {
-      toast.loading("노트 삭제 중...");
       await onDelete();
       toast.success("노트가 성공적으로 삭제되었습니다.");
       onClose();

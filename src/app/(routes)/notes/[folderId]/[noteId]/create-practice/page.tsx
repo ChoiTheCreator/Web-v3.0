@@ -41,16 +41,6 @@ const CreatePracticePage = () => {
     try {
       setIsLoading(true);
 
-      // 입력값 로깅
-      toast.loading("입력값 확인 중...");
-      toast.success(`노트 ID: ${noteId}`);
-      toast.success(`폴더 ID: ${folderId}`);
-      toast.success(`파일: ${file}`);
-      toast.success(`키워드: ${keywords}`);
-      toast.success(`요구사항: ${requirement}`);
-      toast.success(`타입: ${type}`);
-      toast.success(`문제 크기: ${practiceSize}`);
-
       // STT 요청
       toast.loading("STT 변환 중...");
       const sttResponse = await createNoteSTT(
