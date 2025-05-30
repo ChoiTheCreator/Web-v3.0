@@ -1,4 +1,6 @@
-import apiClient from '@/app/utils/api';
+import apiClient from "@/app/utils/api";
+import { toast } from "react-hot-toast";
+
 export interface PracticeItemResponse {
   praticeId: number; // ← 서버 스펠링 그대로 유지 (오타라면 서버에 수정 요청하는게 좋음)
   practiceNumber: number;
@@ -6,7 +8,7 @@ export interface PracticeItemResponse {
   additionalResults: string[];
   result: string;
   solution: string;
-  practiceType: 'OX' | 'SHORT' | string;
+  practiceType: "OX" | "SHORT" | string;
 }
 
 export interface PracticeGetResponse {
@@ -46,7 +48,7 @@ export const getPractice = async (
     );
     return response.data;
   } catch (e) {
-    console.log('getPractice 함수단에서 에러 발생', e);
+    toast.error("문제를 가져오는 중 오류가 발생했습니다.");
     throw e;
   }
 };
@@ -62,7 +64,7 @@ export const savePractice = async (
     );
     return response.data;
   } catch (e) {
-    console.error('savePractice단에서 오류 발생', e);
+    toast.error("문제 저장 중 오류가 발생했습니다.");
     throw e;
   }
 };

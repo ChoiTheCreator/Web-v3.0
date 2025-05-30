@@ -1,14 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { usePracticeContext } from '@/app/context/PracticeContext';
-import NewPracticeForm from '@/app/components/organisms/NewPracticeForm';
-import Button from '@/app/components/atoms/Button';
-import { createPractice } from '@/app/api/practice/createPractice';
-import Loader from '@/app/components/utils/Loader';
-import { createNoteSTT } from '@/app/api/notes';
-import apiClient from '@/app/utils/api';
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { usePracticeContext } from "@/app/context/PracticeContext";
+import NewPracticeForm from "@/app/components/organisms/NewPracticeForm";
+import Button from "@/app/components/atoms/Button";
+import { createPractice } from "@/app/api/practice/createPractice";
+import Loader from "@/app/components/utils/Loader";
+import { createNoteSTT } from "@/app/api/notes";
+import apiClient from "@/app/utils/api";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 const CreatePracticePage = () => {
   const router = useRouter();
@@ -27,69 +29,70 @@ const CreatePracticePage = () => {
 
   const handleCreatePractice = async () => {
     if (!noteId || !file || file.size === 0) {
-      alert('파일이 업로드되지 않았습니다. 파일을 선택해주세요.');
+      alert("파일이 업로드되지 않았습니다. 파일을 선택해주세요.");
       return;
     }
 
     if (!type) {
-      alert('문제 유형을 최소 하나 선택해야 합니다.');
+      alert("문제 유형을 최소 하나 선택해야 합니다.");
       return;
     }
 
     try {
       setIsLoading(true);
 
-      // 1️⃣ 입력값 확인
-      console.log('📥 입력값 확인');
-      console.log('noteId:', noteId);
-      console.log('folderId:', folderId);
-      console.log('file:', file);
-      console.log('keywords:', keywords);
-      console.log('requirement:', requirement);
-      console.log('type:', type);
-      console.log('practiceSize:', practiceSize);
+      // 입력값 로깅
+      toast.loading("입력값 확인 중...");
+      toast.success(`노트 ID: ${noteId}`);
+      toast.success(`폴더 ID: ${folderId}`);
+      toast.success(`파일: ${file}`);
+      toast.success(`키워드: ${keywords}`);
+      toast.success(`요구사항: ${requirement}`);
+      toast.success(`타입: ${type}`);
+      toast.success(`문제 크기: ${practiceSize}`);
 
-      // 2️⃣ STT 요청
-      console.log('🎧 createNoteSTT 호출 시작');
-      await createNoteSTT(
+      // STT 요청
+      toast.loading("STT 변환 중...");
+      const sttResponse = await createNoteSTT(
         Number(folderId),
         Number(noteId),
         keywords,
         requirement
       );
-      console.log('✅ createNoteSTT 성공');
+      toast.success("STT 변환 완료");
 
-      // 3️⃣ 문제 생성 요청
+      // 문제 생성 요청
       const createPayLoad = {
-        practiceSize,
-        type,
-        keywords,
-        requirement,
+        noteId: Number(noteId),
+        createPracticeReq: {
+          practiceSize: practiceSize || undefined,
+          type,
+          keywords,
+          requirement,
+        },
+        file,
       };
-      console.log('🧾 문제 생성 요청 payload:', createPayLoad);
+      toast.loading("문제 생성 중...");
+      const createRes = await createPractice(createPayLoad);
+      toast.success("문제 생성 완료");
 
-      const createRes = await apiClient.post(
-        `/api/v1/professor/practice/${noteId}/new`,
-        createPayLoad
-      );
-      console.log('✅ 문제 미리 생성 성공:', createRes.data);
-
-      // 4️⃣ 페이지 이동
-      router.push(`/notes/${folderId}/${noteId}/result?tab=questions`);
+      // 페이지 이동
+      router.push(`/notes/${folderId}/${noteId}/result`);
     } catch (error) {
-      alert('지금은 요청이 많아, 생성이 어려워요. 5분 후에 다시 시도해주세요.');
-
-      if (error instanceof Error) {
-        const axiosError = error as any;
-        if (axiosError.response) {
-          console.log('❌ 응답 에러 데이터: ', axiosError.response.data);
-          console.log('❌ 응답 상태 코드: ', axiosError.response.status);
-          console.log('❌ 응답 헤더: ', axiosError.response.headers);
-        } else {
-          console.log('❌ 일반 에러 메시지: ', error.message);
-        }
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          `API 에러: ${
+            error.response?.data?.message || "알 수 없는 오류가 발생했습니다."
+          }`
+        );
       } else {
-        console.log('❌ 알 수 없는 에러 객체: ', error);
+        toast.error(
+          `오류 발생: ${
+            error instanceof Error
+              ? error.message
+              : "알 수 없는 오류가 발생했습니다."
+          }`
+        );
       }
     } finally {
       setIsLoading(false);

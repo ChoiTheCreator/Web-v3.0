@@ -9,6 +9,7 @@ import forder from "../../../../public/folder.svg";
 import delete_bin_red from "../../../../public/delete_bin_red.svg";
 import note from "../../../../public/note.svg";
 import folder_opened from "../../../../public/folder_opened.svg";
+import { toast } from "react-hot-toast";
 
 export const SectionFolder: React.FC<{
   section: FolderListData;
@@ -106,12 +107,12 @@ export const SectionModal: React.FC<{
     setIsSaving(true);
 
     try {
-      console.log("Attempting to save folder...");
+      toast.loading("폴더 저장 중...");
       await onSave();
-      console.log("Folder saved successfully.");
+      toast.success("폴더가 성공적으로 저장되었습니다.");
       onClose();
     } catch (error) {
-      console.error("Error saving folder:", error);
+      toast.error("폴더 저장 중 오류가 발생했습니다.");
     } finally {
       setIsSaving(false);
     }
@@ -188,12 +189,12 @@ export const DeleteModal: React.FC<{
     setIsSaving(true);
 
     try {
-      console.log("Attempting to delete note...");
+      toast.loading("노트 삭제 중...");
       await onDelete();
-      console.log("Note deleted successfully.");
+      toast.success("노트가 성공적으로 삭제되었습니다.");
       onClose();
     } catch (error) {
-      console.error("Error deleting note:", error);
+      toast.error("노트 삭제 중 오류가 발생했습니다.");
     } finally {
       setIsSaving(false);
     }
