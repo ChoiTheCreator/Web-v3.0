@@ -1,28 +1,45 @@
 import apiClient from '@/app/utils/api';
-import { toHexUtil } from 'pdfjs-dist/types/src/shared/util';
-export interface PracticeCreateRequestType {
-  minute: number;
-  second: number;
-  endDate: string; // ISO 문자열 ("2025-05-26T07:20:01.035Z" 형식)
-  reqList: PracticeRequestItem[];
+export interface PracticeItemResponse {
+  praticeId: number; // ← 서버 스펠링 그대로 유지 (오타라면 서버에 수정 요청하는게 좋음)
+  practiceNumber: number;
+  content: string;
+  additionalResults: string[];
+  result: string;
+  solution: string;
+  practiceType: 'OX' | 'SHORT' | string;
 }
 
+export interface PracticeGetResponse {
+  minute: number;
+  second: number;
+  endDate: string;
+  reqList: PracticeItemResponse[];
+}
 export interface PracticeRequestItem {
   practiceNumber: number;
   content: string;
-  additionalResultUs: string[];
-  result: string; // 예: "O" 또는 "X"
+  additionalResults: string[];
+  result: string; // "O", "X" 등
   solution: string;
-  practiceType: string; // 예: "OX", "객관식", 등
+  practiceType: string;
+}
+
+export interface SavePracticeRequest {
+  minute: number;
+  second: number;
+  endDate: string; // ISO
+  reqList: PracticeRequestItem[];
 }
 
 export interface PracticeCreateItem {
   practiceSize: number;
-  type: string; //OX
+  type: string;
   keywords: string;
   requirement: string;
 }
-export const getPractice = async (noteId: number): Promise<any> => {
+export const getPractice = async (
+  noteId: number
+): Promise<PracticeGetResponse> => {
   try {
     const response = await apiClient.get(
       `/api/v1/professor/practice/${noteId}`
@@ -36,16 +53,16 @@ export const getPractice = async (noteId: number): Promise<any> => {
 
 export const savePractice = async (
   noteId: number,
-  savePracticeList: PracticeRequestItem
+  payload: SavePracticeRequest
 ) => {
   try {
     const response = await apiClient.post(
       `/api/v1/professor/practice/${noteId}`,
-      savePracticeList //Req Body
+      payload
     );
     return response.data;
   } catch (e) {
-    console.log('savePractice단에서 오류 발생', e);
+    console.error('savePractice단에서 오류 발생', e);
     throw e;
   }
 };
@@ -56,7 +73,7 @@ export const createPractice = async (
 ) => {
   try {
     const response = await apiClient.post(
-      `/api/v1/professor/practice/${noteId}`,
+      `/api/v1/professor/practice/${noteId}/new`,
       createRequestItem
     );
     return response.data;

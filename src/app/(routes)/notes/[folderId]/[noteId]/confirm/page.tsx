@@ -19,21 +19,23 @@ const ConfirmNotePage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!file) return;
+    if (!file || !folderId || !noteId) return;
+
+    let alreadyRun = false; // 재호출 방지 플래그
+
     const runSTT = async () => {
-      if (file) {
-        try {
-          console.log('🎧 STT 변환 시작 - 파일:', file);
-          await createSTT(Number(folderId), Number(noteId), file);
-          alert('✅ STT 변환 성공');
-        } catch (error) {
-          console.error('❌ STT 변환 실패:', error);
-          alert('STT 처리 중 오류가 발생했습니다.');
-        } finally {
-          setSttLoading(false);
-        }
-      } else {
-        console.warn('⚠️ STT 변환 생략 - 파일 없음');
+      if (alreadyRun) return;
+      alreadyRun = true;
+
+      try {
+        console.log('🎧 STT 변환 시작 - 파일:', file);
+        await createSTT(Number(folderId), Number(noteId), file);
+        alert('✅ STT 변환 성공');
+      } catch (error) {
+        console.error('❌ STT 변환 실패:', error);
+        alert('STT 처리 중 오류가 발생했습니다.');
+      } finally {
+        setSttLoading(false);
       }
     };
 

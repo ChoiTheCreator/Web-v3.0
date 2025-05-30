@@ -41,7 +41,7 @@ export const createSTT = async (
       formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': undefined,
         },
       }
     );
@@ -62,13 +62,18 @@ export const createNoteSTT = async (
   console.log('📨 요청 인자:', { folderId, noteId, keywords, requirement });
 
   try {
+    const body = {
+      ...(keywords && keywords.trim() && { keywords: keywords.trim() }),
+      ...(requirement &&
+        requirement.trim() && { requirement: requirement.trim() }),
+    };
+
     const res = await apiClient.post(
       `/api/v1/folders/${folderId}/notes/${noteId}/summaries`,
-      {},
+      body,
       {
-        params: {
-          ...(keywords && { keywords }),
-          ...(requirement && { requirement }),
+        headers: {
+          'Content-Type': 'application/json',
         },
       }
     );
@@ -78,7 +83,7 @@ export const createNoteSTT = async (
   } catch (error) {
     console.error('❌ createNoteSTT 요청 실패');
 
-    if (error instanceof Error && (error as any).response) {
+    if ((error as any)?.response) {
       const axiosError = error as any;
       console.error('응답 데이터:', axiosError.response.data);
       console.error('응답 상태 코드:', axiosError.response.status);

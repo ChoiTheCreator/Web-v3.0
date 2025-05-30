@@ -8,12 +8,13 @@ import Button from '@/app/components/atoms/Button';
 import { createPractice } from '@/app/api/practice/createPractice';
 import Loader from '@/app/components/utils/Loader';
 import { createNoteSTT } from '@/app/api/notes';
+import apiClient from '@/app/utils/api';
 
 const CreatePracticePage = () => {
   const router = useRouter();
   const { folderId, noteId } = useParams();
   const {
-    file, 
+    file,
     keywords,
     requirement,
     practiceSize,
@@ -38,15 +39,42 @@ const CreatePracticePage = () => {
     try {
       setIsLoading(true);
 
-      // ✅ 1. 노트 요약 생성 API 호출
+      // 1️⃣ 입력값 확인
+      console.log('📥 입력값 확인');
+      console.log('noteId:', noteId);
+      console.log('folderId:', folderId);
+      console.log('file:', file);
+      console.log('keywords:', keywords);
+      console.log('requirement:', requirement);
+      console.log('type:', type);
+      console.log('practiceSize:', practiceSize);
+
+      // 2️⃣ STT 요청
+      console.log('🎧 createNoteSTT 호출 시작');
       await createNoteSTT(
         Number(folderId),
         Number(noteId),
         keywords,
         requirement
       );
-      console.log('✅ 요약 생성 성공');
+      console.log('✅ createNoteSTT 성공');
 
+      // 3️⃣ 문제 생성 요청
+      const createPayLoad = {
+        practiceSize,
+        type,
+        keywords,
+        requirement,
+      };
+      console.log('🧾 문제 생성 요청 payload:', createPayLoad);
+
+      const createRes = await apiClient.post(
+        `/api/v1/professor/practice/${noteId}/new`,
+        createPayLoad
+      );
+      console.log('✅ 문제 미리 생성 성공:', createRes.data);
+
+      // 4️⃣ 페이지 이동
       router.push(`/notes/${folderId}/${noteId}/result?tab=questions`);
     } catch (error) {
       alert('지금은 요청이 많아, 생성이 어려워요. 5분 후에 다시 시도해주세요.');
@@ -54,14 +82,14 @@ const CreatePracticePage = () => {
       if (error instanceof Error) {
         const axiosError = error as any;
         if (axiosError.response) {
-          console.log('응답 데이터: ', axiosError.response.data);
-          console.log('응답 상태 코드: ', axiosError.response.status);
-          console.log('응답 헤더: ', axiosError.response.headers);
+          console.log('❌ 응답 에러 데이터: ', axiosError.response.data);
+          console.log('❌ 응답 상태 코드: ', axiosError.response.status);
+          console.log('❌ 응답 헤더: ', axiosError.response.headers);
         } else {
-          console.log('오류 메시지: ', error.message);
+          console.log('❌ 일반 에러 메시지: ', error.message);
         }
       } else {
-        console.log('알 수 없는 오류 발생', error);
+        console.log('❌ 알 수 없는 에러 객체: ', error);
       }
     } finally {
       setIsLoading(false);
