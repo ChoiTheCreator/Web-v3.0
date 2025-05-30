@@ -97,7 +97,7 @@ const ConfirmNotePage = () => {
             onRequirementChange={setRequirement}
           ></TextInputSection>
           <hr className="border-t-[0.5px] border-black-80 my-4" />
-          <div className="flex flex-col items-start font-semibold gap-2 w-2/5 pt-8 px-4">
+          <div className="flex flex-col items-start font-semibold gap-2 w-2/5 pt-8 px-4 border-l border-black-80">
             <p className="text-white">강의 파일</p>
             <p className="text-black-60 font-normal">
               * 파일 업로드 중에 다른 페이지로 이동하면 입력한 내용이 모두
