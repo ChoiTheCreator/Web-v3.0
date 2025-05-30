@@ -1,39 +1,38 @@
-'use client';
-import { useEffect, useState } from 'react';
-import Button from '@/app/components/atoms/Button';
-import TextInputSection from '@/app/components/atoms/TextInputSection';
-import { usePracticeContext } from '@/app/context/PracticeContext';
-import { createSTT, summaryNote } from '@/app/api/notes';
-import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+"use client";
+import { useEffect, useState } from "react";
+import Button from "@/app/components/atoms/Button";
+import TextInputSection from "@/app/components/atoms/TextInputSection";
+import { usePracticeContext } from "@/app/context/PracticeContext";
+import { createSTT, summaryNote } from "@/app/api/notes";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import toast from "react-hot-toast";
 
-import Loader from '@/app/components/utils/Loader';
+import Loader from "@/app/components/utils/Loader";
 
 const ConfirmNotePage = () => {
-  //라우팅 경로의 useParams 중 fileID, folderID는 이전 페이지에서 확보
   const { file, setKeywords, setRequirement, keywords, requirement } =
     usePracticeContext();
   const [sttLoading, setSttLoading] = useState(true);
-  //STT의 await을 차라리 여기 UseEffect에서 해버리는 구조가 더 적절해보임
+
   const { folderId, noteId } = useParams();
   const router = useRouter();
 
   useEffect(() => {
     if (!file || !folderId || !noteId) return;
 
-    let alreadyRun = false; // 재호출 방지 플래그
+    let alreadyRun = false;
 
     const runSTT = async () => {
       if (alreadyRun) return;
       alreadyRun = true;
 
       try {
-        console.log('🎧 STT 변환 시작 - 파일:', file);
+        console.log("🎧 STT 변환 시작 - 파일:", file);
         await createSTT(Number(folderId), Number(noteId), file);
-        alert('✅ STT 변환 성공');
+        toast.success(" STT 변환 성공하였습니다");
       } catch (error) {
-        console.error('❌ STT 변환 실패:', error);
-        alert('STT 처리 중 오류가 발생했습니다.');
+        toast.error("STT 처리 중 오류가 발생했습니다.");
       } finally {
         setSttLoading(false);
       }
@@ -52,14 +51,8 @@ const ConfirmNotePage = () => {
 
   const handleNoteFinalBtn = async () => {
     try {
-      console.log('🟢 summaryNote 호출');
-      console.log('📌 folderId:', folderId);
-      console.log('📌 noteId:', noteId);
-      console.log('📌 keywords:', keywords);
-      console.log('📌 requirement:', requirement);
-
       if (!keywords || !requirement) {
-        alert('⚠️ 키워드와 요구사항을 모두 입력해주세요.');
+        toast.error("키워드와 요구사항을 모두 입력해주세요.");
         return;
       }
 
@@ -69,15 +62,13 @@ const ConfirmNotePage = () => {
         keywords,
         requirement
       );
-      console.log('✅ summaryNote 응답:', res);
 
       router.push(`/notes/${folderId}/${noteId}/create-practice`);
     } catch (e) {
-      console.error('❌ summaryNote 처리 중 에러 발생:', e);
       if ((e as any)?.response?.data) {
-        console.error('📩 서버 응답 메시지:', (e as any).response.data);
+        console.error("📩 서버 응답 메시지:", (e as any).response.data);
       }
-      alert('요약 생성 중 오류가 발생했습니다.');
+      toast.error("요약 생성 중 오류가 발생했습니다.");
     }
   };
 
@@ -107,7 +98,7 @@ const ConfirmNotePage = () => {
           ></TextInputSection>
           <hr className="border-t-[0.5px] border-black-80 my-4" />
           <div className="flex flex-col items-start font-semibold gap-2 w-2/5 pt-8 px-4">
-            <p>강의 파일</p>
+            <p className="text-white">강의 파일</p>
             <p className="text-black-60 font-normal">
               * 파일 업로드 중에 다른 페이지로 이동하면 입력한 내용이 모두
               사라져요!
@@ -115,7 +106,7 @@ const ConfirmNotePage = () => {
             <p className="text-base border-[0.5px] py-3 px-4 w-full border-black-80 rounded-md p-2 text-black-70 flex font-semibold gap-4">
               <Image
                 src={`/active_folder.svg`}
-                alt={'active_folder'}
+                alt={"active_folder"}
                 width={40}
                 height={40}
               />
