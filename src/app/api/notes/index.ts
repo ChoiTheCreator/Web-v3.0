@@ -6,7 +6,6 @@ import {
 } from "@/app/types/note";
 import { baseURL } from "..";
 import apiClient from "@/app/utils/api";
-import { toast } from "react-hot-toast";
 
 export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
   const response = await apiClient.get(
@@ -56,22 +55,47 @@ export const createSTT = async (
 export const createNoteSTT = async (
   folderId: number,
   noteId: number,
-  keywords: string,
-  requirement: string
-) => {
+  keywords: string | null,
+  requirement: string | null
+): Promise<any> => {
+  console.log("🟡 createNoteSTT 시작");
+  console.log("📨 요청 인자:", { folderId, noteId, keywords, requirement });
+
   try {
-    toast.loading("STT 변환 시작...");
-    const res = await apiClient.post(`/api/v1/professor/notes/${noteId}/stt`, {
-      folderId,
-      noteId,
-      keywords,
-      requirement,
-    });
-    toast.success("STT 변환 완료");
-    return res;
+    const formData = new FormData();
+    if (keywords && keywords.trim()) {
+      formData.append("keywords", keywords.trim());
+    }
+    if (requirement && requirement.trim()) {
+      formData.append("requirement", requirement.trim());
+    }
+
+    const res = await apiClient.post(
+      `/api/v1/professor/practice/${noteId}/new`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    console.log("✅ createNoteSTT 응답:", res.data);
+    return res.data;
   } catch (error) {
-    toast.error("STT 변환 중 오류가 발생했습니다.");
+    console.error("❌ createNoteSTT 요청 실패");
+
+    if ((error as any)?.response) {
+      const axiosError = error as any;
+      console.error("응답 데이터:", axiosError.response.data);
+      console.error("응답 상태 코드:", axiosError.response.status);
+    } else {
+      console.error("일반 에러:", error);
+    }
+
     throw error;
+  } finally {
+    console.log("🔚 createNoteSTT 종료");
   }
 };
 
@@ -115,9 +139,9 @@ export const summaryNote = async (
     );
     return response.data;
   } catch (e) {
-    toast.error("요약 생성 중 오류가 발생했습니다.");
+    console.error("❌ summaryNote 처리 중 에러 발생:", e);
     if ((e as any)?.response?.data) {
-      toast.error(`서버 응답: ${(e as any).response.data}`);
+      console.error("📩 서버 응답 메시지:", (e as any).response.data);
     }
     throw e;
   }

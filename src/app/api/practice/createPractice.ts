@@ -1,4 +1,6 @@
-import apiClient from '@/app/utils/api';
+import apiClient from "@/app/utils/api";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 interface CreatePracticeRequest {
   noteId: number;
@@ -8,41 +10,43 @@ interface CreatePracticeRequest {
     keywords?: string;
     requirement?: string;
   };
-  file: File;
 }
 
 export const createPractice = async ({
   noteId,
   createPracticeReq,
-  file,
 }: CreatePracticeRequest) => {
   try {
-    const formData = new FormData();
-
-    formData.append(
-      'createPracticeReq',
-      new Blob([JSON.stringify(createPracticeReq)], {
-        type: 'application/json',
-      })
-    );
-
-    formData.append('file', file);
-
     const response = await apiClient.post(
       `/api/v1/professor/practice/${noteId}/new`,
-      formData,
+      createPracticeReq,
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "application/json",
         },
       }
     );
 
-    console.log('API 응답:', response.data);
+    console.log("API 응답:", response.data);
 
     return response.data;
   } catch (error) {
-    console.error('문제 생성 실패:', error);
+    console.error("문제 생성 실패:", error);
+    if (axios.isAxiosError(error)) {
+      toast.error(
+        `문제 생성 에러: ${
+          error.response?.data?.message || "알 수 없는 오류가 발생했습니다."
+        }`
+      );
+    } else {
+      toast.error(
+        `문제 생성 중 오류 발생: ${
+          error instanceof Error
+            ? error.message
+            : "알 수 없는 오류가 발생했습니다."
+        }`
+      );
+    }
     throw error;
   }
 };

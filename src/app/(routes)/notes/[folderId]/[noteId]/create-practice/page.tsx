@@ -7,7 +7,7 @@ import NewPracticeForm from "@/app/components/organisms/NewPracticeForm";
 import Button from "@/app/components/atoms/Button";
 import { createPractice } from "@/app/api/practice/createPractice";
 import Loader from "@/app/components/utils/Loader";
-import { createNoteSTT } from "@/app/api/notes";
+import { createSTT } from "@/app/api/notes";
 import apiClient from "@/app/utils/api";
 import { toast } from "react-hot-toast";
 import axios from "axios";
@@ -41,17 +41,12 @@ const CreatePracticePage = () => {
     try {
       setIsLoading(true);
 
-      // STT 요청
+      // STT 요청 (createSTT 함수 사용)
       toast.loading("STT 변환 중...");
-      const sttResponse = await createNoteSTT(
-        Number(folderId),
-        Number(noteId),
-        keywords,
-        requirement
-      );
+      await createSTT(Number(folderId), Number(noteId), file); // 파일만 전송하도록 수정
       toast.success("STT 변환 완료");
 
-      // 문제 생성 요청
+      // 문제 생성 요청 (STT 변환 성공 후에 호출)
       const createPayLoad = {
         noteId: Number(noteId),
         createPracticeReq: {
@@ -60,10 +55,9 @@ const CreatePracticePage = () => {
           keywords,
           requirement,
         },
-        file,
       };
       toast.loading("문제 생성 중...");
-      const createRes = await createPractice(createPayLoad);
+      const createRes = await createPractice(createPayLoad); // 파일 제거된 페이로드 전달
       toast.success("문제 생성 완료");
 
       // 페이지 이동
