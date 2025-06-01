@@ -33,7 +33,7 @@ export const createSTT = async (
   file: File
 ): Promise<any> => {
   const formData = new FormData();
-  formData.append("file", file); // Swagger에서 요구한 key: file
+  formData.append("file", file);
 
   try {
     const response = await apiClient.post(
@@ -58,9 +58,6 @@ export const createNoteSTT = async (
   keywords: string | null,
   requirement: string | null
 ): Promise<any> => {
-  console.log("🟡 createNoteSTT 시작");
-  console.log("📨 요청 인자:", { folderId, noteId, keywords, requirement });
-
   try {
     const formData = new FormData();
     if (keywords && keywords.trim()) {
@@ -80,22 +77,15 @@ export const createNoteSTT = async (
       }
     );
 
-    console.log("✅ createNoteSTT 응답:", res.data);
     return res.data;
   } catch (error) {
-    console.error("❌ createNoteSTT 요청 실패");
-
     if ((error as any)?.response) {
       const axiosError = error as any;
-      console.error("응답 데이터:", axiosError.response.data);
-      console.error("응답 상태 코드:", axiosError.response.status);
     } else {
-      console.error("일반 에러:", error);
     }
 
     throw error;
   } finally {
-    console.log("🔚 createNoteSTT 종료");
   }
 };
 
@@ -139,9 +129,7 @@ export const summaryNote = async (
     );
     return response.data;
   } catch (e) {
-    console.error("❌ summaryNote 처리 중 에러 발생:", e);
     if ((e as any)?.response?.data) {
-      console.error("📩 서버 응답 메시지:", (e as any).response.data);
     }
     throw e;
   }

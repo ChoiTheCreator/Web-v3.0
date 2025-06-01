@@ -2,7 +2,7 @@ import apiClient from "@/app/utils/api";
 import { toast } from "react-hot-toast";
 
 export interface PracticeItemResponse {
-  praticeId: number; // ← 서버 스펠링 그대로 유지 (오타라면 서버에 수정 요청하는게 좋음)
+  praticeId: number;
   practiceNumber: number;
   content: string;
   additionalResults: string[];
@@ -12,15 +12,12 @@ export interface PracticeItemResponse {
 }
 
 export interface PracticeGetResponse {
-  minute: number;
-  second: number;
-  endDate: string;
-  reqList: PracticeItemResponse[];
+  check: boolean;
+  information: PracticeItemResponse[];
 }
 export interface PracticeRequestItem {
   practiceNumber: number;
   content: string;
-  additionalResults: string[];
   result: string; // "O", "X" 등
   solution: string;
   practiceType: string;
@@ -55,17 +52,16 @@ export const getPractice = async (
 
 export const savePractice = async (
   noteId: number,
-  payload: SavePracticeRequest
+  questions: PracticeRequestItem[]
 ) => {
   try {
     const response = await apiClient.post(
       `/api/v1/professor/practice/${noteId}`,
-      payload
+      questions
     );
     return response.data;
   } catch (e) {
     toast.error("문제 저장 중 오류가 발생했습니다.");
-    throw e;
   }
 };
 
