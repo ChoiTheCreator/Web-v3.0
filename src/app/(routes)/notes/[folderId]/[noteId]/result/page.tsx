@@ -5,9 +5,10 @@ import { useParams } from "next/navigation";
 import ReviewQuestions from "@/app/components/organisms/ReviewQuestions";
 import Info from "@/app/components/molecules/Info";
 import { usePracticeContext } from "@/app/context/PracticeContext";
-import { getPractice } from "@/app/api/Professor";
-import { savePractice } from "@/app/api/Professor";
-import { PracticeItemResponse } from "@/app/api/Professor";
+import {
+  getPractice,
+  PracticeItemResponse,
+} from "@/app/api/practice/getPractice";
 
 const ResultPage = () => {
   const params = useParams<{ folderId: string; noteId: string }>();
@@ -43,27 +44,6 @@ const ResultPage = () => {
     if (noteId) fetchPractice();
   }, [noteId, setQuestions]);
 
-  const handleSaveQuestions = async () => {
-    try {
-      setIsSaving(true);
-      const formattedQuestions = practiceQuestions.map((question, index) => ({
-        practiceNumber: index + 1,
-        content: question.content,
-        practiceType: question.practiceType,
-        result: question.result,
-        solution: question.solution,
-      }));
-
-      await savePractice(noteId, formattedQuestions);
-      alert("✅ 문제가 성공적으로 저장되었습니다!");
-    } catch (error) {
-      console.error("문제 저장 실패", error);
-      alert("❌ 저장에 실패했습니다. 다시 시도해주세요.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -74,15 +54,8 @@ const ResultPage = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 pt-4">
         <Info folderName={folderName} professorName={professor} />
-        <button
-          className="px-4 py-2 bg-primary text-white rounded"
-          onClick={handleSaveQuestions}
-          disabled={isSaving}
-        >
-          {isSaving ? "저장 중..." : "문제 저장"}
-        </button>
       </div>
 
       <div className="flex flex-col">

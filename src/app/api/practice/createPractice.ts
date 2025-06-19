@@ -18,7 +18,8 @@ export const createPractice = async ({
 }: CreatePracticeRequest) => {
   try {
     const response = await apiClient.post(
-      `/api/v1/professor/practice/${noteId}/new`,
+      `/api/v1/professor/practice/${noteId}/generate-and-save`,
+
       createPracticeReq,
       {
         headers: {
@@ -26,8 +27,6 @@ export const createPractice = async ({
         },
       }
     );
-
-    console.log("API 응답:", response.data);
 
     return response.data;
   } catch (error) {

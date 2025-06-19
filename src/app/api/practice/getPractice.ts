@@ -18,7 +18,7 @@ export interface PracticeGetResponse {
 export interface PracticeRequestItem {
   practiceNumber: number;
   content: string;
-  result: string; // "O", "X" 등
+  result: string;
   solution: string;
   practiceType: string;
 }
@@ -26,7 +26,7 @@ export interface PracticeRequestItem {
 export interface SavePracticeRequest {
   minute: number;
   second: number;
-  endDate: string; // ISO
+  endDate: string;
   reqList: PracticeRequestItem[];
 }
 
@@ -47,35 +47,5 @@ export const getPractice = async (
   } catch (e) {
     toast.error("문제를 가져오는 중 오류가 발생했습니다.");
     throw e;
-  }
-};
-
-export const savePractice = async (
-  noteId: number,
-  questions: PracticeRequestItem[]
-) => {
-  try {
-    const response = await apiClient.post(
-      `/api/v1/professor/practice/${noteId}`,
-      questions
-    );
-    return response.data;
-  } catch (e) {
-    toast.error("문제 저장 중 오류가 발생했습니다.");
-  }
-};
-
-export const createPractice = async (
-  noteId: number,
-  createRequestItem: PracticeCreateItem
-) => {
-  try {
-    const response = await apiClient.post(
-      `/api/v1/professor/practice/${noteId}/new`,
-      createRequestItem
-    );
-    return response.data;
-  } catch (err) {
-    throw err;
   }
 };
