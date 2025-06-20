@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { fetchSummary } from "@/app/api/summaries/fetchSummary";
 import Icon from "@/app/components/atoms/Icon";
 
 export default function SummaryPage() {
   const { folderId, noteId } = useParams();
+  const router = useRouter();
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -53,7 +54,12 @@ export default function SummaryPage() {
 
         <div className="flex flex-col gap-3.5 justify-center min-w-[220px]">
           <p className="text-white font-semibold">복습 자료 만들기</p>
-          <button className="bg-black-80 text-white px-8 py-6 rounded-lg text-left flex justify-between items-center">
+          <button
+            className="bg-black-80 text-white px-8 py-6 rounded-lg text-left flex justify-between items-center"
+            onClick={() =>
+              router.push(`/notes/${folderId}/${noteId}/create-practice`)
+            }
+          >
             복습 퀴즈 생성
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>

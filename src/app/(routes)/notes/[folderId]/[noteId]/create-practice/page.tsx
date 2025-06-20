@@ -55,11 +55,8 @@ const CreatePracticePage = () => {
     try {
       setIsLoading(true);
 
-      toast.loading("STT 변환 중...");
       await createSTT(Number(folderId), Number(noteId), file);
-      toast.success("STT 변환 완료");
 
-      toast.loading("문제 생성 중...");
       const createPayLoad = {
         noteId: Number(noteId),
         createPracticeReq: {
@@ -73,7 +70,7 @@ const CreatePracticePage = () => {
       const createRes: CreatePracticeApiResponse = await createPractice(
         createPayLoad
       );
-      toast.success("문제 생성 완료");
+      toast.success("문제 생성이 완료되었습니다.");
 
       setQuestions(createRes.information.practiceResList);
       setSummary(createRes.information.summary);
@@ -92,7 +89,6 @@ const CreatePracticePage = () => {
             error instanceof Error
               ? error.message
               : "알 수 없는 오류가 발생했습니다."
-          }
           }`
         );
       }

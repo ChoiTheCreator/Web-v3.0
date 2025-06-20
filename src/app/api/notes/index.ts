@@ -48,7 +48,7 @@ export const createSTT = async (
     );
     return response.data;
   } catch (error) {
-    toast.error("STT 처리 중 오류가 발생했습니다.");
+    throw error;
   }
 };
 
