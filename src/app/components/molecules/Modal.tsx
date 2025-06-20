@@ -108,10 +108,9 @@ export const SectionModal: React.FC<{
 
     try {
       await onSave();
-      toast.success("폴더가 성공적으로 저장되었습니다.");
+
       onClose();
     } catch (error) {
-      toast.error("폴더 저장 중 오류가 발생했습니다.");
     } finally {
       setIsSaving(false);
     }

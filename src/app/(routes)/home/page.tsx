@@ -42,9 +42,7 @@ const HomePage = () => {
       setShowModal(false);
       setSubject("");
       setProfessor("");
-    } catch (error) {
-      console.error("폴더 생성 실패:", error);
-    }
+    } catch (error) {}
   };
 
   const handleUpdateFolder = () => {
