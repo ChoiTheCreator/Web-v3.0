@@ -21,6 +21,7 @@ const ConfirmNotePage = () => {
     setSttLoading,
   } = usePracticeContext();
   const [alreadyRun, setAlreadyRun] = useState(false);
+  const [summaryLoading, setSummaryLoading] = useState(false);
 
   const { folderId, noteId } = useParams();
   const router = useRouter();
@@ -48,19 +49,22 @@ const ConfirmNotePage = () => {
       toast.error("키워드와 요구사항을 모두 입력해주세요.");
       return;
     }
-
-    const res = await summaryNote(
-      Number(folderId),
-      Number(noteId),
-      keywords,
-      requirement
-    );
-
+    setSummaryLoading(true);
+    await summaryNote(Number(folderId), Number(noteId), keywords, requirement);
+    setSummaryLoading(false);
     router.push(`/notes/${folderId}/${noteId}/create-practice`);
   };
 
   return (
     <>
+      {summaryLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Loader
+            message="요약문을 생성 중입니다."
+            subMessage="잠시만 기다려주세요. 1분 정도 소요됩니다."
+          />
+        </div>
+      )}
       <div>
         <div className="flex flex-row items-center p-8 justify-between">
           <div className="flex flex-col justify-center items-center text-center text-white h-full">

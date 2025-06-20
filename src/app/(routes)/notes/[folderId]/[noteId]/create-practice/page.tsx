@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { usePracticeContext } from "@/app/context/PracticeContext";
 import NewPracticeForm from "@/app/components/organisms/NewPracticeForm";
@@ -8,7 +8,6 @@ import Button from "@/app/components/atoms/Button";
 import { createPractice } from "@/app/api/practice/createPractice";
 import Loader from "@/app/components/utils/Loader";
 import { createSTT } from "@/app/api/notes";
-import apiClient from "@/app/utils/api";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 
@@ -56,12 +55,10 @@ const CreatePracticePage = () => {
     try {
       setIsLoading(true);
 
-      // STT 요청
       toast.loading("STT 변환 중...");
       await createSTT(Number(folderId), Number(noteId), file);
       toast.success("STT 변환 완료");
 
-      // 문제 생성 요청 (STT 변환 성공 후에 호출)
       toast.loading("문제 생성 중...");
       const createPayLoad = {
         noteId: Number(noteId),
@@ -78,11 +75,9 @@ const CreatePracticePage = () => {
       );
       toast.success("문제 생성 완료");
 
-      // Store the results in the PracticeContext
-      setQuestions(createRes.information.practiceResList); // Assuming practiceResList matches the questions type in context
+      setQuestions(createRes.information.practiceResList);
       setSummary(createRes.information.summary);
 
-      // Navigate to the result page
       router.push(`/notes/${folderId}/${noteId}/result`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
