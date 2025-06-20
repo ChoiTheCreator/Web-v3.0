@@ -89,7 +89,9 @@ const NotesPage = () => {
         notesData.noteListDetailRes[notesData.noteListDetailRes.length - 1];
 
       if (newNote) {
-        router.push(`/notes/${folderId}/${newNote.noteId}/confirm`);
+        router.push(
+          `/notes/${folderId}/${createdNoteResponse.information.noteId}/confirm`
+        );
       } else {
         toast.error("생성된 노트를 찾을 수 없습니다.");
         setSttLoading(false);
