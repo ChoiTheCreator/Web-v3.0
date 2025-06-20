@@ -7,6 +7,7 @@ import { getPractice } from "@/app/api/practice/getPractice";
 import { usePracticeContext } from "@/app/context/PracticeContext";
 import updatePractice from "@/app/api/practice/updatePractice";
 import toast from "react-hot-toast";
+import { exportQuestionsToPDF } from "@/app/utils/pdfExport";
 
 interface ReqList {
   practiceId: number;
@@ -126,9 +127,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
           ...prev,
           [practiceNumber]: false,
         }));
-        toast.success("문제가 수정되었습니다.");
       } catch (error) {
-        alert("문제 수정에 실패했습니다.");
       } finally {
         setLoading(false);
       }
@@ -146,36 +145,29 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
     }));
   };
 
-  const saveSelectedQuestions = async () => {
-    setLoading(true);
-    try {
-      await Promise.all(
-        selectedQuestions.map(async (practiceNumber) => {
-          const originalQuestion = filteredQuestions?.find(
-            (q) => q.practiceNumber === practiceNumber
-          );
-          const editedQuestion = editedQuestions[practiceNumber];
-          if (!originalQuestion) return;
+  const handleSelectAll = () => {
+    if (!filteredQuestions) return;
+    if (selectedQuestions.length === filteredQuestions.length) {
+      setSelectedQuestions([]);
+    } else {
+      setSelectedQuestions(filteredQuestions.map((q) => q.practiceNumber));
+    }
+  };
 
-          await updatePractice(noteId, originalQuestion.practiceId, {
-            practiceNumber,
-            content: editedQuestion?.content || originalQuestion.content || "",
-            additionalResults: [],
-            result: editedQuestion?.result || originalQuestion.result || "",
-            solution: originalQuestion.solution || "",
-            practiceType: originalQuestion.practiceType || "OX",
-          });
-        })
-      );
-      alert("선택된 문제들이 저장되었습니다.");
-      setQuestions([]);
-      await loadPractice();
-      setIsEditable(false);
-    } catch (error) {
-      console.error("문제 저장 중 오류 발생:", error);
-      alert("문제 저장에 실패했습니다.");
-    } finally {
-      setLoading(false);
+  const exportSelectedQuestionsToPDF = async () => {
+    if (!filteredQuestions) return;
+    const selected = filteredQuestions.filter((q) =>
+      selectedQuestions.includes(q.practiceNumber)
+    );
+    if (selected.length === 0) {
+      toast.error("선택된 문제가 없습니다.");
+      return;
+    }
+    try {
+      await exportQuestionsToPDF(selected);
+      toast.success("PDF로 저장되었습니다.");
+    } catch (e) {
+      toast.error("PDF 저장에 실패했습니다.");
     }
   };
 
@@ -196,7 +188,14 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
           <tr className="bg-black-80 text-center whitespace-nowrap m-2">
             <th className="w-[10%] p-1 px-2">
               <div className="flex gap-1 justify-center items-center w-full">
-                <Icon label="UnCheckedCircle" className="w-6 h-8" />
+                <CheckCircle
+                  isChecked={
+                    filteredQuestions &&
+                    selectedQuestions.length === filteredQuestions.length &&
+                    filteredQuestions.length > 0
+                  }
+                  onChange={handleSelectAll}
+                />
                 <span>전체선택</span>
               </div>
             </th>
@@ -333,7 +332,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
           <Button
             label="PDF 변환"
             variant="next"
-            onClick={saveSelectedQuestions}
+            onClick={exportSelectedQuestionsToPDF}
           />
         </div>
       )}
