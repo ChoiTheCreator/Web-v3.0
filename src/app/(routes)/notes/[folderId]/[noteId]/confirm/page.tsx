@@ -35,41 +35,28 @@ const ConfirmNotePage = () => {
       alreadyRun = true;
       setSttLoading(true);
 
-      try {
-        console.log("🎧 STT 변환 시작 - 파일:", file);
-        await createSTT(Number(folderId), Number(noteId), file);
-      } catch (error) {
-        toast.error("STT 처리 중 오류가 발생했습니다.");
-      } finally {
-        setAlreadyRun(false);
-        setSttLoading(false);
-      }
+      await createSTT(Number(folderId), Number(noteId), file);
+      setAlreadyRun(false);
+      setSttLoading(false);
     };
 
     runSTT();
   }, [file, folderId, noteId, setSttLoading]);
 
   const handleNoteFinalBtn = async () => {
-    try {
-      if (!keywords || !requirement) {
-        toast.error("키워드와 요구사항을 모두 입력해주세요.");
-        return;
-      }
-
-      const res = await summaryNote(
-        Number(folderId),
-        Number(noteId),
-        keywords,
-        requirement
-      );
-
-      router.push(`/notes/${folderId}/${noteId}/create-practice`);
-    } catch (e) {
-      if ((e as any)?.response?.data) {
-        console.error("📩 서버 응답 메시지:", (e as any).response.data);
-      }
-      toast.error("요약 생성 중 오류가 발생했습니다.");
+    if (!keywords || !requirement) {
+      toast.error("키워드와 요구사항을 모두 입력해주세요.");
+      return;
     }
+
+    const res = await summaryNote(
+      Number(folderId),
+      Number(noteId),
+      keywords,
+      requirement
+    );
+
+    router.push(`/notes/${folderId}/${noteId}/create-practice`);
   };
 
   return (
@@ -88,6 +75,7 @@ const ConfirmNotePage = () => {
             label="다음"
             variant="next"
             onClick={handleNoteFinalBtn}
+            disabled={sttLoading}
           ></Button>
         </div>
 

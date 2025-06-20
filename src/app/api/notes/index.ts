@@ -6,6 +6,7 @@ import {
 } from "@/app/types/note";
 import { baseURL } from "..";
 import apiClient from "@/app/utils/api";
+import toast from "react-hot-toast";
 
 export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
   const response = await apiClient.get(
@@ -47,8 +48,7 @@ export const createSTT = async (
     );
     return response.data;
   } catch (error) {
-    console.error("STT 생성 실패:", error);
-    throw error;
+    toast.error("STT 처리 중 오류가 발생했습니다.");
   }
 };
 
@@ -129,8 +129,6 @@ export const summaryNote = async (
     );
     return response.data;
   } catch (e) {
-    if ((e as any)?.response?.data) {
-    }
-    throw e;
+    toast.error("요약 생성 중 오류가 발생했습니다.");
   }
 };
