@@ -43,9 +43,9 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
       try {
         setLoading(true);
         const response = await getPractice(noteId);
-        // 정확한 타입 구조 반영해 변환
+
         const converted: ReqList[] = response.information.map((item: any) => ({
-          practiceId: item.praticeId ?? item.practiceId, // typo 대응
+          practiceId: item.praticeId ?? item.practiceId,
           practiceNumber: item.practiceNumber,
           content: item.content,
           result: item.result,
@@ -264,21 +264,48 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
 
               <td className="p-1">
                 {editMode[question.practiceNumber] ? (
-                  <FormInput
-                    name="result"
-                    defaultValue={
-                      editedQuestions[question.practiceNumber]?.result ||
-                      question.result
-                    }
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handleInputChange(
-                        question.practiceNumber,
-                        "result",
-                        e.target.value
-                      )
-                    }
-                    className="w-full"
-                  />
+                  question.practiceType === "OX" ? (
+                    <div className="flex items-center justify-center gap-2">
+                      {["O", "X"].map((val) => {
+                        const selected =
+                          (editedQuestions[question.practiceNumber]?.result ||
+                            question.result) === val;
+                        return (
+                          <button
+                            key={val}
+                            type="button"
+                            onClick={() =>
+                              handleInputChange(
+                                question.practiceNumber,
+                                "result",
+                                val
+                              )
+                            }
+                            className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors duration-200
+                              ${selected ? "bg-primary" : "bg-[#444]"}`}
+                          >
+                            <span className="text-white text-base ">{val}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <FormInput
+                      name="result"
+                      defaultValue={
+                        editedQuestions[question.practiceNumber]?.result ||
+                        question.result
+                      }
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleInputChange(
+                          question.practiceNumber,
+                          "result",
+                          e.target.value
+                        )
+                      }
+                      className="w-full"
+                    />
+                  )
                 ) : (
                   question.result
                 )}
