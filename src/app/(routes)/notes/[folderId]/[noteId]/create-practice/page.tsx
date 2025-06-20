@@ -106,8 +106,8 @@ const CreatePracticePage = () => {
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <Loader
-            message="노트만드는중 stt 기반으로"
-            subMessage="1분정도걸림 ㄱㄷ"
+            message="STT 기반으로 노트를 생성 중이에요"
+            subMessage="약 1분 정도 소요돼요, 잠시만 기다려 주세요!"
           />
         </div>
       )}

@@ -52,7 +52,7 @@ const ConfirmNotePage = () => {
     setSummaryLoading(true);
     await summaryNote(Number(folderId), Number(noteId), keywords, requirement);
     setSummaryLoading(false);
-    router.push(`/notes/${folderId}/${noteId}/create-practice`);
+    router.push(`/notes/${folderId}/${noteId}/summary`);
   };
 
   return (
