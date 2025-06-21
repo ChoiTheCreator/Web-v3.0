@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { usePracticeContext } from "@/app/context/PracticeContext";
-import NewPracticeForm from "@/app/components/organisms/NewPracticeForm";
-import Button from "@/app/components/atoms/Button";
-import { createPractice } from "@/app/api/practice/createPractice";
-import Loader from "@/app/components/utils/Loader";
-import { createSTT } from "@/app/api/notes";
-import { toast } from "react-hot-toast";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { usePracticeContext } from '@/app/context/PracticeContext';
+import NewPracticeForm from '@/app/components/organisms/NewPracticeForm';
+import Button from '@/app/components/atoms/Button';
+import { createPractice } from '@/app/api/practice/createPractice';
+import Loader from '@/app/components/utils/Loader';
+import { createSTT } from '@/app/api/notes';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
 
 interface CreatePracticeApiResponse {
   check: boolean;
@@ -43,12 +43,12 @@ const CreatePracticePage = () => {
 
   const handleCreatePractice = async () => {
     if (!noteId || !file || file.size === 0) {
-      alert("파일이 업로드되지 않았습니다. 파일을 선택해주세요.");
+      toast.error('파일이 업로드되지 않았습니다. 파일을 선택해주세요.');
       return;
     }
 
     if (!type) {
-      alert("문제 유형을 최소 하나 선택해야 합니다.");
+      toast.error('문제 유형을 최소 하나 선택해야 합니다.');
       return;
     }
 
@@ -70,7 +70,7 @@ const CreatePracticePage = () => {
       const createRes: CreatePracticeApiResponse = await createPractice(
         createPayLoad
       );
-      toast.success("문제 생성이 완료되었습니다.");
+      toast.success('문제 생성이 완료되었습니다.');
 
       setQuestions(createRes.information.practiceResList);
       setSummary(createRes.information.summary);
@@ -80,7 +80,7 @@ const CreatePracticePage = () => {
       if (axios.isAxiosError(error)) {
         toast.error(
           `API 에러: ${
-            error.response?.data?.message || "알 수 없는 오류가 발생했습니다."
+            error.response?.data?.message || '알 수 없는 오류가 발생했습니다.'
           }`
         );
       } else {
@@ -88,7 +88,7 @@ const CreatePracticePage = () => {
           `오류 발생: ${
             error instanceof Error
               ? error.message
-              : "알 수 없는 오류가 발생했습니다."
+              : '알 수 없는 오류가 발생했습니다.'
           }`
         );
       }
