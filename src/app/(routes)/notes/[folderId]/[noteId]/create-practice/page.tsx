@@ -1,14 +1,29 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { usePracticeContext } from '@/app/context/PracticeContext';
-import NewPracticeForm from '@/app/components/organisms/NewPracticeForm';
-import Button from '@/app/components/atoms/Button';
-import { createPractice } from '@/app/api/practice/createPractice';
-import Loader from '@/app/components/utils/Loader';
-import { createNoteSTT } from '@/app/api/notes';
-import apiClient from '@/app/utils/api';
+import React, { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { usePracticeContext } from "@/app/context/PracticeContext";
+import NewPracticeForm from "@/app/components/organisms/NewPracticeForm";
+import Button from "@/app/components/atoms/Button";
+import { createPractice } from "@/app/api/practice/createPractice";
+import Loader from "@/app/components/utils/Loader";
+import { createSTT } from "@/app/api/notes";
+import { toast } from "react-hot-toast";
+import axios from "axios";
+
+interface CreatePracticeApiResponse {
+  check: boolean;
+  information: {
+    practiceResList: Array<{
+      practiceNumber: number;
+      content: string;
+      result: string;
+      solution: string;
+      practiceType: string;
+    }>;
+    summary: string;
+  };
+}
 
 const CreatePracticePage = () => {
   const router = useRouter();
@@ -18,78 +33,64 @@ const CreatePracticePage = () => {
     keywords,
     requirement,
     practiceSize,
-    setQuestions,
-    setSummary,
     type,
     setType,
+    setQuestions,
+    setSummary,
   } = usePracticeContext();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreatePractice = async () => {
     if (!noteId || !file || file.size === 0) {
-      alert('파일이 업로드되지 않았습니다. 파일을 선택해주세요.');
+      alert("파일이 업로드되지 않았습니다. 파일을 선택해주세요.");
       return;
     }
 
     if (!type) {
-      alert('문제 유형을 최소 하나 선택해야 합니다.');
+      alert("문제 유형을 최소 하나 선택해야 합니다.");
       return;
     }
 
     try {
       setIsLoading(true);
 
-      // 1️⃣ 입력값 확인
-      console.log('📥 입력값 확인');
-      console.log('noteId:', noteId);
-      console.log('folderId:', folderId);
-      console.log('file:', file);
-      console.log('keywords:', keywords);
-      console.log('requirement:', requirement);
-      console.log('type:', type);
-      console.log('practiceSize:', practiceSize);
+      await createSTT(Number(folderId), Number(noteId), file);
 
-      // 2️⃣ STT 요청
-      console.log('🎧 createNoteSTT 호출 시작');
-      await createNoteSTT(
-        Number(folderId),
-        Number(noteId),
-        keywords,
-        requirement
-      );
-      console.log('✅ createNoteSTT 성공');
-
-      // 3️⃣ 문제 생성 요청
       const createPayLoad = {
-        practiceSize,
-        type,
-        keywords,
-        requirement,
+        noteId: Number(noteId),
+        createPracticeReq: {
+          practiceSize: practiceSize || undefined,
+          type,
+          keywords,
+          requirement,
+        },
       };
-      console.log('🧾 문제 생성 요청 payload:', createPayLoad);
 
-      const createRes = await apiClient.post(
-        `/api/v1/professor/practice/${noteId}/new`,
+      const createRes: CreatePracticeApiResponse = await createPractice(
         createPayLoad
       );
-      console.log('✅ 문제 미리 생성 성공:', createRes.data);
+      toast.success("문제 생성이 완료되었습니다.");
 
-      // 4️⃣ 페이지 이동
-      router.push(`/notes/${folderId}/${noteId}/result?tab=questions`);
+      setQuestions(createRes.information.practiceResList);
+      setSummary(createRes.information.summary);
+
+      router.push(`/notes/${folderId}/${noteId}/result`);
     } catch (error) {
-      alert('지금은 요청이 많아, 생성이 어려워요. 5분 후에 다시 시도해주세요.');
-
-      if (error instanceof Error) {
-        const axiosError = error as any;
-        if (axiosError.response) {
-          console.log('❌ 응답 에러 데이터: ', axiosError.response.data);
-          console.log('❌ 응답 상태 코드: ', axiosError.response.status);
-          console.log('❌ 응답 헤더: ', axiosError.response.headers);
-        } else {
-          console.log('❌ 일반 에러 메시지: ', error.message);
-        }
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          `API 에러: ${
+            error.response?.data?.message || "알 수 없는 오류가 발생했습니다."
+          }`
+        );
       } else {
-        console.log('❌ 알 수 없는 에러 객체: ', error);
+        toast.error(
+          `오류 발생: ${
+            error instanceof Error
+              ? error.message
+              : "알 수 없는 오류가 발생했습니다."
+          }`
+        );
       }
     } finally {
       setIsLoading(false);
@@ -101,8 +102,8 @@ const CreatePracticePage = () => {
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <Loader
-            message="노트만드는중 stt 기반으로"
-            subMessage="1분정도걸림 ㄱㄷ"
+            message="STT 기반으로 노트를 생성 중이에요"
+            subMessage="약 1분 정도 소요돼요, 잠시만 기다려 주세요!"
           />
         </div>
       )}

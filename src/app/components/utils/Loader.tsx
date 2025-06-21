@@ -1,12 +1,29 @@
 // src/components/Loader.tsx
-import React from 'react';
-import Lottie from 'lottie-react';
-import ProgressBar from '../../../../public/Progress.json';
+import React from "react";
+import Lottie from "lottie-react";
+import ProgressBar from "../../../../public/Progress.json";
 
 interface LoaderProps {
   message: string;
   subMessage: string;
 }
+
+interface SmallLoaderProps {
+  className?: string;
+}
+
+const SmallLoader: React.FC<SmallLoaderProps> = ({ className }) => {
+  return (
+    <div className={`w-4 h-4 ${className}`}>
+      <Lottie
+        animationData={ProgressBar}
+        loop={true}
+        className="w-full h-full"
+      />
+    </div>
+  );
+};
+
 const Loader: React.FC<LoaderProps> = ({ message, subMessage }) => {
   return (
     <div className="absolute top-0 left-0 flex items-center justify-center h-screen w-full bg-bgDeepGray/60">
@@ -31,4 +48,5 @@ const Loader: React.FC<LoaderProps> = ({ message, subMessage }) => {
   );
 };
 
+export { SmallLoader };
 export default Loader;

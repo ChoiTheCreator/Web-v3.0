@@ -35,7 +35,7 @@ const TextInputSection = ({
           <div>
             <p className="text-gray-300 mb-2 font-semibold">핵심 키워드</p>
             <textarea
-              className="w-full h-44 p-2 px-3 bg-black-80 placeholder:text-black-70 rounded-lg resize-none outline-none"
+              className="w-full h-44 p-2 px-3 bg-black-80 placeholder:text-black-70 text-white rounded-lg resize-none outline-none"
               value={keywords}
               onChange={handleKeywordChange}
               placeholder="해당 키워드를 더욱 신경 써서 반영한 요약문을 제공해드리겠습니다."

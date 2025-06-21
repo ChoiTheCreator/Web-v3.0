@@ -3,9 +3,10 @@ import {
   FolderInfo,
   CreateNoteRequest,
   DeleteNoteResponse,
-} from '@/app/types/note';
-import { baseURL } from '..';
-import apiClient from '@/app/utils/api';
+} from "@/app/types/note";
+import { baseURL } from "..";
+import apiClient from "@/app/utils/api";
+import toast from "react-hot-toast";
 
 export const fetchNotes = async (folderId: number): Promise<NoteResponse> => {
   const response = await apiClient.get(
@@ -33,7 +34,7 @@ export const createSTT = async (
   file: File
 ): Promise<any> => {
   const formData = new FormData();
-  formData.append('file', file); // Swagger에서 요구한 key: file
+  formData.append("file", file);
 
   try {
     const response = await apiClient.post(
@@ -41,13 +42,12 @@ export const createSTT = async (
       formData,
       {
         headers: {
-          'Content-Type': undefined,
+          "Content-Type": undefined,
         },
       }
     );
     return response.data;
   } catch (error) {
-    console.error('STT 생성 실패:', error);
     throw error;
   }
 };
@@ -58,42 +58,34 @@ export const createNoteSTT = async (
   keywords: string | null,
   requirement: string | null
 ): Promise<any> => {
-  console.log('🟡 createNoteSTT 시작');
-  console.log('📨 요청 인자:', { folderId, noteId, keywords, requirement });
-
   try {
-    const body = {
-      ...(keywords && keywords.trim() && { keywords: keywords.trim() }),
-      ...(requirement &&
-        requirement.trim() && { requirement: requirement.trim() }),
-    };
+    const formData = new FormData();
+    if (keywords && keywords.trim()) {
+      formData.append("keywords", keywords.trim());
+    }
+    if (requirement && requirement.trim()) {
+      formData.append("requirement", requirement.trim());
+    }
 
     const res = await apiClient.post(
-      `/api/v1/folders/${folderId}/notes/${noteId}/summaries`,
-      body,
+      `/api/v1/professor/practice/${noteId}/new`,
+      formData,
       {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "multipart/form-data",
         },
       }
     );
 
-    console.log('✅ createNoteSTT 응답:', res.data);
     return res.data;
   } catch (error) {
-    console.error('❌ createNoteSTT 요청 실패');
-
     if ((error as any)?.response) {
       const axiosError = error as any;
-      console.error('응답 데이터:', axiosError.response.data);
-      console.error('응답 상태 코드:', axiosError.response.status);
     } else {
-      console.error('일반 에러:', error);
     }
 
     throw error;
   } finally {
-    console.log('🔚 createNoteSTT 종료');
   }
 };
 
@@ -131,16 +123,12 @@ export const summaryNote = async (
       },
       {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
     return response.data;
   } catch (e) {
-    console.error('❌ summaryNote 처리 중 에러 발생:', e);
-    if ((e as any)?.response?.data) {
-      console.error('📩 서버 응답 메시지:', (e as any).response.data);
-    }
-    throw e;
+    toast.error("요약 생성 중 오류가 발생했습니다.");
   }
 };
