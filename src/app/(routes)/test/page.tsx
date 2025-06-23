@@ -228,11 +228,16 @@ const Page = () => {
           professor={professor}
           setSubject={setSubject}
           setProfessor={setProfessor}
-          onSave={() => {
-            if (isEditMode) {
-              handleUpdateFolder();
-            } else {
-              handleCreateFolder();
+          onSave={async () => {
+            try {
+              if (isEditMode) {
+                await handleUpdateFolder();
+              } else {
+                await handleCreateFolder();
+              }
+              return true;
+            } catch (e) {
+              return false;
             }
           }}
           onClose={() => setShowModal(false)}
