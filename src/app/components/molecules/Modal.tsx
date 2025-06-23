@@ -5,20 +5,32 @@ import Image from "next/image";
 import { FolderListData } from "@/app/types/folder";
 import Icon from "../atoms/Icon";
 import { useRouter } from "next/navigation";
-import forder from "../../../../public/folder.svg";
 import delete_bin_red from "../../../../public/delete_bin_red.svg";
 import note from "../../../../public/note.svg";
-import folder_opened from "../../../../public/folder_opened.svg";
 import { toast } from "react-hot-toast";
+
+import folder from "../../../../public/folder.svg";
+import folderOpened from "../../../../public/folder_opened.svg";
+import filledFolder from "../.././../../public/filled_folder.svg";
+import filledFolderOpened from "../../../../public/filled_folder_opened.svg";
 
 export const SectionFolder: React.FC<{
   section: FolderListData;
   onClick: (section: FolderListData) => void;
   onMenuClick: (e: React.MouseEvent) => void;
+  noteIsExist?: boolean;
   showModify: boolean;
-}> = ({ section, onClick, onMenuClick }) => {
+}> = ({ section, onClick, onMenuClick, noteIsExist }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
+
+  const getFolderImage = () => {
+    if (noteIsExist) {
+      return isHovered ? filledFolderOpened : filledFolder;
+    } else {
+      return isHovered ? folderOpened : folder;
+    }
+  };
 
   return (
     <div
@@ -33,15 +45,15 @@ export const SectionFolder: React.FC<{
         }}
       >
         <Image
-          src={isHovered ? folder_opened : forder}
+          src={getFolderImage()}
           alt="folder"
           width={240}
           height={140}
-          className={"cursor-pointer transition duration-300 ease-in-out"}
+          className="cursor-pointer transition duration-300 ease-in-out"
         />
       </div>
 
-      <div className="flex justify-between w-full px-3 mt-[-60px] z-">
+      <div className="flex justify-between w-full px-3 mt-[-60px] z-10">
         <div className="flex flex-col">
           <p className="font-Pretendard text-[20px] text-black">
             {section.folderName}

@@ -136,6 +136,7 @@ const HomePage = () => {
                       setSubject(folder.folderName);
                       setProfessor(folder.professor);
                     }}
+                    noteIsExist={folder.noteCount > 0}
                     onMenuClick={() =>
                       setShowModify((prev) => ({
                         ...prev,
