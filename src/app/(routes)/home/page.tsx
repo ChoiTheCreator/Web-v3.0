@@ -21,8 +21,11 @@ import OnBoardingModal from "@/app/components/molecules/OnBoardingModal";
 import toast from "react-hot-toast";
 
 const HomePage = () => {
-  const { data: session } = useSession();
-  const { data: folders = [] } = useFetchFolders();
+  const { data: session, status } = useSession();
+  const token = session?.user?.aiTutorToken;
+  const { data: folders = [] } = useFetchFolders({
+    enabled: status === "authenticated" && !!token,
+  });
   const createFolder = useCreateFolder();
   const updateFolder = useUpdateFolder();
   const deleteFolder = useDeleteFolder();

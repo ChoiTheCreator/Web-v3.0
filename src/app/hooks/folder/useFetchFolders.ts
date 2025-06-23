@@ -6,5 +6,6 @@ export const useFetchFolders = (options?: { enabled?: boolean }) => {
   return useQuery<FolderListData[]>({
     queryKey: ["folders"],
     queryFn: getFolders,
+    enabled: options?.enabled !== undefined ? options.enabled : true,
   });
 };
