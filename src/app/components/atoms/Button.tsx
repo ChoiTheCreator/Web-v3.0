@@ -1,5 +1,5 @@
-import React from "react";
-import Image from "next/image";
+import React from 'react';
+import Image from 'next/image';
 
 interface ButtonProps {
   label?: string;
@@ -10,43 +10,57 @@ interface ButtonProps {
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  type?: "button" | "submit" | "reset";
-  variant?: "select" | "next" | "create" | "cancel" | "save";
-  iconPosition?: "left" | "right";
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'select' | 'next' | 'create' | 'cancel' | 'save';
+  iconPosition?: 'left' | 'right';
   className?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
-  label = "",
+  label = '',
   disabled = false,
   imgSrc,
-  imgAlt = "icon",
+  imgAlt = 'icon',
   isSelected = false,
   onClick,
   onMouseEnter,
   onMouseLeave,
-  type = "button",
-  variant = "create",
-  iconPosition = "right",
-  className = "",
+  type = 'button',
+  variant = 'create',
+  iconPosition = 'right',
+  className = '',
 }) => {
   const getButtonStyles = () => {
+    let base = '';
+
     switch (variant) {
-      case "select":
-        return `rounded-full w-full transition-all duration-300 ease-in-out transform ${
-          isSelected ? "bg-primary shadow-lg" : "bg-black-80 opacity-80"
+      case 'select':
+        base = `rounded-full w-full transition-all duration-300 ease-in-out transform ${
+          isSelected ? 'bg-primary shadow-lg' : 'bg-black-80 opacity-80'
         }`;
-      case "next":
-        return `rounded-full border-black-70 border hover:bg-black-80 transition-all duration-300 ease-in-out`;
-      case "create":
-        return `bg-black-70 rounded-full border border-black-60 hover:bg-black-80 transition-all duration-300`;
-      case "cancel":
-        return `bg-[#3F3F3F] rounded-[10px] border border-[#565656] hover:bg-[#222222] transition-all duration-300`;
-      case "save":
-        return `bg-mainGreen rounded-[10px] border border-[#4CE5A9] hover:bg-[#00A264] transition-all duration-300`;
+        break;
+      case 'next':
+        base = `rounded-full border-black-70 border hover:bg-black-80 transition-all duration-300 ease-in-out`;
+        break;
+      case 'create':
+        base = `bg-black-70 rounded-full border border-black-60 hover:bg-black-80 transition-all duration-300`;
+        break;
+      case 'cancel':
+        base = `bg-[#3F3F3F] rounded-[10px] border border-[#565656] hover:bg-[#222222] transition-all duration-300`;
+        break;
+      case 'save':
+        base = `bg-mainGreen rounded-[10px] border border-[#4CE5A9] hover:bg-[#00A264] transition-all duration-300`;
+        break;
       default:
-        return "";
+        base = '';
     }
+
+    if (disabled) {
+      base +=
+        ' opacity-40 grayscale brightness-75 cursor-not-allowed pointer-events-none';
+    }
+
+    return base;
   };
 
   return (
@@ -58,7 +72,7 @@ const Button: React.FC<ButtonProps> = ({
       onMouseLeave={onMouseLeave}
       disabled={disabled}
     >
-      {imgSrc && iconPosition === "left" && (
+      {imgSrc && iconPosition === 'left' && (
         <Image src={`/${imgSrc}.svg`} alt={imgAlt} width={16} height={16} />
       )}
 
@@ -66,7 +80,7 @@ const Button: React.FC<ButtonProps> = ({
         {label}
       </p>
 
-      {imgSrc && iconPosition === "right" && (
+      {imgSrc && iconPosition === 'right' && (
         <Image src={`/${imgSrc}.svg`} alt={imgAlt} width={10} height={10} />
       )}
     </button>

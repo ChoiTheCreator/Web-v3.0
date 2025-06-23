@@ -1,14 +1,14 @@
-"use client";
-import { useEffect, useState } from "react";
-import Button from "@/app/components/atoms/Button";
-import TextInputSection from "@/app/components/atoms/TextInputSection";
-import { usePracticeContext } from "@/app/context/PracticeContext";
-import { createSTT, summaryNote } from "@/app/api/notes";
-import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import toast from "react-hot-toast";
+'use client';
+import { useEffect, useState } from 'react';
+import Button from '@/app/components/atoms/Button';
+import TextInputSection from '@/app/components/atoms/TextInputSection';
+import { usePracticeContext } from '@/app/context/PracticeContext';
+import { createSTT, summaryNote } from '@/app/api/notes';
+import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
+import toast from 'react-hot-toast';
 
-import Loader, { SmallLoader } from "@/app/components/utils/Loader";
+import Loader, { SmallLoader } from '@/app/components/utils/Loader';
 
 const ConfirmNotePage = () => {
   const {
@@ -45,8 +45,9 @@ const ConfirmNotePage = () => {
   }, [file, folderId, noteId, setSttLoading]);
 
   const handleNoteFinalBtn = async () => {
+    if (summaryLoading || sttLoading) return;
     if (!keywords || !requirement) {
-      toast.error("키워드와 요구사항을 모두 입력해주세요.");
+      toast.error('키워드와 요구사항을 모두 입력해주세요.');
       return;
     }
     setSummaryLoading(true);
@@ -97,12 +98,12 @@ const ConfirmNotePage = () => {
             </p>
             <p
               className={`text-base border-[0.5px] py-3 px-4 w-full border-black-80 rounded-md p-2 text-black-70 flex font-semibold gap-4 transition-colors duration-300 ${
-                !sttLoading && file ? "bg-primary/10" : ""
+                !sttLoading && file ? 'bg-primary/10' : ''
               }`}
             >
               <Image
                 src={`/active_folder.svg`}
-                alt={"active_folder"}
+                alt={'active_folder'}
                 width={40}
                 height={40}
               />
@@ -112,7 +113,7 @@ const ConfirmNotePage = () => {
                     {file?.name && (
                       <>
                         {file.name.slice(0, 15)}
-                        {file.name.length > 15 && "..."}
+                        {file.name.length > 15 && '...'}
                       </>
                     )}
                     {sttLoading && <SmallLoader />}

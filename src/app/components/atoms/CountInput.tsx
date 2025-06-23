@@ -1,5 +1,6 @@
-import React from "react";
-import { FormInput } from "../atoms/FormInput";
+import React from 'react';
+import { FormInput } from '../atoms/FormInput';
+import { toast } from 'react-hot-toast';
 
 interface CountInputProps {
   name: string;
@@ -11,15 +12,15 @@ interface CountInputProps {
 
 const CountInput: React.FC<CountInputProps> = ({
   name,
-  defaultValue = "",
-  placeholder = "",
+  defaultValue = '',
+  placeholder = '',
   onChange,
   disabled = false,
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     if (value > 20) {
-      alert("20개 이하로 입력해 주세요.");
+      toast.error('20개 이하로 입력해 주세요.');
       return;
     }
     onChange(event);
