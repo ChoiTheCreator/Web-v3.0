@@ -97,7 +97,7 @@ export const SectionModal: React.FC<{
   professor: string;
   setSubject: (subject: string) => void;
   setProfessor: (professor: string) => void;
-  onSave: () => void;
+  onSave: () => Promise<boolean>;
   onClose: () => void;
 }> = ({ subject, professor, setSubject, setProfessor, onSave, onClose }) => {
   const [isSaving, setIsSaving] = useState(false);
@@ -107,10 +107,10 @@ export const SectionModal: React.FC<{
     setIsSaving(true);
 
     try {
-      await onSave();
-
-      onClose();
-    } catch (error) {
+      const success = await onSave();
+      if (success) {
+        onClose();
+      }
     } finally {
       setIsSaving(false);
     }
