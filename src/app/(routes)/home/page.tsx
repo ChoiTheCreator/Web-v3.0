@@ -48,7 +48,7 @@ const HomePage = () => {
       return false;
     }
 
-    createFolder.mutateAsync({
+    await createFolder.mutateAsync({
       folderName: subject,
       professorName: professor,
     });
