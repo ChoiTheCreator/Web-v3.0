@@ -1,14 +1,19 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchSummary } from "@/app/api/summaries/fetchSummary";
 import Icon from "@/app/components/atoms/Icon";
+import Button from "@/app/components/atoms/Button";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { SummaryPDFDocument } from "@/app/utils/pdfExportSummary";
 
 export default function SummaryPage() {
   const { folderId, noteId } = useParams();
   const router = useRouter();
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(true);
+  const leftAreaRef = useRef<HTMLDivElement>(null);
+  const [leftWidth, setLeftWidth] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +34,17 @@ export default function SummaryPage() {
     fetchData();
   }, [folderId, noteId]);
 
+  useEffect(() => {
+    function updateWidth() {
+      if (leftAreaRef.current) {
+        setLeftWidth(leftAreaRef.current.offsetWidth);
+      }
+    }
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-black-100 p-8 flex-col">
       <div className="flex flex-col items-start w-full">
@@ -38,8 +54,11 @@ export default function SummaryPage() {
         </p>
       </div>
 
-      <div className="flex flex-row w-full pt-12 h-full top-0 items-start">
-        <div className="flex-1 flex flex-col justify-center w-full">
+      <div className="flex flex-row w-full pt-12 h-full top-0 items-start ">
+        <div
+          ref={leftAreaRef}
+          className="flex-1 flex flex-col justify-center w-full"
+        >
           <p className="text-gray-300 mb-2 font-semibold">요약문</p>
           <textarea
             className="w-full h-64 p-2 px-3 bg-black-80 placeholder:text-black-70 text-white rounded-lg resize-none outline-none"
@@ -69,6 +88,19 @@ export default function SummaryPage() {
           </button>
         </div>
       </div>
+      {leftWidth && (
+        <div
+          className="fixed bottom-0 left-auto flex justify-end py-20 z-50 bg-black-100 bg-opacity-90"
+          style={{ width: leftWidth }}
+        >
+          <PDFDownloadLink
+            document={<SummaryPDFDocument summary={summary} />}
+            fileName={`AI_TUTOR_${noteId}.pdf`}
+          >
+            <Button label="PDF 변환" variant="next" />
+          </PDFDownloadLink>
+        </div>
+      )}
     </div>
   );
 }

@@ -18,10 +18,14 @@ import { Folder } from "@/app/types/folder";
 import { useOnboarding } from "@/app/hooks/useOnboarding";
 
 import OnBoardingModal from "@/app/components/molecules/OnBoardingModal";
+import toast from "react-hot-toast";
 
 const HomePage = () => {
-  const { data: session } = useSession();
-  const { data: folders = [] } = useFetchFolders();
+  const { data: session, status } = useSession();
+  const token = session?.user?.aiTutorToken;
+  const { data: folders = [] } = useFetchFolders({
+    enabled: status === "authenticated" && !!token,
+  });
   const createFolder = useCreateFolder();
   const updateFolder = useUpdateFolder();
   const deleteFolder = useDeleteFolder();
@@ -33,20 +37,28 @@ const HomePage = () => {
   const [professor, setProfessor] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const handleCreateFolder = async () => {
-    try {
-      await createFolder.mutateAsync({
-        folderName: subject,
-        professorName: professor,
-      });
-      setShowModal(false);
-      setSubject("");
-      setProfessor("");
-    } catch (error) {}
+  const handleCreateFolder = async (): Promise<boolean> => {
+    if (!subject) {
+      toast.error("과목명을 입력해주세요.");
+      return false;
+    }
+
+    if (!professor) {
+      toast.error("교수명을 입력해주세요.");
+      return false;
+    }
+
+    await createFolder.mutateAsync({
+      folderName: subject,
+      professorName: professor,
+    });
+    setSubject("");
+    setProfessor("");
+    return true;
   };
 
-  const handleUpdateFolder = () => {
-    if (!selectedFolder) return;
+  const handleUpdateFolder = async (): Promise<boolean> => {
+    if (!selectedFolder) return false;
 
     updateFolder.mutate({
       folderId: selectedFolder.folderId,
@@ -56,6 +68,7 @@ const HomePage = () => {
 
     setShowModify((prev) => ({ ...prev, [selectedFolder.folderId]: false }));
     setShowModal(false);
+    return true;
   };
 
   const handleDeleteFolder = (folderId: number) => {
@@ -126,6 +139,7 @@ const HomePage = () => {
                       setSubject(folder.folderName);
                       setProfessor(folder.professor);
                     }}
+                    noteIsExist={folder.noteCount > 0}
                     onMenuClick={() =>
                       setShowModify((prev) => ({
                         ...prev,

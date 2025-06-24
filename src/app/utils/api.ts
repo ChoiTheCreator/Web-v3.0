@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { baseURL } from "@/app/api/index";
+import { refreshAuthToken } from "@/app/api/auth/[...nextauth]/auth";
 
 const apiClient = axios.create({
   baseURL: baseURL,
@@ -34,7 +35,20 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      return apiClient(originalRequest);
+      const refreshToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("refreshToken")
+          : null;
+      if (refreshToken) {
+        const tokens = await refreshAuthToken(refreshToken);
+        if (tokens?.accessToken) {
+          setAuthToken(tokens.accessToken);
+          originalRequest.headers[
+            "Authorization"
+          ] = `Bearer ${tokens.accessToken}`;
+          return apiClient(originalRequest);
+        }
+      }
     }
 
     return Promise.reject(error);
