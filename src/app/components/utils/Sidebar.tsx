@@ -1,16 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Icon from "../atoms/Icon";
-import { useFetchFolders } from "@/app/hooks/folder/useFetchFolders";
-import { setAuthToken } from "@/app/utils/api";
-import { useSession } from "next-auth/react";
+import { useEffect, useState } from 'react';
+import { useOnboarding } from '@/app/hooks/useOnboarding';
+import Link from 'next/link';
+import Icon from '../atoms/Icon';
+import { useFetchFolders } from '@/app/hooks/folder/useFetchFolders';
+import { setAuthToken } from '@/app/utils/api';
+import { useSession } from 'next-auth/react';
 
 const Sidebar: React.FC = () => {
   const { data: session } = useSession();
   const token = session?.user?.aiTutorToken;
   const [isAuthSet, setIsAuthSet] = useState(false);
+  const { showOnboarding, closeOnboarding } = useOnboarding();
 
   useEffect(() => {
     if (token) {
@@ -18,6 +20,10 @@ const Sidebar: React.FC = () => {
       setIsAuthSet(true);
     }
   }, [token]);
+
+  const handleGuideClick = () => {
+    //클릭 누르면 글로벌 상태 변경
+  };
 
   const { data: folders = [], isLoading, error } = useFetchFolders();
 
@@ -57,7 +63,7 @@ const Sidebar: React.FC = () => {
               <Icon
                 label="arrow_sidebar"
                 className={`h-[16px] w-[16px] my-auto invert transition-transform ${
-                  showSections ? "rotate-90" : ""
+                  showSections ? 'rotate-90' : ''
                 }`}
               />
             </div>

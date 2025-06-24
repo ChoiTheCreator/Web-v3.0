@@ -6,11 +6,9 @@ import { slides } from '@/app/constants/OnBoardingModalImageList';
 
 interface OnBoardingModalProps {
   onClose: () => void;
-  //필요 props 추가할거 있으면 해야할듯 합니다.
 }
 
 const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
-  //carousel IMG Array
   const [slideIndex, setSlideIndex] = useState(0);
 
   const handleSlideClicked = (index: number) => {
