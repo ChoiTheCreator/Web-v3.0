@@ -1,50 +1,55 @@
-"use client";
-import React, { useState } from "react";
-import Button from "@/app/components/atoms/Button";
+'use client';
+import React, { useEffect, useState } from 'react';
+import Button from '@/app/components/atoms/Button';
 import {
   SectionFolder,
   SectionModal,
   SectionModify,
-} from "@/app/components/molecules/Modal";
-import { useFetchFolders } from "@/app/hooks/folder/useFetchFolders";
-import { useCreateFolder } from "@/app/hooks/folder/useCreateFolder";
-import { useUpdateFolder } from "@/app/hooks/folder/useUpdateFolder";
-import { useDeleteFolder } from "@/app/hooks/folder/useDeleteFolder";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import speach_bubble from "../../../../public/speech_bubble.svg";
-import { Folder } from "@/app/types/folder";
+} from '@/app/components/molecules/Modal';
+import {
+  getIsFirstTimeUser,
+  setIsFirstTimeUser,
+} from '@/app/utils/localstorage';
+import { useFetchFolders } from '@/app/hooks/folder/useFetchFolders';
+import { useCreateFolder } from '@/app/hooks/folder/useCreateFolder';
+import { useUpdateFolder } from '@/app/hooks/folder/useUpdateFolder';
+import { useDeleteFolder } from '@/app/hooks/folder/useDeleteFolder';
+import { useOnboardingstore } from '@/app/store/useOnboardingStore';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import speach_bubble from '../../../../public/speech_bubble.svg';
+import { Folder } from '@/app/types/folder';
 
-import { useOnboarding } from "@/app/hooks/useOnboarding";
+import { useOnboarding } from '@/app/hooks/useOnboarding';
 
-import OnBoardingModal from "@/app/components/molecules/OnBoardingModal";
-import toast from "react-hot-toast";
+import OnBoardingModal from '@/app/components/molecules/OnBoardingModal';
+import toast from 'react-hot-toast';
 
 const HomePage = () => {
   const { data: session, status } = useSession();
   const token = session?.user?.aiTutorToken;
   const { data: folders = [] } = useFetchFolders({
-    enabled: status === "authenticated" && !!token,
+    enabled: status === 'authenticated' && !!token,
   });
   const createFolder = useCreateFolder();
   const updateFolder = useUpdateFolder();
   const deleteFolder = useDeleteFolder();
-
+  const { open } = useOnboardingstore();
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [professor, setProfessor] = useState("");
+  const [subject, setSubject] = useState('');
+  const [professor, setProfessor] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleCreateFolder = async (): Promise<boolean> => {
     if (!subject) {
-      toast.error("과목명을 입력해주세요.");
+      toast.error('과목명을 입력해주세요.');
       return false;
     }
 
     if (!professor) {
-      toast.error("교수명을 입력해주세요.");
+      toast.error('교수명을 입력해주세요.');
       return false;
     }
 
@@ -52,8 +57,8 @@ const HomePage = () => {
       folderName: subject,
       professorName: professor,
     });
-    setSubject("");
-    setProfessor("");
+    setSubject('');
+    setProfessor('');
     return true;
   };
 
@@ -76,6 +81,13 @@ const HomePage = () => {
     setSelectedFolder(null);
   };
   const { showOnboarding, closeOnboarding } = useOnboarding();
+
+  useEffect(() => {
+    if (getIsFirstTimeUser()) {
+      open();
+      setIsFirstTimeUser(false);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col justify-between h-full w-full">
@@ -100,8 +112,8 @@ const HomePage = () => {
               variant="create"
               onClick={() => {
                 setIsEditMode(false);
-                setSubject("");
-                setProfessor("");
+                setSubject('');
+                setProfessor('');
                 setShowModal(true);
               }}
             />
@@ -110,9 +122,7 @@ const HomePage = () => {
 
         <div className="bg-black-80 rounded-lg rounded-b-none mx-4 h-full">
           <div className="flex text-center">
-            {showOnboarding && (
-              <OnBoardingModal onClose={closeOnboarding}></OnBoardingModal>
-            )}
+            {showOnboarding && <OnBoardingModal></OnBoardingModal>}
           </div>
           {folders.length === 0 ? (
             <div className="flex flex-col justify-center items-center h-full text-center text-white">

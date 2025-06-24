@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
-
+import { useOnboardingstore } from '@/app/store/useOnboardingStore';
 import Image from 'next/image';
 import OnBoardingCarousel from './OnBoardingCarousel';
 import { slides } from '@/app/constants/OnBoardingModalImageList';
 
-interface OnBoardingModalProps {
-  onClose: () => void;
-}
-
-const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
+const OnBoardingModal: React.FC = () => {
   const [slideIndex, setSlideIndex] = useState(0);
 
   const handleSlideClicked = (index: number) => {
     setSlideIndex(index);
   };
 
+  const { isOpen, close } = useOnboardingstore();
+
+  if (!isOpen) return null;
   return (
     <div
       className="fixed flex flex-col z-50 inset-0 items-center justify-center bg-black bg-opacity-50 backdrop-blur-md"
-      onClick={onClose}
+      onClick={close}
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -41,7 +40,7 @@ const OnBoardingModal: React.FC<OnBoardingModalProps> = ({ onClose }) => {
         ></OnBoardingCarousel>{' '}
         <button
           className="absolute top-4 right-1 bg-transparent text-white px-3 py-1 rounded-md"
-          onClick={onClose}
+          onClick={close}
         >
           ✕
         </button>

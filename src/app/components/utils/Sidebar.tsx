@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useOnboarding } from '@/app/hooks/useOnboarding';
+import { useOnboardingstore } from '@/app/store/useOnboardingStore';
 import Link from 'next/link';
 import Icon from '../atoms/Icon';
 import { useFetchFolders } from '@/app/hooks/folder/useFetchFolders';
@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
   const { data: session } = useSession();
   const token = session?.user?.aiTutorToken;
   const [isAuthSet, setIsAuthSet] = useState(false);
-  const { showOnboarding, closeOnboarding } = useOnboarding();
+  const { isOpen, close, open } = useOnboardingstore();
 
   useEffect(() => {
     if (token) {
@@ -22,7 +22,7 @@ const Sidebar: React.FC = () => {
   }, [token]);
 
   const handleGuideClick = () => {
-    //클릭 누르면 글로벌 상태 변경
+    open();
   };
 
   const { data: folders = [], isLoading, error } = useFetchFolders();
@@ -86,7 +86,10 @@ const Sidebar: React.FC = () => {
       </div>
       <div className="pb-8">
         <div className="hover:bg-black-80 hover:rounded-md cursor-pointer transition-colors duration-200 rounded-md">
-          <div className="flex flex-row px-[35px] py-2 gap-3">
+          <div
+            onClick={handleGuideClick}
+            className="flex flex-row px-[35px] py-2 gap-3"
+          >
             <Icon label="guide" className="w-[20px] h-[20px] my-auto" />
             <p className="text-white">가이드보기</p>
           </div>
