@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchSummary } from "@/app/api/summaries/fetchSummary";
@@ -6,14 +7,51 @@ import Icon from "@/app/components/atoms/Icon";
 import Button from "@/app/components/atoms/Button";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { SummaryPDFDocument } from "@/app/utils/pdfExportSummary";
+import { getPractice } from "@/app/api/practice/getPractice";
+import { useSession } from "next-auth/react";
 
 export default function SummaryPage() {
   const { folderId, noteId } = useParams();
   const router = useRouter();
+
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [practiceQuestions, setPracticeQuestions] = useState<any[]>([]);
   const leftAreaRef = useRef<HTMLDivElement>(null);
   const [leftWidth, setLeftWidth] = useState<number | null>(null);
+  const { data: session, status } = useSession();
+  const token = session?.user?.aiTutorToken;
+  const setAuthToken = (token: string | null) => {
+    if (token) {
+      localStorage.setItem("aiTutorToken", token);
+    }}
+
+
+
+  useEffect(() => {
+  const fetchPractice = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getPractice(Number(noteId));
+      setPracticeQuestions(data?.information || []);
+    } catch (e) {
+      console.error("문제 조회 실패", e);
+      setPracticeQuestions([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  if (token && noteId) {
+    setAuthToken(token); 
+    fetchPractice();
+  }
+}, [noteId, token]);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +71,7 @@ export default function SummaryPage() {
     };
     fetchData();
   }, [folderId, noteId]);
+
 
   useEffect(() => {
     function updateWidth() {
@@ -54,7 +93,7 @@ export default function SummaryPage() {
         </p>
       </div>
 
-      <div className="flex flex-row w-full pt-12 h-full top-0 items-start ">
+      <div className="flex flex-row w-full pt-12 h-full top-0 items-start">
         <div
           ref={leftAreaRef}
           className="flex-1 flex flex-col justify-center w-full"
@@ -76,18 +115,24 @@ export default function SummaryPage() {
           <button
             className="bg-black-80 text-white px-8 py-6 rounded-lg text-left flex justify-between items-center"
             onClick={() =>
-              router.push(`/notes/${folderId}/${noteId}/create-practice`)
+              router.push(
+                `/notes/${folderId}/${noteId}/${
+                  practiceQuestions.length > 0 ? "result" : "create-practice"
+                }`
+              )
             }
           >
-            복습 퀴즈 생성
+            {practiceQuestions.length > 0 ? "복습 퀴즈 조회" : "복습 퀴즈 생성"}
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>
+
           <button className="bg-black-80 text-white px-8 py-6 rounded-lg text-left flex justify-between items-center">
             하이라이트 영상 제작
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>
         </div>
       </div>
+
       {leftWidth && (
         <div
           className="fixed bottom-0 left-auto flex justify-end py-20 z-50 bg-black-100 bg-opacity-90"
