@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
   const { data: session } = useSession();
   const token = session?.user?.aiTutorToken;
   const [isAuthSet, setIsAuthSet] = useState(false);
-  const { isOpen, close, open } = useOnboardingstore();
+  const { open } = useOnboardingstore();
 
   useEffect(() => {
     if (token) {
@@ -22,6 +22,8 @@ const Sidebar: React.FC = () => {
   }, [token]);
 
   const handleGuideClick = () => {
+    console.log('클릭');
+
     open();
   };
 
@@ -87,7 +89,9 @@ const Sidebar: React.FC = () => {
       <div className="pb-8">
         <div className="hover:bg-black-80 hover:rounded-md cursor-pointer transition-colors duration-200 rounded-md">
           <div
-            onClick={handleGuideClick}
+            onClick={() => {
+              handleGuideClick();
+            }}
             className="flex flex-row px-[35px] py-2 gap-3"
           >
             <Icon label="guide" className="w-[20px] h-[20px] my-auto" />

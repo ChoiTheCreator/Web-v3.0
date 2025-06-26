@@ -27,6 +27,7 @@ import toast from 'react-hot-toast';
 
 const HomePage = () => {
   const { data: session, status } = useSession();
+
   const token = session?.user?.aiTutorToken;
   const { data: folders = [] } = useFetchFolders({
     enabled: status === 'authenticated' && !!token,
@@ -34,7 +35,7 @@ const HomePage = () => {
   const createFolder = useCreateFolder();
   const updateFolder = useUpdateFolder();
   const deleteFolder = useDeleteFolder();
-  const { open } = useOnboardingstore();
+  const { isOpen, open } = useOnboardingstore();
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
@@ -122,7 +123,7 @@ const HomePage = () => {
 
         <div className="bg-black-80 rounded-lg rounded-b-none mx-4 h-full">
           <div className="flex text-center">
-            {showOnboarding && <OnBoardingModal></OnBoardingModal>}
+            {isOpen && <OnBoardingModal></OnBoardingModal>}
           </div>
           {folders.length === 0 ? (
             <div className="flex flex-col justify-center items-center h-full text-center text-white">
