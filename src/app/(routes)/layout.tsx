@@ -1,25 +1,26 @@
-"use client";
+'use client';
 
-import Sidebar from "@/app/components/utils/Sidebar";
-import { PracticeProvider } from "@/app/context/PracticeContext";
-import { usePathname } from "next/navigation";
-import "@/app/globals.css";
-import { Toaster } from "react-hot-toast";
-import useAuthInterceptor from "../hooks/auth/useAuthInterceptor";
-
+import Sidebar from '@/app/components/utils/Sidebar';
+import { PracticeProvider } from '@/app/context/PracticeContext';
+import { usePathname } from 'next/navigation';
+import '@/app/globals.css';
+import { Toaster } from 'react-hot-toast';
+import useAuthInterceptor from '../hooks/auth/useAuthInterceptor';
+import OnBoardingModal from '../components/molecules/OnBoardingModal';
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isLoginPage = pathname.startsWith("/login");
+  const isLoginPage = pathname.startsWith('/login');
 
   useAuthInterceptor();
 
   return (
     <div>
       <PracticeProvider>
+        <OnBoardingModal />
         <Toaster />
         <div className="flex bg-black">
           {!isLoginPage && <Sidebar />}
