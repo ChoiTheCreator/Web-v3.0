@@ -21,7 +21,7 @@ const OnBoardingModal: React.FC = () => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-[800px] h-[200px] max-w-full bg-transparent -translate-y-20
+        className="relative w-[800px] max-w-full bg-transparent items-center justify-center
       "
       >
         <div className="relative w-full">
