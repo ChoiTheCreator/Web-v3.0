@@ -45,12 +45,31 @@ const NewPracticeForm: React.FC = () => {
   }, [oxRef, shortRef]);
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newSize = Number(event.target.value);
-    if (isNaN(newSize) || newSize < 1) {
-      toast.error('1 이상의 숫자를 입력해주세요.');
+    const value = event.target.value.trim();
+
+    const newSize = Number(value);
+    if (!/^\d+$/.test(value) && newSize.toString().length > 1) {
+      toast.dismiss();
+      toast.error('숫자만 입력해주세요.', { id: 'count-error' });
+      return;
+    }
+
+    if (newSize < 1 && newSize.toString().length > 1) {
+      toast.dismiss();
+      toast.error('1 이상의 숫자를 입력해주세요.', { id: 'count-error' });
       setPracticeSize(0);
       return;
     }
+
+    if (newSize > 20) {
+      toast.dismiss();
+      toast.error('20 이하로 입력해주세요.', { id: 'count-error' });
+
+      setPracticeSize(20);
+      return;
+    }
+
+    toast.dismiss();
     setPracticeSize(newSize);
   };
 
