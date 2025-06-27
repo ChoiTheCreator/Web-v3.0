@@ -1,7 +1,8 @@
-import React from "react";
-import { baseURL } from "@/app/api/index";
-import { usePracticeContext } from "@/app/context/PracticeContext";
-import axios from "axios";
+import React from 'react';
+import { baseURL } from '@/app/api/index';
+import { usePracticeContext } from '@/app/context/PracticeContext';
+import axios from 'axios';
+import { parseMarkdown } from '@/app/utils/parseMarkdown';
 import {
   Document,
   Font,
@@ -10,23 +11,23 @@ import {
   StyleSheet,
   Text,
   View,
-} from "@react-pdf/renderer";
-import Button from "../atoms/Button";
+} from '@react-pdf/renderer';
+import Button from '../atoms/Button';
 
 Font.register({
-  family: "SpoqaHanSans",
-  src: "https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@01ff0283e4f36e159ffbf744b36e16ef742da6d8/Subset/SpoqaHanSans/SpoqaHanSansLight.ttf",
+  family: 'SpoqaHanSans',
+  src: 'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@01ff0283e4f36e159ffbf744b36e16ef742da6d8/Subset/SpoqaHanSans/SpoqaHanSansLight.ttf',
 });
 
 const styles = StyleSheet.create({
   page: {
-    fontFamily: "SpoqaHanSans",
+    fontFamily: 'SpoqaHanSans',
     padding: 20,
   },
   title: {
     fontSize: 18,
     marginBottom: 10,
-    textAlign: "center",
+    textAlign: 'center',
   },
   content: {
     fontSize: 12,
@@ -38,7 +39,8 @@ const PDFDocument = ({ summary }: { summary: string }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <Text style={styles.title}>Summary Document</Text>
-      <Text style={styles.content}>{summary}</Text>
+
+      <View>{parseMarkdown(summary)}</View>
     </Page>
   </Document>
 );
@@ -58,7 +60,7 @@ const SummaryText: React.FC<SummaryTextProps> = ({ folderId, noteId }) => {
       );
       setSummary(response.data.information.summary);
     } catch (error) {
-      console.error("Failed to fetch summary:", error);
+      console.error('Failed to fetch summary:', error);
     }
   };
 
