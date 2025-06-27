@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { fetchSummary } from "@/app/api/summaries/fetchSummary";
-import Icon from "@/app/components/atoms/Icon";
-import Button from "@/app/components/atoms/Button";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { SummaryPDFDocument } from "@/app/utils/pdfExportSummary";
-import { getPractice } from "@/app/api/practice/getPractice";
-import { useSession } from "next-auth/react";
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { fetchSummary } from '@/app/api/summaries/fetchSummary';
+import Icon from '@/app/components/atoms/Icon';
+import Button from '@/app/components/atoms/Button';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { SummaryPDFDocument } from '@/app/utils/pdfExportSummary';
+import { getPractice } from '@/app/api/practice/getPractice';
+import { useSession } from 'next-auth/react';
 
 export default function SummaryPage() {
   const { folderId, noteId } = useParams();
   const router = useRouter();
 
-  const [summary, setSummary] = useState("");
+  const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -23,35 +23,32 @@ export default function SummaryPage() {
   const [leftWidth, setLeftWidth] = useState<number | null>(null);
   const { data: session, status } = useSession();
   const token = session?.user?.aiTutorToken;
+
   const setAuthToken = (token: string | null) => {
     if (token) {
-      localStorage.setItem("aiTutorToken", token);
-    }}
-
-
-
-  useEffect(() => {
-  const fetchPractice = async () => {
-    try {
-      setIsLoading(true);
-      const data = await getPractice(Number(noteId));
-      setPracticeQuestions(data?.information || []);
-    } catch (e) {
-      console.error("문제 조회 실패", e);
-      setPracticeQuestions([]);
-    } finally {
-      setIsLoading(false);
+      localStorage.setItem('aiTutorToken', token);
     }
   };
 
+  useEffect(() => {
+    const fetchPractice = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getPractice(Number(noteId));
+        setPracticeQuestions(data?.information || []);
+      } catch (e) {
+        console.error('문제 조회 실패', e);
+        setPracticeQuestions([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  if (token && noteId) {
-    setAuthToken(token); 
-    fetchPractice();
-  }
-}, [noteId, token]);
-
-
+    if (token && noteId) {
+      setAuthToken(token);
+      fetchPractice();
+    }
+  }, [noteId, token]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,16 +59,15 @@ export default function SummaryPage() {
           folderId: Number(folderId),
           noteId: Number(noteId),
         });
-        setSummary(data.information.summary || "");
+        setSummary(data.information.summary || '');
       } catch (error) {
-        setSummary("요약문을 불러오지 못했습니다.");
+        setSummary('요약문을 불러오지 못했습니다.');
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, [folderId, noteId]);
-
 
   useEffect(() => {
     function updateWidth() {
@@ -80,8 +76,8 @@ export default function SummaryPage() {
       }
     }
     updateWidth();
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
   return (
@@ -103,12 +99,12 @@ export default function SummaryPage() {
             className="w-full h-64 p-2 px-3 bg-black-80 placeholder:text-black-70 text-white rounded-lg resize-none outline-none"
             maxLength={300}
             placeholder="강의에서 강조하고 싶은 내용, 어투와 문장 등을 작성하세요."
-            value={loading ? "불러오는 중..." : summary}
+            value={loading ? '불러오는 중...' : summary}
             readOnly
           />
         </div>
 
-        <div className="w-px bg-black-70 mx-8" style={{ minHeight: "500px" }} />
+        <div className="w-px bg-black-70 mx-8" style={{ minHeight: '500px' }} />
 
         <div className="flex flex-col gap-3.5 justify-center min-w-[220px]">
           <p className="text-white font-semibold">복습 자료 만들기</p>
@@ -117,12 +113,12 @@ export default function SummaryPage() {
             onClick={() =>
               router.push(
                 `/notes/${folderId}/${noteId}/${
-                  practiceQuestions.length > 0 ? "result" : "create-practice"
+                  practiceQuestions.length > 0 ? 'result' : 'create-practice'
                 }`
               )
             }
           >
-            {practiceQuestions.length > 0 ? "복습 퀴즈 조회" : "복습 퀴즈 생성"}
+            {practiceQuestions.length > 0 ? '복습 퀴즈 조회' : '복습 퀴즈 생성'}
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>
 
