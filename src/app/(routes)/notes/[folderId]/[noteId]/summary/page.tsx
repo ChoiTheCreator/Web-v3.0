@@ -24,12 +24,6 @@ export default function SummaryPage() {
   const { data: session, status } = useSession();
   const token = session?.user?.aiTutorToken;
 
-  const setAuthToken = (token: string | null) => {
-    if (token) {
-      localStorage.setItem('aiTutorToken', token);
-    }
-  };
-
   useEffect(() => {
     const fetchPractice = async () => {
       try {
@@ -45,7 +39,6 @@ export default function SummaryPage() {
     };
 
     if (token && noteId) {
-      setAuthToken(token);
       fetchPractice();
     }
   }, [noteId, token]);
