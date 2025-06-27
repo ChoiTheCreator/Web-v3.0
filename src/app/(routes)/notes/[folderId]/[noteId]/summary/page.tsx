@@ -1,19 +1,47 @@
-"use client";
-import React, { useEffect, useState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { fetchSummary } from "@/app/api/summaries/fetchSummary";
-import Icon from "@/app/components/atoms/Icon";
-import Button from "@/app/components/atoms/Button";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { SummaryPDFDocument } from "@/app/utils/pdfExportSummary";
+'use client';
+
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { fetchSummary } from '@/app/api/summaries/fetchSummary';
+import Icon from '@/app/components/atoms/Icon';
+import Button from '@/app/components/atoms/Button';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { SummaryPDFDocument } from '@/app/utils/pdfExportSummary';
+import { getPractice } from '@/app/api/practice/getPractice';
+import { useSession } from 'next-auth/react';
 
 export default function SummaryPage() {
   const { folderId, noteId } = useParams();
   const router = useRouter();
-  const [summary, setSummary] = useState("");
+
+  const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [practiceQuestions, setPracticeQuestions] = useState<any[]>([]);
   const leftAreaRef = useRef<HTMLDivElement>(null);
   const [leftWidth, setLeftWidth] = useState<number | null>(null);
+  const { data: session, status } = useSession();
+  const token = session?.user?.aiTutorToken;
+
+  useEffect(() => {
+    const fetchPractice = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getPractice(Number(noteId));
+        setPracticeQuestions(data?.information || []);
+      } catch (e) {
+        console.error('문제 조회 실패', e);
+        setPracticeQuestions([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (token && noteId) {
+      fetchPractice();
+    }
+  }, [noteId, token]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,9 +52,9 @@ export default function SummaryPage() {
           folderId: Number(folderId),
           noteId: Number(noteId),
         });
-        setSummary(data.information.summary || "");
+        setSummary(data.information.summary || '');
       } catch (error) {
-        setSummary("요약문을 불러오지 못했습니다.");
+        setSummary('요약문을 불러오지 못했습니다.');
       } finally {
         setLoading(false);
       }
@@ -41,8 +69,8 @@ export default function SummaryPage() {
       }
     }
     updateWidth();
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
   return (
@@ -54,7 +82,7 @@ export default function SummaryPage() {
         </p>
       </div>
 
-      <div className="flex flex-row w-full pt-12 h-full top-0 items-start ">
+      <div className="flex flex-row w-full pt-12 h-full top-0 items-start">
         <div
           ref={leftAreaRef}
           className="flex-1 flex flex-col justify-center w-full"
@@ -64,30 +92,36 @@ export default function SummaryPage() {
             className="w-full h-64 p-2 px-3 bg-black-80 placeholder:text-black-70 text-white rounded-lg resize-none outline-none"
             maxLength={300}
             placeholder="강의에서 강조하고 싶은 내용, 어투와 문장 등을 작성하세요."
-            value={loading ? "불러오는 중..." : summary}
+            value={loading ? '불러오는 중...' : summary}
             readOnly
           />
         </div>
 
-        <div className="w-px bg-black-70 mx-8" style={{ minHeight: "500px" }} />
+        <div className="w-px bg-black-70 mx-8" style={{ minHeight: '500px' }} />
 
         <div className="flex flex-col gap-3.5 justify-center min-w-[220px]">
           <p className="text-white font-semibold">복습 자료 만들기</p>
           <button
             className="bg-black-80 text-white px-8 py-6 rounded-lg text-left flex justify-between items-center"
             onClick={() =>
-              router.push(`/notes/${folderId}/${noteId}/create-practice`)
+              router.push(
+                `/notes/${folderId}/${noteId}/${
+                  practiceQuestions.length > 0 ? 'result' : 'create-practice'
+                }`
+              )
             }
           >
-            복습 퀴즈 생성
+            {practiceQuestions.length > 0 ? '복습 퀴즈 조회' : '복습 퀴즈 생성'}
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>
+
           <button className="bg-black-80 text-white px-8 py-6 rounded-lg text-left flex justify-between items-center">
             하이라이트 영상 제작
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>
         </div>
       </div>
+
       {leftWidth && (
         <div
           className="fixed bottom-0 left-auto flex justify-end py-20 z-50 bg-black-100 bg-opacity-90"

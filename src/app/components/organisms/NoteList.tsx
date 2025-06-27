@@ -22,7 +22,7 @@ const NoteList: React.FC<NoteListProps> = ({
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
 
   const handleNoteClick = (noteId: number) => {
-    router.push(`/notes/${folderId}/${noteId}/result`);
+    router.push(`/notes/${folderId}/${noteId}/summary`);
   };
 
   const handleDeleteNote = (id: number) => {

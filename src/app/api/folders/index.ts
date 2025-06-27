@@ -52,3 +52,12 @@ export const getFolders = async () => {
   const response = await apiClient.get(`${baseURL}/api/v1/folders`);
   return response.data.information;
 };
+
+export const getFoldersContent = async() => {
+  const authHeader = apiClient.defaults.headers.common["Authorization"];
+  if (!authHeader) {
+    return [];
+  }
+  const response = await apiClient.get(`${baseURL}/api/v1/folders/notes`);
+  return response.data.information;
+}
