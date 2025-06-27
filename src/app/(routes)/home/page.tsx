@@ -20,11 +20,9 @@ import Image from 'next/image';
 import speach_bubble from '../../../../public/speech_bubble.svg';
 import { Folder } from '@/app/types/folder';
 
-import { useOnboarding } from '@/app/hooks/useOnboarding';
-
 import OnBoardingModal from '@/app/components/molecules/OnBoardingModal';
 import toast from 'react-hot-toast';
-
+import { DeleteModal } from '@/app/components/molecules/Modal';
 const HomePage = () => {
   const { data: session, status } = useSession();
 
@@ -42,6 +40,8 @@ const HomePage = () => {
   const [subject, setSubject] = useState('');
   const [professor, setProfessor] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
 
   const handleCreateFolder = async (): Promise<boolean> => {
     if (!subject) {
@@ -77,11 +77,12 @@ const HomePage = () => {
     return true;
   };
 
-  const handleDeleteFolder = (folderId: number) => {
-    deleteFolder.mutate(folderId);
+  const handleDeleteFolder = async (folderId: number) => {
+    await deleteFolder.mutateAsync(folderId);
     setSelectedFolder(null);
+    setShowDeleteModal(false);
+    setPendingDeleteId(null);
   };
-  const { showOnboarding, closeOnboarding } = useOnboarding();
 
   useEffect(() => {
     if (getIsFirstTimeUser()) {
@@ -174,8 +175,25 @@ const HomePage = () => {
                           setProfessor(folder.professor);
                           setShowModal(true);
                         }}
-                        onDelete={() => handleDeleteFolder(folder.folderId)}
+                        onDelete={() => {
+                          setPendingDeleteId(folder.folderId);
+                          setShowDeleteModal(true);
+                        }}
                       />
+                      {showDeleteModal && pendingDeleteId !== null && (
+                        <DeleteModal
+                          message="정말 해당 과목 폴더를 삭제하시겠습니까?"
+                          onDelete={() => {
+                            if (pendingDeleteId !== null) {
+                              handleDeleteFolder(pendingDeleteId);
+                            }
+                          }}
+                          onClose={() => {
+                            setShowDeleteModal(false);
+                            setPendingDeleteId(null);
+                          }}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
