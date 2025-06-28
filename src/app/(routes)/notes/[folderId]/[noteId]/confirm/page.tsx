@@ -6,7 +6,6 @@ import { usePracticeContext } from '@/app/context/PracticeContext';
 import { createSTT, summaryNote } from '@/app/api/notes';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import toast from 'react-hot-toast';
 
 import Loader, { SmallLoader } from '@/app/components/utils/Loader';
 
@@ -46,10 +45,7 @@ const ConfirmNotePage = () => {
 
   const handleNoteFinalBtn = async () => {
     if (summaryLoading || sttLoading) return;
-    if (!keywords || !requirement) {
-      toast.error('키워드와 요구사항을 모두 입력해주세요.');
-      return;
-    }
+
     setSummaryLoading(true);
     await summaryNote(Number(folderId), Number(noteId), keywords, requirement);
     setSummaryLoading(false);

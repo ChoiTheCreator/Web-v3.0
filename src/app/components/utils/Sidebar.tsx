@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useOnboardingstore } from '@/app/store/useOnboardingStore';
 import Link from 'next/link';
 import Icon from '../atoms/Icon';
@@ -11,7 +11,6 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ data }) => {
-  const [isAuthSet, setIsAuthSet] = useState(false);
   const { open } = useOnboardingstore();
 
   type Note = {
