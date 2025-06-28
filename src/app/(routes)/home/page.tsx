@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Button from '@/app/components/atoms/Button';
 import {
   SectionFolder,
@@ -27,6 +28,7 @@ import { DeleteModal } from '@/app/components/molecules/Modal';
 
 const HomePage = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const token = session?.user?.aiTutorToken;
   const { data: folders = [], refetch } = useFetchFolders({
