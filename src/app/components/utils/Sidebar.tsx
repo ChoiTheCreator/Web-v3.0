@@ -4,14 +4,13 @@ import { useEffect, useState } from 'react';
 import { useOnboardingstore } from '@/app/store/useOnboardingStore';
 import Link from 'next/link';
 import Icon from '../atoms/Icon';
-import { setAuthToken } from '@/app/utils/api';
-import { useSession } from 'next-auth/react';
-import useFetchFolderContent from '@/app/hooks/folder/useFetchFolderContent';
 import { useParams, usePathname } from 'next/navigation';
 
-const Sidebar: React.FC = () => {
-  const { data: session } = useSession();
-  const token = session?.user?.aiTutorToken;
+interface SidebarProps {
+  data?: any;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ data }) => {
   const [isAuthSet, setIsAuthSet] = useState(false);
   const { open } = useOnboardingstore();
 
@@ -34,7 +33,6 @@ const Sidebar: React.FC = () => {
   const currentNoteId = params.noteId;
   const isHome = pathname === '/home';
 
-  const { data, isLoading, error } = useFetchFolderContent(token ?? undefined);
   const folders = data?.folderNoteDetailList || [];
 
   const [showSections, setShowSections] = useState(false);
@@ -53,13 +51,6 @@ const Sidebar: React.FC = () => {
   const handleGuideClick = () => {
     open();
   };
-
-  useEffect(() => {
-    if (token) {
-      setAuthToken(token);
-      setIsAuthSet(true);
-    }
-  }, [token]);
 
   return (
     <div className="min-w-[220px] h-screen justify-between flex flex-col z-20 bg-black">
