@@ -6,7 +6,13 @@ import Popover from '@/app/components/molecules/PopOver';
 import { usePracticeContext } from '@/app/context/PracticeContext';
 import ToggleSelect from '../atoms/ToggleSelect';
 
-const NewPracticeForm: React.FC = () => {
+interface NewPracticeFormProps {
+  onFormValidChange: (isValid: boolean) => void;
+}
+
+const NewPracticeForm: React.FC<NewPracticeFormProps> = ({
+  onFormValidChange,
+}) => {
   const { practiceSize, setPracticeSize, type, setType } = usePracticeContext();
   const [countOption, setCountOption] = useState<'AI' | 'manual'>('AI');
   const [showPopover, setShowPopover] = useState<'OX' | 'SHORT' | null>(null);
@@ -26,6 +32,18 @@ const NewPracticeForm: React.FC = () => {
     top: '0px',
     left: '0px',
   });
+
+  useEffect(() => {
+    const isValidCount =
+      countOption === 'AI' ||
+      (typeof practiceSize === 'number' &&
+        practiceSize >= 1 &&
+        practiceSize <= 20);
+    const isValidType = type === 'OX' || type === 'SHORT' || type === 'BOTH';
+    const isValid = isValidCount && isValidType;
+
+    onFormValidChange(isValid);
+  }, [countOption, practiceSize, type]);
 
   useEffect(() => {
     if (oxRef.current) {
