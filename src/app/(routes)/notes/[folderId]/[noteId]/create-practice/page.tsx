@@ -27,6 +27,7 @@ interface CreatePracticeApiResponse {
 
 const CreatePracticePage = () => {
   const router = useRouter();
+  const [isFormValid, setIsFormValid] = useState(false);
   const { folderId, noteId } = useParams();
   const {
     file,
@@ -119,12 +120,13 @@ const CreatePracticePage = () => {
             <Button
               label="만들기"
               variant="next"
+              disabled={!isFormValid || isLoading}
               onClick={handleCreatePractice}
             />
           </div>
         </div>
 
-        <NewPracticeForm />
+        <NewPracticeForm onFormValidChange={setIsFormValid} />
       </div>
     </>
   );
