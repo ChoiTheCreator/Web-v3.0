@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@netlify/plugin-nextjs": "^5.8.1",
-    "@react-pdf/renderer": "^4.1.6",
+    "@react-pdf/renderer": "^4.3.0",
     "@tanstack/react-query": "^5.67.2",
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5",
@@ -26,7 +26,7 @@
     "react-hot-toast": "^2.5.2",
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
-    "zustand": "^5.0.0-rc.2"
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",

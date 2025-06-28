@@ -1,29 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
-import Button from "@/app/components/atoms/Button";
-import CountInput from "@/app/components/atoms/CountInput";
-import Popover from "@/app/components/molecules/PopOver";
-import { usePracticeContext } from "@/app/context/PracticeContext";
-import ToggleSelect from "../atoms/ToggleSelect";
+import React, { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import Button from '@/app/components/atoms/Button';
+import CountInput from '@/app/components/atoms/CountInput';
+import Popover from '@/app/components/molecules/PopOver';
+import { usePracticeContext } from '@/app/context/PracticeContext';
+import ToggleSelect from '../atoms/ToggleSelect';
 
 const NewPracticeForm: React.FC = () => {
   const { practiceSize, setPracticeSize, type, setType } = usePracticeContext();
-  const [countOption, setCountOption] = useState<"AI" | "manual">("AI");
-  const [showPopover, setShowPopover] = useState<"OX" | "SHORT" | null>(null);
+  const [countOption, setCountOption] = useState<'AI' | 'manual'>('AI');
+  const [showPopover, setShowPopover] = useState<'OX' | 'SHORT' | null>(null);
   const oxRef = useRef<HTMLDivElement>(null);
   const shortRef = useRef<HTMLDivElement>(null);
   const [oxPopoverPosition, setOXPopoverPosition] = useState<{
     top: string;
     left: string;
   }>({
-    top: "0px",
-    left: "0px",
+    top: '0px',
+    left: '0px',
   });
   const [shortPopoverPosition, setShortPopoverPosition] = useState<{
     top: string;
     left: string;
   }>({
-    top: "0px",
-    left: "0px",
+    top: '0px',
+    left: '0px',
   });
 
   useEffect(() => {
@@ -44,25 +45,49 @@ const NewPracticeForm: React.FC = () => {
   }, [oxRef, shortRef]);
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newSize = Number(event.target.value);
-    setPracticeSize(isNaN(newSize) ? 0 : newSize);
+    const value = event.target.value.trim();
+
+    const newSize = Number(value);
+    if (!/^\d+$/.test(value) && newSize.toString().length > 1) {
+      toast.dismiss();
+      toast.error('숫자만 입력해주세요.', { id: 'count-error' });
+      return;
+    }
+
+    if (newSize < 1 && newSize.toString().length > 1) {
+      toast.dismiss();
+      toast.error('1 이상의 숫자를 입력해주세요.', { id: 'count-error' });
+      setPracticeSize(0);
+      return;
+    }
+
+    if (newSize > 20) {
+      toast.dismiss();
+      toast.error('20 이하로 입력해주세요.', { id: 'count-error' });
+
+      setPracticeSize(20);
+      return;
+    }
+
+    toast.dismiss();
+    setPracticeSize(newSize);
   };
 
-  const toggleType = (selectedType: "OX" | "SHORT") => {
-    if (type === "") {
+  const toggleType = (selectedType: 'OX' | 'SHORT') => {
+    if (type === '') {
       setType(selectedType);
-    } else if (type === "OX" && selectedType === "OX") {
-      setType("");
-    } else if (type === "SHORT" && selectedType === "SHORT") {
-      setType("");
-    } else if (type === "OX" && selectedType === "SHORT") {
-      setType("BOTH");
-    } else if (type === "SHORT" && selectedType === "OX") {
-      setType("BOTH");
-    } else if (type === "BOTH" && selectedType === "OX") {
-      setType("SHORT");
-    } else if (type === "BOTH" && selectedType === "SHORT") {
-      setType("OX");
+    } else if (type === 'OX' && selectedType === 'OX') {
+      setType('');
+    } else if (type === 'SHORT' && selectedType === 'SHORT') {
+      setType('');
+    } else if (type === 'OX' && selectedType === 'SHORT') {
+      setType('BOTH');
+    } else if (type === 'SHORT' && selectedType === 'OX') {
+      setType('BOTH');
+    } else if (type === 'BOTH' && selectedType === 'OX') {
+      setType('SHORT');
+    } else if (type === 'BOTH' && selectedType === 'SHORT') {
+      setType('OX');
     }
   };
 
@@ -74,21 +99,21 @@ const NewPracticeForm: React.FC = () => {
         </span>
         <div className="flex flex-row">
           <ToggleSelect
-            items={["AI 추천", "직접 입력"]}
+            items={['AI 추천', '직접 입력']}
             onClick={(selectedItem) => {
-              setCountOption(selectedItem === "AI 추천" ? "AI" : "manual");
-              if (selectedItem === "AI 추천") {
+              setCountOption(selectedItem === 'AI 추천' ? 'AI' : 'manual');
+              if (selectedItem === 'AI 추천') {
                 setPracticeSize(0);
               }
             }}
-            isSelected={countOption === "manual"}
+            isSelected={countOption === 'manual'}
           />
 
-          {countOption === "manual" && (
+          {countOption === 'manual' && (
             <CountInput
               name="count"
               defaultValue={
-                practiceSize !== null ? practiceSize.toString() : ""
+                practiceSize !== null ? practiceSize.toString() : ''
               }
               onChange={handleCountChange}
               placeholder="문제 개수를 입력하세요"
@@ -102,31 +127,31 @@ const NewPracticeForm: React.FC = () => {
         <div className="flex flex-row gap-2">
           <div
             ref={oxRef}
-            onMouseEnter={() => setShowPopover("OX")}
+            onMouseEnter={() => setShowPopover('OX')}
             onMouseLeave={() => setShowPopover(null)}
           >
             <Button
               label="OX 퀴즈"
               variant="select"
-              isSelected={type === "OX" || type === "BOTH"}
-              onClick={() => toggleType("OX")}
+              isSelected={type === 'OX' || type === 'BOTH'}
+              onClick={() => toggleType('OX')}
             />
-            {showPopover === "OX" && (
+            {showPopover === 'OX' && (
               <Popover type="OX" position={oxPopoverPosition} />
             )}
           </div>
           <div
             ref={shortRef}
-            onMouseEnter={() => setShowPopover("SHORT")}
+            onMouseEnter={() => setShowPopover('SHORT')}
             onMouseLeave={() => setShowPopover(null)}
           >
             <Button
               label="단답형"
               variant="select"
-              isSelected={type === "SHORT" || type === "BOTH"}
-              onClick={() => toggleType("SHORT")}
+              isSelected={type === 'SHORT' || type === 'BOTH'}
+              onClick={() => toggleType('SHORT')}
             />
-            {showPopover === "SHORT" && (
+            {showPopover === 'SHORT' && (
               <Popover type="단답형" position={shortPopoverPosition} />
             )}
           </div>

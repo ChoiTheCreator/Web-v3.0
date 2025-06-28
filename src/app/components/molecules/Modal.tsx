@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { FolderListData } from "@/app/types/folder";
-import Icon from "../atoms/Icon";
-import { useRouter } from "next/navigation";
-import delete_bin_red from "../../../../public/delete_bin_red.svg";
-import note from "../../../../public/note.svg";
-import { toast } from "react-hot-toast";
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { FolderListData } from '@/app/types/folder';
+import Icon from '../atoms/Icon';
+import { useRouter } from 'next/navigation';
+import delete_bin_red from '../../../../public/delete_bin_red.svg';
+import note from '../../../../public/note.svg';
+import { toast } from 'react-hot-toast';
 
-import folder from "../../../../public/folder.svg";
-import folderOpened from "../../../../public/folder_opened.svg";
-import filledFolder from "../.././../../public/filled_folder.svg";
-import filledFolderOpened from "../../../../public/filled_folder_opened.svg";
+import folder from '../../../../public/folder.svg';
+import folderOpened from '../../../../public/folder_opened.svg';
+import filledFolder from '../.././../../public/filled_folder.svg';
+import filledFolderOpened from '../../../../public/filled_folder_opened.svg';
 
 export const SectionFolder: React.FC<{
   section: FolderListData;
@@ -177,7 +177,7 @@ export const SectionModal: React.FC<{
                 className="bg-primary rounded-lg text-white px-8 py-2"
                 disabled={isSaving}
               >
-                {isSaving ? "저장 중..." : "저장"}
+                {isSaving ? '저장 중...' : '저장'}
               </button>
             </div>
           </div>
@@ -200,10 +200,10 @@ export const DeleteModal: React.FC<{
 
     try {
       await onDelete();
-      toast.success("노트가 성공적으로 삭제되었습니다.");
+      // toast.success("노트가 성공적으로 삭제되었습니다.");
       onClose();
     } catch (error) {
-      toast.error("노트 삭제 중 오류가 발생했습니다.");
+      toast.error('노트 삭제 중 오류가 발생했습니다.');
     } finally {
       setIsSaving(false);
     }
@@ -231,7 +231,7 @@ export const DeleteModal: React.FC<{
                 className="bg-red-600 rounded-lg text-white px-8 py-2"
                 disabled={isSaving}
               >
-                {isSaving ? "삭제 중..." : "삭제"}
+                {isSaving ? '삭제 중...' : '삭제'}
               </button>
             </div>
           </div>

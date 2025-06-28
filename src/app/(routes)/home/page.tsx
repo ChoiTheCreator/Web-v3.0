@@ -1,50 +1,56 @@
-"use client";
-import React, { useState } from "react";
-import Button from "@/app/components/atoms/Button";
+'use client';
+import React, { useEffect, useState } from 'react';
+import Button from '@/app/components/atoms/Button';
 import {
   SectionFolder,
   SectionModal,
   SectionModify,
-} from "@/app/components/molecules/Modal";
-import { useFetchFolders } from "@/app/hooks/folder/useFetchFolders";
-import { useCreateFolder } from "@/app/hooks/folder/useCreateFolder";
-import { useUpdateFolder } from "@/app/hooks/folder/useUpdateFolder";
-import { useDeleteFolder } from "@/app/hooks/folder/useDeleteFolder";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import speach_bubble from "../../../../public/speech_bubble.svg";
-import { Folder } from "@/app/types/folder";
+} from '@/app/components/molecules/Modal';
+import {
+  getIsFirstTimeUser,
+  setIsFirstTimeUser,
+} from '@/app/utils/localstorage';
+import { useFetchFolders } from '@/app/hooks/folder/useFetchFolders';
+import { useCreateFolder } from '@/app/hooks/folder/useCreateFolder';
+import { useUpdateFolder } from '@/app/hooks/folder/useUpdateFolder';
+import { useDeleteFolder } from '@/app/hooks/folder/useDeleteFolder';
+import { useOnboardingstore } from '@/app/store/useOnboardingStore';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import speach_bubble from '../../../../public/speech_bubble.svg';
+import { Folder } from '@/app/types/folder';
 
-import { useOnboarding } from "@/app/hooks/useOnboarding";
-
-import OnBoardingModal from "@/app/components/molecules/OnBoardingModal";
-import toast from "react-hot-toast";
-
+import OnBoardingModal from '@/app/components/molecules/OnBoardingModal';
+import toast from 'react-hot-toast';
+import { DeleteModal } from '@/app/components/molecules/Modal';
 const HomePage = () => {
   const { data: session, status } = useSession();
+
   const token = session?.user?.aiTutorToken;
   const { data: folders = [] } = useFetchFolders({
-    enabled: status === "authenticated" && !!token,
+    enabled: status === 'authenticated' && !!token,
   });
   const createFolder = useCreateFolder();
   const updateFolder = useUpdateFolder();
   const deleteFolder = useDeleteFolder();
-
+  const { isOpen, open } = useOnboardingstore();
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [showModify, setShowModify] = useState<{ [key: string]: boolean }>({});
   const [showModal, setShowModal] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [professor, setProfessor] = useState("");
+  const [subject, setSubject] = useState('');
+  const [professor, setProfessor] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
 
   const handleCreateFolder = async (): Promise<boolean> => {
     if (!subject) {
-      toast.error("과목명을 입력해주세요.");
+      toast.error('과목명을 입력해주세요.');
       return false;
     }
 
     if (!professor) {
-      toast.error("교수명을 입력해주세요.");
+      toast.error('교수명을 입력해주세요.');
       return false;
     }
 
@@ -52,8 +58,8 @@ const HomePage = () => {
       folderName: subject,
       professorName: professor,
     });
-    setSubject("");
-    setProfessor("");
+    setSubject('');
+    setProfessor('');
     return true;
   };
 
@@ -71,11 +77,19 @@ const HomePage = () => {
     return true;
   };
 
-  const handleDeleteFolder = (folderId: number) => {
-    deleteFolder.mutate(folderId);
+  const handleDeleteFolder = async (folderId: number) => {
+    await deleteFolder.mutateAsync(folderId);
     setSelectedFolder(null);
+    setShowDeleteModal(false);
+    setPendingDeleteId(null);
   };
-  const { showOnboarding, closeOnboarding } = useOnboarding();
+
+  useEffect(() => {
+    if (getIsFirstTimeUser()) {
+      open();
+      setIsFirstTimeUser(false);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col justify-between h-full w-full">
@@ -100,8 +114,8 @@ const HomePage = () => {
               variant="create"
               onClick={() => {
                 setIsEditMode(false);
-                setSubject("");
-                setProfessor("");
+                setSubject('');
+                setProfessor('');
                 setShowModal(true);
               }}
             />
@@ -110,9 +124,7 @@ const HomePage = () => {
 
         <div className="bg-black-80 rounded-lg rounded-b-none mx-4 h-full">
           <div className="flex text-center">
-            {showOnboarding && (
-              <OnBoardingModal onClose={closeOnboarding}></OnBoardingModal>
-            )}
+            {isOpen && <OnBoardingModal></OnBoardingModal>}
           </div>
           {folders.length === 0 ? (
             <div className="flex flex-col justify-center items-center h-full text-center text-white">
@@ -163,8 +175,25 @@ const HomePage = () => {
                           setProfessor(folder.professor);
                           setShowModal(true);
                         }}
-                        onDelete={() => handleDeleteFolder(folder.folderId)}
+                        onDelete={() => {
+                          setPendingDeleteId(folder.folderId);
+                          setShowDeleteModal(true);
+                        }}
                       />
+                      {showDeleteModal && pendingDeleteId !== null && (
+                        <DeleteModal
+                          message="정말 해당 과목 폴더를 삭제하시겠습니까?"
+                          onDelete={() => {
+                            if (pendingDeleteId !== null) {
+                              handleDeleteFolder(pendingDeleteId);
+                            }
+                          }}
+                          onClose={() => {
+                            setShowDeleteModal(false);
+                            setPendingDeleteId(null);
+                          }}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
