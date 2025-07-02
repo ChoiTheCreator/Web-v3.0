@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { NoteData } from '@/app/types/note';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -30,6 +30,8 @@ const NoteList: React.FC<NoteListProps> = ({
     setDeleteModalOpen(true);
   };
 
+  const reversedNotes = useMemo(() => [...notes].reverse(), [notes]);
+
   return (
     <div className="mx-8">
       <div className="flex gap-0.5 items-center flex-row justify-around text-center text-white border-b border-gray-600 whitespace-nowrap">
@@ -42,7 +44,7 @@ const NoteList: React.FC<NoteListProps> = ({
         </div>
       </div>
 
-      {[...notes].reverse().map((note, id) => (
+      {reversedNotes.map((note, id) => (
         <div
           key={note.noteId}
           className="flex justify-around text-center flex-shrink-0 text-white py-3 border-b border-gray-600 hover:bg-black-80 hover:cursor-pointer whitespace-nowrap"
