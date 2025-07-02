@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { NoteData } from "@/app/types/note";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import delete_bin from "../../../../public/delete_bin_red.svg";
-import delete_red from "../../../../public/delete_red.svg";
-import { DeleteModal } from "../molecules/Modal";
+import React, { useState } from 'react';
+import { NoteData } from '@/app/types/note';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import delete_bin from '../../../../public/delete_bin_red.svg';
+import delete_red from '../../../../public/delete_red.svg';
+import { DeleteModal } from '../molecules/Modal';
 
 interface NoteListProps {
   notes: NoteData[];
@@ -42,7 +42,7 @@ const NoteList: React.FC<NoteListProps> = ({
         </div>
       </div>
 
-      {notes.map((note, id) => (
+      {[...notes].reverse().map((note, id) => (
         <div
           key={note.noteId}
           className="flex justify-around text-center flex-shrink-0 text-white py-3 border-b border-gray-600 hover:bg-black-80 hover:cursor-pointer whitespace-nowrap"
@@ -53,7 +53,7 @@ const NoteList: React.FC<NoteListProps> = ({
           <div className="w-1/4">{note.createdAt}</div>
           <div className="w-1/4">{note.practiceSize}문제</div>
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               handleDeleteNote(note.noteId);
             }}
@@ -68,7 +68,7 @@ const NoteList: React.FC<NoteListProps> = ({
         <DeleteModal
           onClose={() => setDeleteModalOpen(false)}
           onDelete={() => onDeleteNote(selectedNoteId)}
-          message={"해당 수업을 삭제하시겠습니까?"}
+          message={'해당 수업을 삭제하시겠습니까?'}
         />
       )}
     </div>
