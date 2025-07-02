@@ -122,7 +122,7 @@ export default function SummaryPage() {
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>
 
-          <button className="bg-black-80 text-white px-8 py-6 rounded-lg text-left flex justify-between items-center">
+          <button className="bg-black-80 text-white px-8 py-6 rounded-lg text-left flex justify-between items-center cursor-not-allowed">
             하이라이트 영상 제작
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>
