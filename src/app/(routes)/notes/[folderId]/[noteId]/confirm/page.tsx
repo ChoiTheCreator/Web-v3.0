@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-
+import toast from 'react-hot-toast';
 import Button from '@/app/components/atoms/Button';
 import TextInputSection from '@/app/components/atoms/TextInputSection';
 import Loader, { SmallLoader } from '@/app/components/utils/Loader';
