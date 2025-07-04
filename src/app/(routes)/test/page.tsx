@@ -56,7 +56,7 @@ const Page = () => {
     try {
       const data = await fetchFolderName();
     } catch (error) {
-      toast.error('Error fetching folder name');
+      toast.error('폴더 불러오는데 실패했어요.');
     }
   };
 
@@ -69,7 +69,7 @@ const Page = () => {
       const data = await getFolders();
       setFolders(data);
     } catch (error) {
-      toast.error('Error fetching folder name');
+      toast.error('폴더 불러오는데 실패했어요.');
       setFolders([]);
     }
   };
@@ -90,7 +90,7 @@ const Page = () => {
       setProfessor('');
       setShowModal(false);
     } catch (err) {
-      toast.error('Error fetching folder name');
+      toast.error('폴더 불러오는데 실패했어요.');
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +111,7 @@ const Page = () => {
         }));
         setShowModal(false);
       } catch (error) {
-        toast.error('Error fetching folder name');
+        toast.error('폴더 불러오는데 실패했어요.');
       }
     }
   };
@@ -126,7 +126,7 @@ const Page = () => {
         [folderId]: false,
       }));
     } catch (error) {
-      toast.error('Error fetching folder name');
+      toast.error('폴더 불러오는데 실패했어요.');
     }
   };
 
@@ -141,7 +141,7 @@ const Page = () => {
   const handleUploadError = (err: any) => {
     setResponseData(null);
     setError('업로드 중 오류가 발생했습니다.');
-    toast.error('Error fetching folder name');
+    toast.error('폴더 불러오는데 실패했어요.');
   };
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {

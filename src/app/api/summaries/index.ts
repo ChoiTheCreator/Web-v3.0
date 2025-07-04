@@ -38,7 +38,7 @@ export const postSummary = async ({ file, request }: PostSummaryProps) => {
 
     return response.data;
   } catch (error) {
-    toast.error('Upload error');
+    toast.error('업로드 도중 오류가 발생했습니다.');
     throw error;
   }
 };

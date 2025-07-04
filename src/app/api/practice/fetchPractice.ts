@@ -26,7 +26,7 @@ export const fetchPractice = async (
 
     return response.data;
   } catch (error) {
-    toast.error('Error fetching Practice');
+    toast.error('폴더 불러오는데 실패했어요.');
     throw error;
   }
 };

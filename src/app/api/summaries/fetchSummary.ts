@@ -21,7 +21,7 @@ export const fetchSummary = async ({
     );
     return response.data;
   } catch (error) {
-    toast.error('Error at fetching Summary ');
+    toast.error('요약본을 불러오는데 실패했어요.');
     throw error;
   }
 };
