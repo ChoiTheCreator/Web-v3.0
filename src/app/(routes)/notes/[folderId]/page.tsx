@@ -47,13 +47,13 @@ const NotesPage = () => {
             setFolderName(currentFolder.folderName);
             setProfessor(currentFolder.professor);
           } else {
-            console.error('Folder not found');
+            toast.error('Folder not found');
           }
 
           const notesData: NoteResponse = await fetchNotes(Number(folderId));
           setNotes(notesData.noteListDetailRes);
         } catch (error) {
-          console.error('Failed to load notes:', error);
+          toast.error('노트를 불러오는데 실패했어요.:');
         } finally {
           setLoading(false);
         }
@@ -69,7 +69,7 @@ const NotesPage = () => {
       const notesData: NoteResponse = await fetchNotes(Number(folderId));
       setNotes(notesData.noteListDetailRes);
     } catch (error) {
-      console.error('Failed to delete note:', error);
+      toast.error('노트 삭제하는데데 실패했어요.');
     }
   };
 
