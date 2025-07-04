@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchNotes, deleteNote, createSTT } from '@/app/api/notes';
 import { getFolders } from '@/app/api/folders';
@@ -34,11 +34,14 @@ const NotesPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [noteName, setNoteName] = useState('');
   const isNextBtnDisabled = !noteName || !file;
+  const hasFetched = useRef(false);
 
   useEffect(() => {
+    if (hasFetched.current) return;
     if (folderId) {
       const loadNotes = async () => {
         try {
+          hasFetched.current = true;
           const folders = await getFolders();
           const currentFolder = folders.find(
             (folder: any) => folder.folderId === Number(folderId)
@@ -46,14 +49,12 @@ const NotesPage = () => {
           if (currentFolder) {
             setFolderName(currentFolder.folderName);
             setProfessor(currentFolder.professor);
-          } else {
-            toast.error('Folder not found');
           }
 
           const notesData: NoteResponse = await fetchNotes(Number(folderId));
           setNotes(notesData.noteListDetailRes);
         } catch (error) {
-          toast.error('노트를 불러오는데 실패했어요.:');
+          toast.error('노트를 불러오는데 실패했어요2');
         } finally {
           setLoading(false);
         }

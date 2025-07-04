@@ -27,10 +27,14 @@ export default function SummaryPage() {
   const [leftWidth, setLeftWidth] = useState<number | null>(null);
   const { data: session, status } = useSession();
   const token = session?.user?.aiTutorToken;
+  const hasFetchedSummary = useRef(false);
+  const hasFetchedPractice = useRef(false);
 
   useEffect(() => {
+    if (hasFetchedPractice.current) return;
     const fetchPractice = async () => {
       try {
+        hasFetchedPractice.current = true;
         setIsLoading(true);
         const data = await getPractice(Number(noteId));
         setPracticeQuestions(data?.information || []);
@@ -48,10 +52,12 @@ export default function SummaryPage() {
   }, [noteId, token]);
 
   useEffect(() => {
+    if (hasFetchedSummary.current) return;
     const fetchData = async () => {
       if (!folderId || !noteId) return;
       setLoading(true);
       try {
+        hasFetchedSummary.current = true;
         const data = await fetchSummary({
           folderId: Number(folderId),
           noteId: Number(noteId),
