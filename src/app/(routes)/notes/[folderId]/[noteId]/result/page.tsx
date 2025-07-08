@@ -22,7 +22,6 @@ const ResultPage = () => {
   const [noteTitle, setNoteTitle] = useState('');
   const [professorName, setProfessorName] = useState('');
   const noteId = Number(params.noteId);
-  console.log(practiceQuestions, 'practiceQuestions');
 
   useEffect(() => {
     const fetchPractice = async () => {
@@ -73,7 +72,7 @@ const ResultPage = () => {
         <p className="text-base text-white">{professorName}</p>
       </div>
       <div className="flex flex-col">
-        {practiceQuestions ? (
+        {practiceQuestions.length > 0 ? (
           <ReviewQuestions noteId={Number(params.noteId)} />
         ) : (
           <div className="flex justify-center items-center h-[50vh]">
