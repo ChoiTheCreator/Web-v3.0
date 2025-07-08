@@ -37,7 +37,7 @@ export default function SummaryPage() {
         hasFetchedPractice.current = true;
         setIsLoading(true);
         const data = await getPractice(Number(noteId));
-        setPracticeQuestions(data?.information || []);
+        setPracticeQuestions(data?.information?.reqList || []);
       } catch (e) {
         toast.error('문제 조회 실패');
         setPracticeQuestions([]);
@@ -126,8 +126,13 @@ export default function SummaryPage() {
                 }`
               )
             }
+            disabled={isLoading}
           >
-            {practiceQuestions.length > 0 ? '복습 퀴즈 조회' : '복습 퀴즈 생성'}
+            {isLoading
+              ? '로딩 중...'
+              : practiceQuestions.length > 0
+                ? '복습 퀴즈 조회'
+                : '복습 퀴즈 생성'}
             <Icon label="arrow_next" className="w-4 h-4" />
           </button>
 
