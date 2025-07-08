@@ -2,18 +2,26 @@ import apiClient from "@/app/utils/api";
 import { toast } from "react-hot-toast";
 
 export interface PracticeItemResponse {
-  praticeId: number;
+  practiceId: number;
   practiceNumber: number;
   content: string;
-  additionalResults: string[];
+  additionalResults: string[] | null;
   result: string;
   solution: string;
   practiceType: "OX" | "SHORT" | string;
 }
 
+export interface PracticeInformation {
+  noteId: number;
+  noteTitle: string;
+  professorId: number;
+  professorName: string;
+  reqList: PracticeItemResponse[];
+}
+
 export interface PracticeGetResponse {
   check: boolean;
-  information: PracticeItemResponse[];
+  information: PracticeInformation;
 }
 export interface PracticeRequestItem {
   practiceNumber: number;

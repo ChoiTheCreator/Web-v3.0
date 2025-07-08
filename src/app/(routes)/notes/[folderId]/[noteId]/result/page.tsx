@@ -19,25 +19,38 @@ const ResultPage = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const { folderName, professor, setQuestions } = usePracticeContext();
+  const [noteTitle, setNoteTitle] = useState('');
+  const [professorName, setProfessorName] = useState('');
   const noteId = Number(params.noteId);
+  console.log(practiceQuestions, 'practiceQuestions');
 
   useEffect(() => {
     const fetchPractice = async () => {
       try {
         setIsLoading(true);
         const data = await getPractice(noteId);
-        if (data && data.information) {
-          setPracticeQuestions(data.information);
-          setQuestions(data.information);
+        if (
+          data &&
+          data.information &&
+          Array.isArray(data.information.reqList)
+        ) {
+          setPracticeQuestions(data.information.reqList);
+          setQuestions(data.information.reqList);
+          setNoteTitle(data.information.noteTitle || '');
+          setProfessorName(data.information.professorName || '');
         } else {
           setPracticeQuestions([]);
           setQuestions([]);
-          console.warn('API 응답에 information 필드가 없습니다.', data);
+          setNoteTitle('');
+          setProfessorName('');
+          console.warn('API 응답에 reqList 필드가 없습니다.', data);
         }
       } catch (e) {
-        toast.error('문제를 가져오는데 실패했어요.');
+        toast.error('문제를 가져오는데 실패했어요.⭐️');
         setPracticeQuestions([]);
         setQuestions([]);
+        setNoteTitle('');
+        setProfessorName('');
       } finally {
         setIsLoading(false);
       }
@@ -55,12 +68,12 @@ const ResultPage = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4 pt-4">
-        <Info folderName={folderName} professorName={professor} />
+      <div className="flex flex-col items-start w-full mb-4 px-5 pt-6">
+        <p className="text-2xl mb-2 font-semibold text-white">{noteTitle}</p>
+        <p className="text-base text-white">{professorName}</p>
       </div>
-
       <div className="flex flex-col">
-        {practiceQuestions && practiceQuestions.length > 0 ? (
+        {practiceQuestions ? (
           <ReviewQuestions noteId={Number(params.noteId)} />
         ) : (
           <div className="flex justify-center items-center h-[50vh]">
