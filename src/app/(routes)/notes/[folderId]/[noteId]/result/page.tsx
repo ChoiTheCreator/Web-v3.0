@@ -45,7 +45,7 @@ const ResultPage = () => {
           console.warn('API 응답에 reqList 필드가 없습니다.', data);
         }
       } catch (e) {
-        toast.error('문제를 가져오는데 실패했어요.⭐️');
+        toast.error('문제를 가져오는데 실패했어요.');
         setPracticeQuestions([]);
         setQuestions([]);
         setNoteTitle('');
