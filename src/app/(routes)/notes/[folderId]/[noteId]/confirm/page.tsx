@@ -49,11 +49,6 @@ const ConfirmNotePage = () => {
   const handleNoteFinalBtn = async () => {
     if (sttLoading || summaryLoading) return;
 
-    if (!keywords || !requirement) {
-      toast.error('키워드와 요구사항을 모두 입력해주세요.');
-      return;
-    }
-
     try {
       setSummaryLoading(true);
       await summaryNote(

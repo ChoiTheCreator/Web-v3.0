@@ -45,7 +45,10 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
         setLoading(true);
         const response = await getPractice(noteId);
 
-        const converted: ReqList[] = response.information.map((item: any) => ({
+        const infoArray = Array.isArray(response.information)
+          ? response.information
+          : [response.information];
+        const converted: ReqList[] = infoArray.map((item: any) => ({
           practiceId: item.praticeId ?? item.practiceId,
           practiceNumber: item.practiceNumber,
           content: item.content,
@@ -68,9 +71,9 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
   }, [loadPractice]);
 
   const toggleSelect = (practiceNumber: number) => {
-    setSelectedQuestions((prev) =>
+    setSelectedQuestions(prev =>
       prev.includes(practiceNumber)
-        ? prev.filter((num) => num !== practiceNumber)
+        ? prev.filter(num => num !== practiceNumber)
         : [...prev, practiceNumber]
     );
   };
@@ -78,15 +81,15 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
   const toggleEditMode = async (practiceNumber: number) => {
     if (!isEditable) return;
     if (!editMode[practiceNumber]) {
-      setEditMode((prev) => ({
+      setEditMode(prev => ({
         ...prev,
         [practiceNumber]: true,
       }));
       const question = filteredQuestions?.find(
-        (q) => q.practiceNumber === practiceNumber
+        q => q.practiceNumber === practiceNumber
       );
       if (question) {
-        setEditedQuestions((prev) => ({
+        setEditedQuestions(prev => ({
           ...prev,
           [practiceNumber]: {
             content: question.content,
@@ -98,7 +101,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
       setLoading(true);
       try {
         const originalQuestion = filteredQuestions?.find(
-          (q) => q.practiceNumber === practiceNumber
+          q => q.practiceNumber === practiceNumber
         );
         const editedQuestion = editedQuestions[practiceNumber];
         if (!originalQuestion) return;
@@ -112,8 +115,8 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
         });
 
         setFilteredQuestions(
-          (prev) =>
-            prev?.map((q) =>
+          prev =>
+            prev?.map(q =>
               q.practiceNumber === practiceNumber
                 ? {
                     ...q,
@@ -123,7 +126,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
                 : q
             ) || null
         );
-        setEditMode((prev) => ({
+        setEditMode(prev => ({
           ...prev,
           [practiceNumber]: false,
         }));
@@ -139,7 +142,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
     field: 'content' | 'result',
     value: string
   ) => {
-    setEditedQuestions((prev) => ({
+    setEditedQuestions(prev => ({
       ...prev,
       [practiceNumber]: { ...prev[practiceNumber], [field]: value },
     }));
@@ -150,13 +153,13 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
     if (selectedQuestions.length === filteredQuestions.length) {
       setSelectedQuestions([]);
     } else {
-      setSelectedQuestions(filteredQuestions.map((q) => q.practiceNumber));
+      setSelectedQuestions(filteredQuestions.map(q => q.practiceNumber));
     }
   };
 
   const exportSelectedQuestionsToPDF = async () => {
     if (!filteredQuestions) return;
-    const selected = filteredQuestions.filter((q) =>
+    const selected = filteredQuestions.filter(q =>
       selectedQuestions.includes(q.practiceNumber)
     );
     if (selected.length === 0) {
@@ -211,7 +214,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
         </thead>
 
         <tbody>
-          {filteredQuestions.map((question) => (
+          {filteredQuestions.map(question => (
             <tr
               key={question.practiceNumber}
               className="bg-black-90 m-2 text-center border-b-4 border-white border-solid"
@@ -265,7 +268,7 @@ const ReviewQuestions: React.FC<ReviewQuestionsProps> = ({ noteId }) => {
                 {editMode[question.practiceNumber] ? (
                   question.practiceType === 'OX' ? (
                     <div className="flex items-center justify-center gap-2">
-                      {['O', 'X'].map((val) => {
+                      {['O', 'X'].map(val => {
                         const selected =
                           (editedQuestions[question.practiceNumber]?.result ||
                             question.result) === val;
