@@ -28,11 +28,7 @@ const ResultPage = () => {
       try {
         setIsLoading(true);
         const data = await getPractice(noteId);
-        if (
-          data &&
-          data.information &&
-          Array.isArray(data.information.reqList)
-        ) {
+        if (data.information) {
           setPracticeQuestions(data.information.reqList);
           setQuestions(data.information.reqList);
           setNoteTitle(data.information.noteTitle || '');
